@@ -44,6 +44,12 @@
 
       <!-- Right Header Actions -->
       <div class="flex items-center gap-2 relative">
+        <!-- New: Farm Setup Investment & Recovery Button -->
+        <button onclick="openSetupCostModal()" title="फार्म स्थापना लागत व रिकवरी" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow border-2 border-amber-300 flex items-center gap-1.5 transition active:scale-95">
+          <i class="fa-solid fa-calculator text-slate-950"></i>
+          <span class="hidden sm:inline">लागत हिसाब</span>
+        </button>
+
         <button onclick="printOverallMasterReport()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow-md border-2 border-sky-400 flex items-center gap-1.5 transition">
           <i class="fa-solid fa-file-pdf text-amber-300"></i>
           <span class="hidden sm:inline">संपूर्ण PDF रिपोर्ट</span>
@@ -545,7 +551,7 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 6: FEED & FODDER STOCK (WITH DAILY USAGE & EXPIRY CALC) ==================== -->
+    <!-- ==================== TAB 6: FEED & FODDER STOCK ==================== -->
     <section id="tabStock" class="mt-4 hidden space-y-4">
       <div id="stockAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-yellow-600">
         <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
@@ -580,13 +586,11 @@
             </select>
           </div>
 
-          <!-- New: Daily Usage Input -->
           <div>
             <label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">1 दिन में कितना लगता है?</label>
             <input type="number" step="0.1" id="stockDailyUse" required placeholder="उदा. 1.5" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-black text-emerald-950" />
           </div>
 
-          <!-- New: Alert Before Days -->
           <div>
             <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">कितने दिन पहले अलर्ट मिले?</label>
             <input type="number" id="stockAlertDays" required value="3" placeholder="उदा. 3 दिन" class="w-full text-sm border-2 border-rose-300 bg-rose-50 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-600 outline-none font-bold text-rose-950" />
@@ -613,6 +617,95 @@
     </section>
 
   </main>
+
+  <!-- ==================== POPUP: FARM SETUP COST & RECOVERY TRACKER ==================== -->
+  <div id="setupCostModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden border-4 border-amber-400 flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="bg-emerald-950 text-white p-4 px-5 flex items-center justify-between border-b-2 border-emerald-800 shrink-0">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center text-lg font-black shadow">
+            <i class="fa-solid fa-building-columns"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-amber-300">फार्म स्थापना कुल लागत व रिकवरी</h3>
+            <p class="text-[11px] text-emerald-200 font-medium">निवेश (Investment) बनाम शुद्ध कमाई (Recovery)</p>
+          </div>
+        </div>
+
+        <button onclick="closeSetupCostModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-sm font-black shadow transition border border-rose-400">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable Content -->
+      <div class="p-4 sm:p-5 overflow-y-auto space-y-4">
+        
+        <!-- Live Side-by-Side Comparison Dashboard -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          
+          <!-- Box 1: Total Setup Investment -->
+          <div class="bg-slate-900 text-white p-4 rounded-2xl border-2 border-slate-700 shadow-md">
+            <span class="text-[11px] text-slate-400 font-bold uppercase block flex items-center gap-1.5">
+              <i class="fa-solid fa-sack-dollar text-amber-400"></i> कुल फार्म स्थापना लागत
+            </span>
+            <div class="text-2xl sm:text-3xl font-black text-amber-300 mt-1" id="dispTotalSetupCost">₹0</div>
+            <span class="text-[10px] text-slate-400 block mt-1" id="setupItemsCount">0 मदों में किया गया निवेश</span>
+          </div>
+
+          <!-- Box 2: Live Net Profit (Recovered Amount) -->
+          <div class="bg-emerald-950 text-white p-4 rounded-2xl border-2 border-emerald-700 shadow-md">
+            <span class="text-[11px] text-emerald-300 font-bold uppercase block flex items-center gap-1.5">
+              <i class="fa-solid fa-hand-holding-dollar text-emerald-400"></i> डेयरी से शुद्ध बचत (कवर हुई रकम)
+            </span>
+            <div class="text-2xl sm:text-3xl font-black text-emerald-300 mt-1" id="dispNetRecovered">₹0</div>
+            <span class="text-[10px] text-emerald-200 block mt-1">कुल दूध आय - कुल खर्च</span>
+          </div>
+        </div>
+
+        <!-- Net Status & Remaining Balance Calculation -->
+        <div id="recoveryStatusBox" class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-bold text-amber-950 uppercase block">लागत में से शेष बची रकम (Remaining Investment):</span>
+            <div class="text-2xl font-black text-rose-700 mt-0.5" id="dispRemainingCost">₹0</div>
+            <p class="text-[11px] text-slate-600 font-medium" id="recoveryPercentText">0% लागत कवर हो चुकी है</p>
+          </div>
+          <div class="w-full sm:w-48 bg-slate-200 rounded-full h-4 overflow-hidden border border-slate-300 shrink-0">
+            <div id="recoveryProgressBar" class="bg-emerald-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Admin Input Form for Setup Items -->
+        <div id="setupCostAdminForm" class="hidden bg-slate-50 p-3.5 rounded-2xl border-2 border-slate-300 space-y-2">
+          <h4 class="text-xs font-extrabold text-slate-900 uppercase flex items-center gap-1.5">
+            <i class="fa-solid fa-plus-circle text-emerald-700"></i> नई लागत जोड़ें (Admin Only)
+          </h4>
+          <form onsubmit="addSetupCostItem(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <input type="text" id="setupItemName" required placeholder="मद का नाम (उदा. शेड निर्माण / 4 भैंस)" class="w-full text-xs border-2 border-slate-300 rounded-xl p-2.5 bg-white font-semibold outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <input type="number" id="setupItemAmount" required placeholder="लागत रकम (₹)" class="w-full text-xs border-2 border-slate-300 rounded-xl p-2.5 bg-white font-bold outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <button type="submit" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs py-2.5 rounded-xl shadow transition border border-emerald-700">
+                + लागत क्लाउड में जोड़ें
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Setup Cost Items List -->
+        <div>
+          <h4 class="text-xs font-extrabold text-slate-800 uppercase mb-2">फार्म स्थापना लागत सूची (Live Cloud)</h4>
+          <div id="setupCostListContainer" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 
   <!-- ==================== POPUP 1: LOGO FULLSCREEN PREVIEW ==================== -->
   <div id="logoPreviewModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
@@ -763,8 +856,8 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Admin State & Cloud Synced Master Password
-    let isAdmin = false;
+    // Persistent Admin State (Saved in LocalStorage so it NEVER logs out on refresh)
+    let isAdmin = localStorage.getItem('prajapati_is_admin_logged_in') === 'true';
     let currentAdminPass = "1234";
 
     // Realtime Master Password Listener
@@ -790,6 +883,7 @@
     let cattleData = [];
     let customerPayments = [];
     let stockData = [];
+    let setupCostData = [];
 
     // Dates
     const today = new Date().toISOString().split('T')[0];
@@ -813,7 +907,7 @@
       }
     });
 
-    // Toggle Admin Login
+    // Toggle Admin Login (Persistent)
     function toggleAdminLogin() {
       const menu = document.getElementById('sideMenuDropdown');
       menu.classList.add('hidden');
@@ -822,15 +916,17 @@
         const pin = prompt("एडमिन मोड चालू करने के लिए पिन दर्ज करें:");
         if (pin === currentAdminPass) {
           isAdmin = true;
+          localStorage.setItem('prajapati_is_admin_logged_in', 'true');
           updateAdminUI();
-          alert("स्वागत है! आप एडमिन बन चुके हैं।");
+          alert("स्वागत है! आप एडमिन बन चुके हैं। (रिफ्रेश करने पर भी यह लॉगआउट नहीं होगा)");
         } else if (pin) {
           alert("गलत एडमिन पासवर्ड!");
         }
       } else {
         isAdmin = false;
+        localStorage.removeItem('prajapati_is_admin_logged_in');
         updateAdminUI();
-        alert("एडमिन मोड लॉगआउट हो गया।");
+        alert("एडमिन मोड सफलतापूर्वक लॉगआउट हो गया।");
       }
     }
 
@@ -840,6 +936,7 @@
       const menuAdminBtnText = document.getElementById('menuAdminBtnText');
       const menuChangePassBtn = document.getElementById('menuChangePassBtn');
       const adminLogoArea = document.getElementById('adminLogoChangeArea');
+      const setupAdminArea = document.getElementById('setupCostAdminForm');
 
       const adminForms = ['milkAdminForm', 'expAdminForm', 'attAdminForm', 'catAdminForm', 'custAdminForm', 'stockAdminForm'];
 
@@ -850,6 +947,7 @@
         menuAdminBtnText.innerText = "Admin Logout";
         menuChangePassBtn.classList.remove('hidden');
         adminLogoArea.classList.remove('hidden');
+        if (setupAdminArea) setupAdminArea.classList.remove('hidden');
 
         adminForms.forEach(id => {
           const el = document.getElementById(id);
@@ -863,6 +961,7 @@
         menuAdminBtnText.innerText = "Admin Mode On";
         menuChangePassBtn.classList.add('hidden');
         adminLogoArea.classList.add('hidden');
+        if (setupAdminArea) setupAdminArea.classList.add('hidden');
 
         adminForms.forEach(id => {
           const el = document.getElementById(id);
@@ -871,6 +970,98 @@
         document.querySelectorAll('.admin-action-col').forEach(el => el.classList.add('hidden'));
       }
       renderAll();
+    }
+
+    // ==================== FARM SETUP COST MODAL & LOGIC ====================
+    function openSetupCostModal() {
+      document.getElementById('setupCostModal').classList.remove('hidden');
+      renderSetupCostList();
+    }
+
+    function closeSetupCostModal() {
+      document.getElementById('setupCostModal').classList.add('hidden');
+    }
+
+    function addSetupCostItem(e) {
+      e.preventDefault();
+      if (!isAdmin) { alert("केवल एडमिन ही लागत जोड़ सकते हैं!"); return; }
+
+      const name = document.getElementById('setupItemName').value.trim();
+      const amount = parseFloat(document.getElementById('setupItemAmount').value) || 0;
+
+      db.ref('farm_setup_costs').push({
+        name: name,
+        amount: amount,
+        timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('setupItemName').value = '';
+        document.getElementById('setupItemAmount').value = '';
+      });
+    }
+
+    function deleteSetupCostItem(id) {
+      if (!isAdmin) return;
+      if (confirm("यह लागत मद हटाएं?")) {
+        db.ref('farm_setup_costs/' + id).remove();
+      }
+    }
+
+    // Setup Costs Realtime Listener
+    db.ref('farm_setup_costs').on('value', snap => {
+      const val = snap.val();
+      setupCostData = [];
+      if (val) {
+        Object.keys(val).forEach(k => setupCostData.push({ id: k, ...val[k] }));
+      }
+      renderSetupCostList();
+    });
+
+    function renderSetupCostList() {
+      const container = document.getElementById('setupCostListContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let totalInvestment = 0;
+      setupCostData.forEach((item, index) => {
+        totalInvestment += item.amount;
+        container.innerHTML += `
+          <div class="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 text-xs">
+            <div>
+              <span class="font-extrabold text-slate-900">${index + 1}. ${item.name}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-black text-slate-900">₹ ${item.amount.toLocaleString('en-IN')}</span>
+              ${isAdmin ? `<button onclick="deleteSetupCostItem('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      if (setupCostData.length === 0) {
+        container.innerHTML = `<div class="text-center p-4 text-xs text-slate-400">अभी तक कोई फार्म स्थापना लागत नहीं जोड़ी गई है।</div>`;
+      }
+
+      // Calculate Total Net Profit from Daily Operations
+      let totalRev = 0, totalExp = 0;
+      milkData.forEach(m => totalRev += m.total);
+      expenseData.forEach(e => totalExp += e.amount);
+      const totalNetProfit = Math.max(0, totalRev - totalExp);
+
+      // Remaining Investment after profit recovery
+      const remainingCost = Math.max(0, totalInvestment - totalNetProfit);
+      const percentRecovered = totalInvestment > 0 ? Math.min(100, (totalNetProfit / totalInvestment) * 100) : 0;
+
+      // Update UI elements
+      document.getElementById('dispTotalSetupCost').innerText = '₹ ' + totalInvestment.toLocaleString('en-IN');
+      document.getElementById('setupItemsCount').innerText = `${setupCostData.length} मदों में किया गया कुल निवेश`;
+      document.getElementById('dispNetRecovered').innerText = '₹ ' + totalNetProfit.toLocaleString('en-IN');
+      document.getElementById('dispRemainingCost').innerText = '₹ ' + remainingCost.toLocaleString('en-IN');
+      document.getElementById('recoveryPercentText').innerText = `${percentRecovered.toFixed(1)}% लागत रिकवर हो चुकी है`;
+      document.getElementById('recoveryProgressBar').style.width = `${percentRecovered}%`;
+
+      if (remainingCost === 0 && totalInvestment > 0) {
+        document.getElementById('dispRemainingCost').innerHTML = '<span class="text-emerald-600">🎉 पूरी लागत रिकवर हो गई!</span>';
+      }
     }
 
     // Password Change Modal System
@@ -993,8 +1184,6 @@
       const fHour = hour % 12 || 12;
       return `${fHour}:${m} ${ampm}`;
     }
-
-    // ==================== REALTIME DATABASE ACTIONS ====================
 
     // 1. Milk Sale
     function calcMilkTotal() {
@@ -1148,7 +1337,7 @@
       window.open(`https://wa.me/?text=${msg}`, '_blank');
     }
 
-    // 6. Stock with Daily Usage & Alert Days
+    // 6. Stock
     function addStockItem(e) {
       e.preventDefault();
       if (!isAdmin) { alert("सिर्फ एडमिन ही एंट्री कर सकते हैं!"); return; }
@@ -1198,6 +1387,7 @@
       renderMilk();
       renderCustomerSummary();
       renderTotals();
+      renderSetupCostList();
     });
 
     db.ref('expense_records').on('value', snap => {
@@ -1209,6 +1399,7 @@
       }
       renderExpense();
       renderTotals();
+      renderSetupCostList();
     });
 
     db.ref('attendance_records').on('value', snap => {
@@ -1460,7 +1651,6 @@
       });
     }
 
-    // Smart Stock Render: Calculates Expiry Date & Warns Admin
     function renderStock() {
       const sContainer = document.getElementById('stockListContainer');
       const notifBanner = document.getElementById('stockNotificationBanner');
@@ -1474,10 +1664,8 @@
         const dailyUse = parseFloat(item.dailyUse) || 1;
         const alertDays = parseFloat(item.alertDays) || 3;
         
-        // Days Left Calculation
         const daysLeft = Math.floor(item.qty / dailyUse);
 
-        // Date of finish calculation
         const finishDate = new Date();
         finishDate.setDate(finishDate.getDate() + daysLeft);
         const finishDateStr = finishDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -1485,9 +1673,9 @@
         const isLow = daysLeft <= alertDays;
 
         if (isLow && item.qty > 0) {
-          warningAlerts.push(`⚠️ <b>${item.name}</b> मात्र <b>${daysLeft} दिन</b> चलेगा (${finishDateStr} तक खत्म हो जाएगा)। कृपया नया चारा मंगाएं!`);
+          warningAlerts.push(`⚠️ <b>${item.name}</b> मात्र <b>${daysLeft} दिन</b> चलेगा (${finishDateStr} तक खत्म हो जाएगा)। नया चारा मंगाएं!`);
         } else if (item.qty <= 0) {
-          warningAlerts.push(`🚨 <b>${item.name}</b> पूरी तरह खत्म हो चुका है! तुरंत नया स्टॉक भरें।`);
+          warningAlerts.push(`🚨 <b>${item.name}</b> खत्म हो चुका है! तुरंत नया स्टॉक भरें।`);
         }
 
         sContainer.innerHTML += `
@@ -1532,7 +1720,6 @@
 
       document.getElementById('stockRecordCount').innerText = `${stockData.length} आइटम`;
 
-      // Show Alert Banner to Admin
       if (warningAlerts.length > 0 && isAdmin) {
         notifList.innerHTML = warningAlerts.map(msg => `<div>${msg}</div>`).join('');
         notifBanner.classList.remove('hidden');
@@ -1568,6 +1755,7 @@
       renderCustomerSummary();
       renderStock();
       renderTotals();
+      renderSetupCostList();
     }
 
     // Print Overall Report
@@ -1641,6 +1829,9 @@
       window.print();
       printDiv.classList.add('hidden');
     }
+
+    // Run Initial State Check
+    updateAdminUI();
   </script>
 </body>
 </html>
