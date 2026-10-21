@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase Live SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
@@ -428,23 +428,38 @@
     </div>
   </div>
 
-  <!-- POPUP: VET DOCTOR CONTACT DIRECTORY -->
+  <!-- POPUP: VET DOCTOR CONTACT DIRECTORY (UPDATED WITH TOGGLE FORM) -->
   <div id="vetDoctorModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border-4 border-rose-500 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-2"><i class="fa-solid fa-user-doctor text-rose-600"></i> पशु डॉक्टर संपर्क डायरेक्टरी</h3>
         <button onclick="closeVetDoctorModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white font-black">✕</button>
       </div>
-      <div id="vetAdminAddForm" class="hidden p-3 bg-rose-50 rounded-2xl border border-rose-200">
-        <h4 class="text-xs font-bold text-rose-950 mb-2">नया डॉक्टर जोड़ें</h4>
+
+      <!-- 1. Doctors List First -->
+      <div id="vetDoctorList" class="space-y-2"></div>
+
+      <!-- 2. Add More Doctor Toggle Button -->
+      <div class="pt-2 border-t">
+        <button type="button" onclick="toggleVetAddForm()" id="vetToggleAddBtn" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-800 font-extrabold py-2.5 px-4 rounded-xl text-xs border-2 border-rose-300 flex items-center justify-center gap-2 transition active:scale-95">
+          <i class="fa-solid fa-user-plus text-rose-600"></i>
+          <span id="vetToggleAddText">+ नया डॉक्टर जोड़ें (Add More Dr.)</span>
+        </button>
+      </div>
+
+      <!-- 3. Add Doctor Form (Opens only on click) -->
+      <div id="vetAdminAddForm" class="hidden p-3.5 bg-rose-50/80 rounded-2xl border-2 border-rose-200 animate-in fade-in duration-150">
+        <h4 class="text-xs font-black text-rose-950 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-address-card"></i> डॉक्टर का विवरण दर्ज करें</h4>
         <form onsubmit="saveVetDoctor(event)" class="space-y-2">
-          <input type="text" id="vetDocName" required placeholder="डॉक्टर का नाम" class="w-full text-xs border rounded-xl p-2.5 font-bold" />
-          <input type="tel" id="vetDocPhone" required placeholder="मोबाइल नंबर" class="w-full text-xs border rounded-xl p-2.5 font-bold" />
-          <input type="text" id="vetDocClinic" placeholder="अस्पताल / पता" class="w-full text-xs border rounded-xl p-2.5" />
-          <button type="submit" class="w-full bg-rose-700 text-white text-xs font-bold py-2 rounded-xl">सुरक्षित करें</button>
+          <input type="text" id="vetDocName" required placeholder="डॉक्टर का नाम (उदा. डॉ. शर्मा)" class="w-full text-xs border-2 rounded-xl p-2.5 font-bold bg-white" />
+          <input type="tel" id="vetDocPhone" required placeholder="मोबाइल नंबर (उदा. 9876543210)" class="w-full text-xs border-2 rounded-xl p-2.5 font-bold bg-white" />
+          <input type="text" id="vetDocClinic" placeholder="अस्पताल / पता (उदा. राजकीय पशु चिकित्सालय)" class="w-full text-xs border-2 rounded-xl p-2.5 bg-white" />
+          <div class="flex gap-2 pt-1">
+            <button type="button" onclick="toggleVetAddForm()" class="w-1/3 bg-slate-200 text-slate-700 font-bold text-xs py-2 rounded-xl">रद्द करें</button>
+            <button type="submit" class="w-2/3 bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold py-2 rounded-xl shadow">सुरक्षित करें</button>
+          </div>
         </form>
       </div>
-      <div id="vetDoctorList" class="space-y-2"></div>
     </div>
   </div>
 
@@ -703,7 +718,6 @@
       const menuAdminBtnText = document.getElementById('menuAdminBtnText');
       const menuChangePassBtn = document.getElementById('menuChangePassBtn');
       const setupAdminArea = document.getElementById('setupCostAdminForm');
-      const vetForm = document.getElementById('vetAdminAddForm');
       const logoAdminArea = document.getElementById('adminLogoChangeArea');
 
       const adminForms = ['milkAdminForm', 'expAdminForm', 'labourAdminForm', 'catAdminForm', 'calfAdminForm', 'sellAnimalAdminForm', 'custAdminForm', 'stockAdminForm'];
@@ -715,7 +729,6 @@
         menuAdminBtnText.innerText = "Admin Logout";
         menuChangePassBtn.classList.remove('hidden');
         if (setupAdminArea) setupAdminArea.classList.remove('hidden');
-        if (vetForm) vetForm.classList.remove('hidden');
         if (logoAdminArea) logoAdminArea.classList.remove('hidden');
         adminForms.forEach(id => document.getElementById(id)?.classList.remove('hidden'));
       } else {
@@ -725,7 +738,6 @@
         menuAdminBtnText.innerText = "Admin Mode On";
         menuChangePassBtn.classList.add('hidden');
         if (setupAdminArea) setupAdminArea.classList.add('hidden');
-        if (vetForm) vetForm.classList.add('hidden');
         if (logoAdminArea) logoAdminArea.classList.add('hidden');
         adminForms.forEach(id => document.getElementById(id)?.classList.add('hidden'));
       }
@@ -1069,7 +1081,19 @@
       });
     }
 
-    // Vet Doctor Contact Logic
+    // Vet Doctor Contact Logic (UPDATED: List First + Add Toggle Button)
+    function toggleVetAddForm() {
+      const form = document.getElementById('vetAdminAddForm');
+      const isHidden = form.classList.contains('hidden');
+      if (isHidden) {
+        form.classList.remove('hidden');
+        document.getElementById('vetToggleAddBtn').classList.add('hidden');
+      } else {
+        form.classList.add('hidden');
+        document.getElementById('vetToggleAddBtn').classList.remove('hidden');
+      }
+    }
+
     function saveVetDoctor(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1082,22 +1106,26 @@
         document.getElementById('vetDocName').value = '';
         document.getElementById('vetDocPhone').value = '';
         document.getElementById('vetDocClinic').value = '';
-        alert("✅ डॉक्टर सुरक्षित!");
+        toggleVetAddForm();
+        alert("✅ नया डॉक्टर सुरक्षित!");
       }).catch(err => alert("Firebase त्रुटि: " + err.message));
     }
 
     function renderVetDoctors() {
       const c = document.getElementById('vetDoctorList');
       c.innerHTML = '';
-      if (vetDoctors.length === 0) { c.innerHTML = '<div class="text-xs text-slate-400 text-center py-3">कोई डॉक्टर दर्ज नहीं।</div>'; return; }
+      if (vetDoctors.length === 0) { 
+        c.innerHTML = '<div class="text-xs text-slate-400 text-center py-4 bg-slate-50 rounded-2xl border">अभी कोई डॉक्टर दर्ज नहीं है। नीचे बटन दबाकर जोड़ें।</div>'; 
+        return; 
+      }
       vetDoctors.forEach(d => {
         c.innerHTML += `
-          <div class="p-2.5 bg-slate-50 border rounded-xl flex items-center justify-between text-xs">
-            <div><h4 class="font-bold text-slate-900">${d.name}</h4><p class="text-[10px] text-slate-500">${d.clinic} • ${d.phone}</p></div>
-            <div class="flex gap-1.5">
-              <a href="tel:${d.phone}" class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-phone"></i></a>
-              <a href="https://wa.me/91${d.phone.replace(/\D/g,'')}?text=नमस्ते डॉ. साहब, प्रजापति डेयरी फार्म पर सहायता चाहिए।" target="_blank" class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs"><i class="fa-brands fa-whatsapp"></i></a>
-              ${isAdmin ? `<button onclick="db.ref('vet_doctors/${d.id}').remove()" class="text-rose-600 px-1 text-xs"><i class="fa-solid fa-trash"></i></button>` : ''}
+          <div class="p-3 bg-slate-50 border-2 border-slate-200 rounded-2xl flex items-center justify-between text-xs">
+            <div><h4 class="font-black text-slate-900 text-sm">${d.name}</h4><p class="text-[11px] text-slate-500 font-bold mt-0.5">${d.clinic} • ${d.phone}</p></div>
+            <div class="flex items-center gap-1.5">
+              <a href="tel:${d.phone}" class="w-8 h-8 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white flex items-center justify-center text-xs shadow"><i class="fa-solid fa-phone"></i></a>
+              <a href="https://wa.me/91${d.phone.replace(/\D/g,'')}?text=नमस्ते डॉ. साहब, प्रजापति डेयरी फार्म पर सहायता चाहिए।" target="_blank" class="w-8 h-8 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center text-xs shadow"><i class="fa-brands fa-whatsapp"></i></a>
+              ${isAdmin ? `<button onclick="db.ref('vet_doctors/${d.id}').remove()" class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xs border border-rose-300 ml-1"><i class="fa-solid fa-trash"></i></button>` : ''}
             </div>
           </div>
         `;
