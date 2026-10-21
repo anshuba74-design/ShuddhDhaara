@@ -86,7 +86,7 @@
 
             <button onclick="openPaymentSettingsModal()" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-sky-300 transition border-t border-slate-800">
               <i class="fa-solid fa-qrcode text-sky-400 text-sm"></i>
-              <span>बैंक, UPI व QR सेटिंग्स</span>
+              <span>बैंक व UPI सेटिंग्स</span>
             </button>
 
             <button onclick="openSoldAnimalsFolderModal()" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-amber-300 transition border-t border-slate-800">
@@ -428,7 +428,7 @@
     </div>
   </div>
 
-  <!-- POPUP: VET DOCTOR CONTACT DIRECTORY (UPDATED WITH TOGGLE FORM) -->
+  <!-- POPUP: VET DOCTOR CONTACT DIRECTORY -->
   <div id="vetDoctorModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border-4 border-rose-500 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2">
@@ -436,10 +436,8 @@
         <button onclick="closeVetDoctorModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white font-black">✕</button>
       </div>
 
-      <!-- 1. Doctors List First -->
       <div id="vetDoctorList" class="space-y-2"></div>
 
-      <!-- 2. Add More Doctor Toggle Button -->
       <div class="pt-2 border-t">
         <button type="button" onclick="toggleVetAddForm()" id="vetToggleAddBtn" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-800 font-extrabold py-2.5 px-4 rounded-xl text-xs border-2 border-rose-300 flex items-center justify-center gap-2 transition active:scale-95">
           <i class="fa-solid fa-user-plus text-rose-600"></i>
@@ -447,7 +445,6 @@
         </button>
       </div>
 
-      <!-- 3. Add Doctor Form (Opens only on click) -->
       <div id="vetAdminAddForm" class="hidden p-3.5 bg-rose-50/80 rounded-2xl border-2 border-rose-200 animate-in fade-in duration-150">
         <h4 class="text-xs font-black text-rose-950 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-address-card"></i> डॉक्टर का विवरण दर्ज करें</h4>
         <form onsubmit="saveVetDoctor(event)" class="space-y-2">
@@ -463,23 +460,18 @@
     </div>
   </div>
 
-  <!-- POPUP: PAYMENT SETTINGS -->
+  <!-- POPUP: PAYMENT SETTINGS (BANK & UPI ONLY) -->
   <div id="paymentSettingsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border-4 border-sky-500 space-y-3">
       <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-black text-slate-900 text-base">बैंक, UPI व QR सेटिंग्स</h3>
+        <h3 class="font-black text-slate-900 text-base">बैंक व UPI सेटिंग्स</h3>
         <button onclick="closePaymentSettingsModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white font-black">✕</button>
       </div>
       <form onsubmit="savePaymentSettings(event)" class="space-y-2.5">
-        <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">UPI ID</label><input type="text" id="settingUpiId" class="w-full border rounded-xl p-2 text-xs font-bold" /></div>
-        <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">PhonePe / GPay</label><input type="tel" id="settingUpiPhone" class="w-full border rounded-xl p-2 text-xs font-bold" /></div>
-        <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बैंक खाता संख्या</label><input type="text" id="settingBankAcc" class="w-full border rounded-xl p-2 text-xs" /></div>
-        <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">IFSC कोड</label><input type="text" id="settingBankIfsc" class="w-full border rounded-xl p-2 text-xs uppercase" /></div>
-        <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">QR Code फोटो</label>
-          <input type="file" id="settingQrFileInput" accept="image/*" onchange="handleQrUpload(event)" class="text-xs w-full" />
-          <div id="qrPreviewWrap" class="mt-2 hidden text-center"><img id="qrPreviewImg" src="" alt="QR" class="w-24 h-24 mx-auto object-contain border rounded-lg" /></div>
-        </div>
+        <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">UPI ID</label><input type="text" id="settingUpiId" placeholder="उदा. 9876543210@paytm" class="w-full border rounded-xl p-2 text-xs font-bold text-sky-950" /></div>
+        <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">PhonePe / Google Pay नंबर</label><input type="tel" id="settingUpiPhone" placeholder="उदा. 9876543210" class="w-full border rounded-xl p-2 text-xs font-bold" /></div>
+        <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बैंक खाता संख्या (A/C No.)</label><input type="text" id="settingBankAcc" placeholder="खाता संख्या" class="w-full border rounded-xl p-2 text-xs" /></div>
+        <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">IFSC कोड</label><input type="text" id="settingBankIfsc" placeholder="IFSC कोड" class="w-full border rounded-xl p-2 text-xs uppercase" /></div>
         <button type="submit" class="w-full bg-sky-700 text-white font-bold py-2.5 rounded-xl text-xs shadow">सेटिंग्स सेव करें</button>
       </form>
     </div>
@@ -507,7 +499,7 @@
     </div>
   </div>
 
-  <!-- POPUP: SETUP COST & RECOVERY LINE (FIXED & LOCKED) -->
+  <!-- POPUP: SETUP COST & RECOVERY LINE (LOCKED) -->
   <div id="setupCostModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-amber-400 flex flex-col max-h-[90vh]">
       <div class="bg-emerald-950 text-white p-4 flex items-center justify-between border-b shrink-0">
@@ -589,7 +581,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script with All Fixes -->
+  <!-- Core Script (Clean, Fast & Safe WhatsApp Messaging) -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -625,8 +617,7 @@
       upiId: 'prajapatidairy@upi',
       upiPhone: '9876543210',
       bankAcc: '',
-      bankIfsc: '',
-      qrImage: ''
+      bankIfsc: ''
     };
 
     const today = new Date().toISOString().split('T')[0];
@@ -648,36 +639,9 @@
       document.getElementById('stockNotificationBanner').classList.add('hidden');
     }
 
-    function dataURLtoBlob(dataurl) {
-      const arr = dataurl.split(',');
-      const mime = arr[0].match(/:(.*?);/)[1];
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      return new Blob([u8arr], {type:mime});
-    }
-
-    async function shareDirectBillWithQR(phone, textMsg) {
+    // Direct, Safe WhatsApp Launcher (Without QR file attachment glitch)
+    function sendWhatsAppText(phone, textMsg) {
       const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
-      if (paymentSettings.qrImage && navigator.canShare) {
-        try {
-          const qrBlob = dataURLtoBlob(paymentSettings.qrImage);
-          const file = new File([qrBlob], "Payment_QR.png", { type: qrBlob.type });
-          if (navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              title: 'प्रजापति डेयरी फॉर्म बिल',
-              text: textMsg.replace(/%0A/g, '\n'),
-              files: [file]
-            });
-            return;
-          }
-        } catch (err) {
-          console.log("Web Share fallback:", err);
-        }
-      }
       if (cleanPhone) {
         window.open(`https://wa.me/91${cleanPhone}?text=${textMsg}`, '_blank');
       } else {
@@ -1081,7 +1045,7 @@
       });
     }
 
-    // Vet Doctor Contact Logic (UPDATED: List First + Add Toggle Button)
+    // Vet Doctor Contact Logic
     function toggleVetAddForm() {
       const form = document.getElementById('vetAdminAddForm');
       const isHidden = form.classList.contains('hidden');
@@ -1132,15 +1096,23 @@
       });
     }
 
-    // Customer WhatsApp Reminder with QR code
+    // Customer WhatsApp Reminder (CLEAN BANK & UPI ONLY - NO QR ISSUE)
     function sendWhatsAppReminder(name, bal, phone) {
-      const msg = `*प्रजापति डेयरी फॉर्म - उधारी तगादा*%0A--------------------------------%0Aनमस्ते *${name}*,%0Aडेयरी बहीखाते के अनुसार आपकी कुल बकाया रकम *₹ ${bal.toFixed(2)}* है।%0A*UPI ID:* ${paymentSettings.upiId}%0A*PhonePe/GPay:* ${paymentSettings.upiPhone}%0A*खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})%0A(कृपया संलग्न QR कोड को स्कैन करके भुगतान करें)%0A--------------------------------%0Aधन्यवाद!`;
-      shareDirectBillWithQR(phone, msg);
+      const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
+      const phoneText = paymentSettings.upiPhone ? `%0A*PhonePe / Google Pay:* ${paymentSettings.upiPhone}` : '';
+      const bankText = paymentSettings.bankAcc ? `%0A*बैंक खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})` : '';
+
+      const msg = `*प्रजापति डेयरी फॉर्म - उधारी भुगतान तगादा*%0A--------------------------------%0Aनमस्ते *${name}*,%0Aडेयरी बहीखाते के अनुसार आपकी कुल बकाया रकम *₹ ${bal.toFixed(2)}* है।%0Aकृपया नीचे दिए गए UPI अथवा बैंक विवरण से ऑनलाइन भुगतान करने का कष्ट करें:${upiText}${phoneText}${bankText}%0A--------------------------------%0Aभुगतान के पश्चात स्क्रीनशॉट अवश्य साझा करें। धन्यवाद!`;
+      sendWhatsAppText(phone, msg);
     }
 
     function sendCustomerMilkBill(name, date, qty, rate, total, status, phone) {
-      const msg = `*प्रजापति डेयरी फॉर्म - दूध रसीद*%0A--------------------------------%0A*ग्राहक:* ${name}%0A*तारीख:* ${date}%0A*मात्रा:* ${qty} L%0A*रेट:* ₹ ${rate}/L%0A*कुल बिल:* ₹ ${total}%0A*भुगतान स्थिति:* ${status}%0A*UPI ID:* ${paymentSettings.upiId}%0A*PhonePe/GPay:* ${paymentSettings.upiPhone}%0A--------------------------------%0Aधन्यवाद!`;
-      shareDirectBillWithQR(phone, msg);
+      const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
+      const phoneText = paymentSettings.upiPhone ? `%0A*PhonePe / Google Pay:* ${paymentSettings.upiPhone}` : '';
+      const bankText = paymentSettings.bankAcc ? `%0A*बैंक खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})` : '';
+
+      const msg = `*प्रजापति डेयरी फॉर्म - दूध रसीद*%0A--------------------------------%0A*ग्राहक:* ${name}%0A*तारीख:* ${date}%0A*मात्रा:* ${qty} L%0A*रेट:* ₹ ${rate}/L%0A*कुल बिल:* ₹ ${total}%0A*भुगतान स्थिति:* ${status}%0A--------------------------------%0A*ऑनलाइन भुगतान विवरण:*${upiText}${phoneText}${bankText}%0A--------------------------------%0Aधन्यवाद!`;
+      sendWhatsAppText(phone, msg);
     }
 
     function renderCustomers() {
@@ -1161,13 +1133,17 @@
         const bal = map[name].bill - map[name].paid;
         const due = bal > 0;
         const custPhone = map[name].phone || '';
-        const qrHtml = paymentSettings.qrImage ? `<div class="p-2 bg-sky-50 rounded-xl border text-center mt-2"><span class="text-[10px] font-bold block mb-1">पेमेंट QR कोड</span><img src="${paymentSettings.qrImage}" class="w-20 h-20 mx-auto object-contain border rounded" /></div>` : '';
 
         const pop = `
           <div class="space-y-2 text-xs">
             <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between"><div><b>${name}</b><br>दूध: ${map[name].milk}L<br><span class="text-[10px] text-slate-500 font-bold">मो: ${custPhone || '-'}</span></div><div class="text-base font-black ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(2)}</div></div>
-            ${qrHtml}
-            ${due ? `<button onclick="sendWhatsAppReminder('${name}', ${bal}, '${custPhone}')" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl mt-2 flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp पर QR फोटो व तगादा भेजें</button>` : '<span class="block text-center text-emerald-700 font-bold mt-2">हिसाब चुकता है</span>'}
+            <div class="p-2.5 bg-sky-50 rounded-xl border border-sky-200 text-sky-950 font-medium">
+              <b>उपलब्ध भुगतान माध्यम:</b><br>
+              • UPI ID: ${paymentSettings.upiId || 'दर्ज नहीं'}<br>
+              • PhonePe/GPay: ${paymentSettings.upiPhone || 'दर्ज नहीं'}<br>
+              • खाता: ${paymentSettings.bankAcc || 'दर्ज नहीं'} (IFSC: ${paymentSettings.bankIfsc || '-'})
+            </div>
+            ${due ? `<button onclick="sendWhatsAppReminder('${name}', ${bal}, '${custPhone}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl mt-2 flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp पर तगादा भेजें (बैंक/UPI सहित)</button>` : '<span class="block text-center text-emerald-700 font-bold mt-2">हिसाब चुकता है</span>'}
           </div>
         `;
 
@@ -1180,7 +1156,7 @@
       });
     }
 
-    // Milk Module Calculations (FIXED)
+    // Milk Module Calculations
     function calcPlantMilkRate() {
       const f = parseFloat(document.getElementById('plantFat').value) || 0;
       const s = parseFloat(document.getElementById('plantSnf').value) || 0;
@@ -1261,7 +1237,7 @@
               <div class="p-2 bg-emerald-50 rounded-lg border text-emerald-900 font-bold"><b>कुल:</b> ₹${x.total}</div>
             </div>
             <button onclick="sendCustomerMilkBill('${x.customer}', '${x.date}', ${x.qty}, ${x.rate}, ${x.total}, '${x.paymentStatus}', '${x.customerPhone || ''}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
-              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद (QR फोटो सहित भेजें)
+              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद भेजें (बैंक/UPI सहित)
             </button>
             ${isAdmin ? `<button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
           </div>
@@ -1573,24 +1549,11 @@
         upiId: document.getElementById('settingUpiId').value.trim(),
         upiPhone: document.getElementById('settingUpiPhone').value.trim(),
         bankAcc: document.getElementById('settingBankAcc').value.trim(),
-        bankIfsc: document.getElementById('settingBankIfsc').value.trim(),
-        qrImage: paymentSettings.qrImage || ''
+        bankIfsc: document.getElementById('settingBankIfsc').value.trim()
       }).then(() => {
         alert("सेटिंग्स सुरक्षित!");
         closePaymentSettingsModal();
       });
-    }
-
-    function handleQrUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        paymentSettings.qrImage = e.target.result;
-        document.getElementById('qrPreviewImg').src = paymentSettings.qrImage;
-        document.getElementById('qrPreviewWrap').classList.remove('hidden');
-      };
-      reader.readAsDataURL(file);
     }
 
     function handlePasswordChangeSubmit(e) {
@@ -1843,10 +1806,6 @@
         document.getElementById('settingUpiPhone').value = paymentSettings.upiPhone || '';
         document.getElementById('settingBankAcc').value = paymentSettings.bankAcc || '';
         document.getElementById('settingBankIfsc').value = paymentSettings.bankIfsc || '';
-        if (paymentSettings.qrImage) {
-          document.getElementById('qrPreviewImg').src = paymentSettings.qrImage;
-          document.getElementById('qrPreviewWrap').classList.remove('hidden');
-        }
       }
     });
 
