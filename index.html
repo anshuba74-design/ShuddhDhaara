@@ -38,7 +38,7 @@
             <h1 class="text-base sm:text-2xl font-black tracking-tight text-amber-300">प्रजापति डेयरी फॉर्म</h1>
             <span id="roleBadge" class="text-[9px] sm:text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full font-bold border border-slate-600">User Mode</span>
           </div>
-          <p class="text-[10px] sm:text-xs text-emerald-200 font-medium">सुपरफास्ट क्लाउड सिंक • v2.0</p>
+          <p class="text-[10px] sm:text-xs text-emerald-200 font-medium">लाइव क्लाउड सिंक • ऑटोमेशन सिस्टम</p>
         </div>
       </div>
 
@@ -146,7 +146,7 @@
     </div>
   </div>
 
-  <!-- Main Navigation Tabs -->
+  <!-- Navigation Tabs -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 no-print">
     <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
       <button onclick="switchTab('milk')" id="tabMilkBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-amber-300 shadow border-2 border-slate-700">
@@ -496,7 +496,7 @@
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-amber-400 flex flex-col max-h-[90vh]">
       <div class="bg-emerald-950 text-white p-4 flex items-center justify-between border-b shrink-0"><h3 class="font-extrabold text-amber-300">फार्म स्थापना लागत व रिकवरी</h3><button onclick="closeSetupCostModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white font-black">✕</button></div>
       <div class="p-4 overflow-y-auto space-y-3">
-        <div class="grid grid-cols-2 gap-2"><div class="bg-slate-900 text-white p-3 rounded-xl border"><span class="text-[10px] text-slate-400 font-bold uppercase block">कुल लागत</span><div class="text-xl font-black text-amber-300 mt-0.5" id="dispTotalSetupCost">₹0</div></div><div class="bg-emerald-950 text-white p-3 rounded-xl border"><span class="text-[10px] text-emerald-300 font-bold uppercase block">कुल शुद्ध बचत</span><div class="text-xl font-black text-emerald-300 mt-0.5" id="dispNetRecovered">₹0</div></div></div>
+        <div class="grid grid-cols-2 gap-2"><div class="bg-slate-900 text-white p-3 rounded-xl border"><span class="text-[10px] text-slate-400 font-bold uppercase block">कुल लागत</span><div class="text-xl font-black text-amber-300 mt-0.5" id="dispTotalSetupCost">₹0</div></div><div class="bg-emerald-950 text-white p-4 rounded-2xl border"><span class="text-[11px] text-emerald-300 font-bold uppercase block">कुल शुद्ध बचत</span><div class="text-xl font-black text-emerald-300 mt-0.5" id="dispNetRecovered">₹0</div></div></div>
         <div id="setupCostAdminForm" class="hidden bg-slate-50 p-3 rounded-xl border"><form onsubmit="addSetupCostItem(event)" class="grid grid-cols-3 gap-2"><input type="text" id="setupItemName" required placeholder="मद" class="text-xs border rounded-lg p-2" /><input type="number" id="setupItemAmount" required placeholder="₹" class="text-xs border rounded-lg p-2 font-bold" /><button type="submit" class="bg-emerald-800 text-white font-bold text-xs py-2 rounded-lg">+ जोड़ें</button></form></div>
         <div id="setupCostListContainer" class="space-y-1.5 max-h-48 overflow-y-auto"></div>
       </div>
@@ -517,7 +517,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Cloud Script (Optimized & Debounced) -->
+  <!-- Core Cloud Script (Optimized & Bug-Free) -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -676,6 +676,7 @@
     function populateCalfMothers() {
       const type = document.getElementById('calfCategoryType').value;
       const sel = document.getElementById('calfMotherTagSelect');
+      if (!sel) return;
       sel.innerHTML = '';
       const isBuf = type.includes('भैंस');
       cattleData.filter(c => isBuf ? c.categoryType?.includes('भैंस') : c.categoryType?.includes('गाय')).forEach(m => {
@@ -698,26 +699,96 @@
       cattleData.forEach(c => sel.innerHTML += `<option value="${c.categoryType} #${c.tag}">${c.categoryType} #${c.tag}</option>`);
     }
 
+    // FIXED CATTLE FORM SUBMIT HANDLER
     function handleCattleFormSubmit(e) {
       e.preventDefault();
-      if (!isAdmin) return;
+
+      if (!isAdmin) {
+        const pin = prompt("डेटा सुरक्षित करने के लिए एडमिन पिन दर्ज करें:");
+        if (pin === currentAdminPass) {
+          isAdmin = true;
+          localStorage.setItem('prajapati_is_admin_logged_in', 'true');
+          updateAdminUI();
+        } else {
+          alert("गलत पिन! डेटा सुरक्षित नहीं किया जा सका।");
+          return;
+        }
+      }
+
       const editId = document.getElementById('editCatRecordId').value;
-      const payload = {
-        categoryType: document.getElementById('catCategoryType').value,
-        tag: document.getElementById('catTag').value.trim(),
-        breed: document.getElementById('catBreed').value,
-        status: document.getElementById('catStatus').value,
-        milk: parseFloat(document.getElementById('catDailyMilk').value) || 0,
-        buyDate: document.getElementById('catBuyDate').value || today,
-        buyCost: parseFloat(document.getElementById('catBuyCost').value) || 0,
-        aiDate: document.getElementById('catAiDate').value || '',
+      const catType = document.getElementById('catCategoryType').value;
+      const tagVal = document.getElementById('catTag').value.trim();
+      const breedVal = document.getElementById('catBreed').value;
+      const statusVal = document.getElementById('catStatus').value;
+      const milkVal = parseFloat(document.getElementById('catDailyMilk').value) || 0;
+      const buyDateVal = document.getElementById('catBuyDate').value || today;
+      const buyCostVal = parseFloat(document.getElementById('catBuyCost').value) || 0;
+      const aiDateVal = document.getElementById('catAiDate').value || '';
+
+      if (!tagVal) {
+        alert("कृपया टैग संख्या अवश्य दर्ज करें!");
+        return;
+      }
+
+      if (Array.isArray(cattleData) && cattleData.length > 0) {
+        const duplicate = cattleData.find(c => c && c.tag === tagVal && c.categoryType === catType && c.id !== editId);
+        if (duplicate) {
+          alert(`त्रुटि: ${catType} वर्ग में टैग संख्या '${tagVal}' पहले से मौजूद है!`);
+          return;
+        }
+      }
+
+      const pashuPayload = {
+        categoryType: catType,
+        tag: tagVal,
+        breed: breedVal,
+        status: statusVal,
+        milk: milkVal,
+        buyDate: buyDateVal,
+        buyCost: buyCostVal,
+        aiDate: aiDateVal,
         timestamp: Date.now()
       };
 
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "सुरक्षित हो रहा है...";
+      }
+
       if (editId) {
-        db.ref('cattle_records/' + editId).update(payload).then(() => { alert("अपडेट सफल!"); cancelCattleEdit(); });
+        db.ref('cattle_records/' + editId).update(pashuPayload)
+          .then(() => {
+            alert("✅ पशु विवरण सफलतापूर्वक अपडेट हो गया!");
+            cancelCattleEdit();
+          })
+          .catch(err => {
+            alert("डेटा अपडेट करने में समस्या: " + err.message);
+          })
+          .finally(() => {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerText = "सुरक्षित करें";
+            }
+          });
       } else {
-        db.ref('cattle_records').push(payload).then(() => { alert("पशु जुड़ गया!"); cancelCattleEdit(); });
+        db.ref('cattle_records').push(pashuPayload)
+          .then(() => {
+            alert("✅ नया पशु सफलतापूर्वक सुरक्षित हो गया!");
+            cancelCattleEdit();
+            document.getElementById('catTag').value = '';
+            document.getElementById('catDailyMilk').value = '';
+            document.getElementById('catBuyCost').value = '';
+          })
+          .catch(err => {
+            alert("डेटा सुरक्षित करने में समस्या: " + err.message);
+          })
+          .finally(() => {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerText = "सुरक्षित करें";
+            }
+          });
       }
     }
 
