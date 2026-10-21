@@ -9,12 +9,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    @media print {
+      body * { visibility: hidden; }
+      #printableArea, #printableArea * { visibility: visible; }
+      #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+      .no-print { display: none !important; }
+    }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-16">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-20">
 
   <!-- Header -->
-  <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-40 border-b-2 border-emerald-700">
+  <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-40 border-b-2 border-emerald-700 no-print">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-11 h-11 bg-amber-500 text-emerald-950 rounded-2xl flex items-center justify-center text-2xl shadow-inner font-black">
@@ -38,10 +44,10 @@
   </header>
 
   <!-- Main Navigation Tabs -->
-  <main class="max-w-5xl mx-auto px-4 mt-5">
+  <main class="max-w-5xl mx-auto px-3 sm:px-4 mt-4 no-print">
     <div class="grid grid-cols-3 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
       <button onclick="switchTab('milk')" id="tabMilkBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-emerald-700 text-white shadow">
-        <i class="fa-solid fa-bottle-droplet text-base"></i>
+        <i class="fa-solid fa-bottle-droplet text-base text-emerald-200"></i>
         <span>दूध बिक्री</span>
       </button>
       <button onclick="switchTab('expense')" id="tabExpenseBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
@@ -49,14 +55,14 @@
         <span>खर्च / मजदूरी</span>
       </button>
       <button onclick="switchTab('attendance')" id="tabAttBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
-        <i class="fa-solid fa-users-gear text-base text-blue-600"></i>
+        <i class="fa-solid fa-user-clock text-base text-teal-600"></i>
         <span>मजदूर हाजिरी</span>
       </button>
     </div>
 
     <!-- ==================== TAB 1: MILK SALE ==================== -->
-    <section id="tabMilk" class="mt-5 space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+    <section id="tabMilk" class="mt-4 space-y-4">
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
         <div class="flex items-center justify-between mb-4">
           <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
             <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm">
@@ -110,16 +116,27 @@
         </form>
       </div>
 
-      <!-- Milk List -->
+      <!-- Milk List Header with Print Button -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-list-check text-emerald-700"></i> दूध बिक्री रजिस्टर
-          </span>
-          <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full" id="milkRecordCount">0 एंट्री</span>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-list-check text-emerald-700"></i> दूध बिक्री रिकॉर्ड
+            </span>
+            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full" id="milkRecordCount">0 एंट्री</span>
+          </div>
+          <button onclick="printSection('milk')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-300 flex items-center gap-1 transition">
+            <i class="fa-solid fa-print"></i>
+            <span>PDF / प्रिंट</span>
+          </button>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
+
+        <!-- Mobile Clean Card View -->
+        <div id="milkMobileList" class="p-3 space-y-2.5 sm:hidden"></div>
+
+        <!-- Desktop Table View -->
+        <div class="hidden sm:block overflow-x-auto">
+          <table class="w-full text-left text-sm">
             <thead class="bg-slate-100 text-slate-600 text-[11px] uppercase border-b border-slate-200">
               <tr>
                 <th class="p-3">तारीख</th>
@@ -137,436 +154,15 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 2: EXPENSES & LABOUR ADVANCE/SALARY ==================== -->
-    <section id="tabExpense" class="mt-5 hidden space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center text-sm">
-              <i class="fa-solid fa-wallet"></i>
-            </span>
-            खर्च व मजदूरी भुगतान
-          </h2>
-          <!-- Button to Open Salary Calculation Drawer -->
-          <button onclick="openSalaryCalcModal()" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition">
-            <i class="fa-solid fa-calculator"></i>
-            <span>मजदूर सैलरी व एडवांस खाता</span>
-          </button>
-        </div>
-
-        <form onsubmit="addExpenseEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">तारीख</label>
-            <input type="date" id="expDate" required class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-600 outline-none" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">खर्च का प्रकार</label>
-            <select id="expCategory" onchange="handleExpCategoryChange()" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-600 outline-none bg-white font-medium">
-              <option value="मजदूर एडवांस (बीच में दिया)">मजदूर एडवांस (बीच में दिया)</option>
-              <option value="माह के अंत में फाइनल सैलरी">माह के अंत में फाइनल सैलरी</option>
-              <option value="चारा / खली / दाना">चारा / खली / दाना</option>
-              <option value="दवाई व डॉक्टर खर्च">दवाई व डॉक्टर खर्च</option>
-              <option value="डीजल / बिजली बिल">डीजल / बिजली बिल</option>
-              <option value="फार्म रखरखाव / अन्य">फार्म रखरखाव / अन्य</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1" id="expDetailLabel">मजदूर का नाम</label>
-            <input type="text" id="expDetail" required placeholder="उदा. रमेश (मजदूर)" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-600 outline-none" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">रकम (₹)</label>
-            <input type="number" id="expAmount" required placeholder="₹ 0" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-600 outline-none font-bold" />
-          </div>
-
-          <div class="sm:col-span-2 lg:col-span-1 flex items-end">
-            <button type="submit" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-plus"></i>
-              खर्च दर्ज करें
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Expense List -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-receipt text-purple-700"></i> खर्च व मजदूरी भुगतान बही
-          </span>
-          <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full" id="expRecordCount">0 एंट्री</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-100 text-slate-600 text-[11px] uppercase border-b border-slate-200">
-              <tr>
-                <th class="p-3">तारीख</th>
-                <th class="p-3">प्रकार</th>
-                <th class="p-3">विवरण / नाम</th>
-                <th class="p-3">रकम (₹)</th>
-                <th class="p-3 text-center">हटाएं</th>
-              </tr>
-            </thead>
-            <tbody id="expenseTableBody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== TAB 3: ATTENDANCE ==================== -->
-    <section id="tabAttendance" class="mt-5 hidden space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
-              <i class="fa-solid fa-user-check"></i>
-            </span>
-            मजदूर हाजिरी (एकल व समूह कार्य)
-          </h2>
-        </div>
-
-        <form onsubmit="addAttendanceEntry(event)" class="space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">तारीख</label>
-              <input type="date" id="attDate" required class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" />
-            </div>
-
-            <div class="sm:col-span-2">
-              <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">
-                मजदूर का नाम / नाम समूह (कॉमा लगाकर लिख सकते हैं)
-              </label>
-              <input type="text" id="attLabourName" required placeholder="उदा. रमेश, सुरेश, दिनेश (तीनों मिलकर)" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" />
-            </div>
-          </div>
-
-          <!-- Shifts In-Out Timings -->
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <div class="text-xs font-bold text-slate-700 uppercase mb-2 flex items-center gap-1.5">
-              <i class="fa-regular fa-clock text-blue-600"></i> आने-जाने का समय (Shift Timings)
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              <div>
-                <label class="block text-[10px] font-bold text-slate-500">सुबह आगमन (In)</label>
-                <input type="time" id="attMornIn" value="05:00" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2 bg-white" />
-              </div>
-              <div>
-                <label class="block text-[10px] font-bold text-slate-500">सुबह प्रस्थान (Out)</label>
-                <input type="time" id="attMornOut" value="10:00" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2 bg-white" />
-              </div>
-              <div>
-                <label class="block text-[10px] font-bold text-slate-500">शाम आगमन (In)</label>
-                <input type="time" id="attEveIn" value="15:00" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2 bg-white" />
-              </div>
-              <div>
-                <label class="block text-[10px] font-bold text-slate-500">शाम प्रस्थान (Out)</label>
-                <input type="time" id="attEveOut" value="19:00" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2 bg-white" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Work Category Checkboxes -->
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">
-              किए गए काम (एक या कई काम चुन सकते हैं):
-            </label>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="दूध दुहाई" checked class="rounded text-blue-600" />
-                <span>दूध दुहाई</span>
-              </label>
-              <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="चारा काटना व सानी" checked class="rounded text-blue-600" />
-                <span>चारा काटना व सानी</span>
-              </label>
-              <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="भैंस / गाय धुलाई" checked class="rounded text-blue-600" />
-                <span>भैंस / गाय धुलाई</span>
-              </label>
-              <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="फार्म सफाई व गोबर उठाना" class="rounded text-blue-600" />
-                <span>फार्म सफाई</span>
-              </label>
-            </div>
-            <input type="text" id="attWorkCustom" placeholder="अन्य कोई विशेष काम हो तो यहाँ लिखें..." class="mt-2 w-full text-xs border border-slate-300 rounded-lg p-2" />
-          </div>
-
-          <div class="flex justify-end">
-            <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-clipboard-user"></i>
-              हाजिरी दर्ज करें
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Attendance List -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-user-clock text-blue-600"></i> दैनिक मजदूर रजिस्टर
-          </span>
-          <span class="text-xs bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full" id="attRecordCount">0 हाजिरी</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-100 text-slate-600 text-[11px] uppercase border-b border-slate-200">
-              <tr>
-                <th class="p-3">तारीख</th>
-                <th class="p-3">मजदूर / समूह</th>
-                <th class="p-3">सुबह समय</th>
-                <th class="p-3">शाम समय</th>
-                <th class="p-3">किए गए कार्य</th>
-                <th class="p-3 text-center">हटाएं</th>
-              </tr>
-            </thead>
-            <tbody id="attTableBody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- ==================== POPUP 1: SUMMARY TOTALS MODAL ==================== -->
-  <div id="summaryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200">
-      
-      <div class="bg-emerald-900 text-white p-4 px-5 flex items-center justify-between border-b border-emerald-800">
-        <div class="flex items-center gap-2">
-          <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-red-600/90 hover:bg-red-700 text-white flex items-center justify-center text-sm shadow transition" title="पीछे जाएं">
-            <i class="fa-solid fa-arrow-left"></i>
-          </button>
-          <div>
-            <h3 class="font-extrabold text-base text-amber-300">कुल डेयरी हिसाब-किताब</h3>
-            <p class="text-[11px] text-emerald-200">प्रजापति डेयरी फॉर्म का संचित विवरण</p>
-          </div>
-        </div>
-
-        <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center text-sm font-black shadow transition" title="बंद करें">
-          <i class="fa-solid fa-xmark text-base"></i>
-        </button>
-      </div>
-
-      <div class="p-5 space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
-            <div class="text-[11px] font-bold text-emerald-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-bottle-droplet text-emerald-600"></i> कुल दूध बिक्री
-            </div>
-            <div class="text-2xl font-black text-emerald-900 mt-1" id="modalMilkQty">0 L</div>
-            <div class="text-[11px] text-emerald-700 mt-0.5">कुल मात्रा</div>
-          </div>
-
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            <div class="text-[11px] font-bold text-slate-700 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-indian-rupee-sign text-emerald-600"></i> कुल दूध कमाई
-            </div>
-            <div class="text-2xl font-black text-slate-900 mt-1" id="modalMilkRev">₹0</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">सकल आय</div>
-          </div>
-
-          <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200">
-            <div class="text-[11px] font-bold text-purple-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-wallet text-purple-600"></i> कुल खर्च व मजदूरी
-            </div>
-            <div class="text-2xl font-black text-purple-700 mt-1" id="modalExpenses">₹0</div>
-            <div class="text-[11px] text-purple-600 mt-0.5">चारा, दवाई, एडवांस व सैलरी</div>
-          </div>
-
-          <div class="bg-blue-50 p-4 rounded-2xl border border-blue-200">
-            <div class="text-[11px] font-bold text-blue-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-piggy-bank text-blue-600"></i> शुद्ध बचत (मुनाफा)
-            </div>
-            <div class="text-2xl font-black text-blue-700 mt-1" id="modalNetProfit">₹0</div>
-            <div class="text-[11px] text-blue-600 mt-0.5">हाथ में बची रकम</div>
-          </div>
-        </div>
-
-        <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
-          <button onclick="changePasswordPrompt()" class="text-xs text-slate-600 hover:text-emerald-800 font-semibold flex items-center gap-1">
-            <i class="fa-solid fa-key text-amber-500"></i> एडमिन पासवर्ड बदलें
-          </button>
-          <button onclick="closeSummaryModal()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5">
-            <i class="fa-solid fa-arrow-left"></i> वापस जाएं
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==================== POPUP 2: LABOUR MONTHLY SALARY & ADVANCE CALCULATOR ==================== -->
-  <div id="salaryCalcModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200">
-      
-      <div class="bg-purple-900 text-white p-4 px-5 flex items-center justify-between border-b border-purple-800">
-        Aapke bataye anusar **खर्च / मजदूरी** wale section me yeh teeno bade updates kar diye gaye hain:
-
-1. **Advance (Beech me diye gaye rupaye) Tracking:** Jab bhi kisi majdoor ko mahine ke beech me kharcha ya advance dena ho, to **"मजदूर एडवांस (Advance / खर्चे के लिए)"** select karke daal sakte hain.
-2. **Month-End Salary Settlement (Minis / Minus System):** Ek naya **"मजदूर मासिक हिसाब (Salary Settlement)"** calculator jod diya gaya hai:
-   * Majdoor ka naam aur uski tay shuda **Kul Monthly Salary** likhiye.
-   * Us mahine me use jitna bhi advance diya gaya hoga, system apne aap use **Minus** karke dikha dega ki aakhiri me kitna **Net Pay (Baaki Rupaye)** dena hai.
-   * Single click par "Final Salary" record me save ho jayegi.
-3. **Icon Colour Change:** Kharch/Majduri wale section ka icon jo pehle red tha aur Out-time wale red se mix ho raha tha, use badal kar **Purple / Baingani (fa-handshake / fa-wallet)** color me kar diya gaya hai, taaki door se hi alag pehchan me aaye.
-
----
-
-### Step: GitHub par `index.html` me yeh poora updated code paste karein:
-
-```html
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>प्रजापति डेयरी फॉर्म - मुकम्मल खाता-बही</title>
-  <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-  <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)" />
-  <link href="[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap)" rel="stylesheet" />
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-  </style>
-</head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-16">
-
-  <!-- Header -->
-  <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-40 border-b-2 border-emerald-700">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 bg-amber-500 text-emerald-950 rounded-2xl flex items-center justify-center text-2xl shadow-inner font-black">
-          <i class="fa-solid fa-cow"></i>
-        </div>
-        <div>
-          <h1 class="text-xl sm:text-2xl font-black tracking-tight text-amber-300">प्रजापति डेयरी फॉर्म</h1>
-          <p class="text-[11px] text-emerald-200 font-medium">दैनिक दूध हिसाब • खर्च व मजदूरी • मजदूर हाजिरी</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="openSummaryModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs sm:text-sm font-bold px-3 py-2 rounded-xl shadow flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-chart-pie text-emerald-950"></i>
-          <span>कुल हिसाब देखें</span>
-        </button>
-        <button onclick="promptResetData()" title="डेटा रीसेट" class="text-xs bg-red-600/90 hover:bg-red-700 text-white p-2.5 rounded-xl border border-red-400 transition">
-          <i class="fa-solid fa-trash-can"></i>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Navigation Tabs -->
-  <main class="max-w-5xl mx-auto px-4 mt-5">
-    <div class="grid grid-cols-3 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
-      <button onclick="switchTab('milk')" id="tabMilkBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-emerald-700 text-white shadow">
-        <i class="fa-solid fa-bottle-droplet text-base"></i>
-        <span>दूध बिक्री</span>
-      </button>
-      <button onclick="switchTab('expense')" id="tabExpenseBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
-        <i class="fa-solid fa-hand-holding-dollar text-base text-purple-600"></i>
-        <span>खर्च / मजदूरी</span>
-      </button>
-      <button onclick="switchTab('attendance')" id="tabAttBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
-        <i class="fa-solid fa-users-gear text-base text-blue-600"></i>
-        <span>मजदूर हाजिरी</span>
-      </button>
-    </div>
-
-    <!-- ==================== TAB 1: MILK SALE ==================== -->
-    <section id="tabMilk" class="mt-5 space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm">
-              <i class="fa-solid fa-plus"></i>
-            </span>
-            दूध बिक्री एंट्री
-          </h2>
-          <span class="text-xs text-slate-400 font-semibold" id="todayLabel1"></span>
-        </div>
-
-        <form onsubmit="addMilkEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">तारीख</label>
-            <input type="date" id="milkDate" required class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">समय (Shift)</label>
-            <select id="milkShift" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none bg-white">
-              <option value="सुबह (Morning)">सुबह (Morning)</option>
-              <option value="शाम (Evening)">शाम (Evening)</option>
-            </select>
-          </div>
-
-          <div class="sm:col-span-2 lg:col-span-1">
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">ग्राहक / डेयरी नाम</label>
-            <input type="text" id="milkCustomer" required placeholder="उदा. राम जी / डेयरी प्लांट" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">मात्रा (लीटर)</label>
-            <input type="number" step="0.25" id="milkQty" oninput="calcMilkTotal()" required placeholder="0" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-bold" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">रेट (₹/L)</label>
-            <input type="number" step="0.5" id="milkRate" oninput="calcMilkTotal()" required placeholder="₹ 65" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-bold" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">कुल मूल्य (₹)</label>
-            <input type="text" id="milkTotal" readonly placeholder="₹ 0" class="w-full text-sm border border-slate-200 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-800" />
-          </div>
-
-          <div class="sm:col-span-2 lg:col-span-6 flex justify-end mt-1">
-            <button type="submit" class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-floppy-disk"></i>
-              दूध एंट्री सेव करें
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Milk List -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-list-check text-emerald-700"></i> दूध बिक्री रजिस्टर
-          </span>
-          <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full" id="milkRecordCount">0 एंट्री</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-100 text-slate-600 text-[11px] uppercase border-b border-slate-200">
-              <tr>
-                <th class="p-3">तारीख</th>
-                <th class="p-3">शिफ्ट</th>
-                <th class="p-3">ग्राहक</th>
-                <th class="p-3">मात्रा</th>
-                <th class="p-3">रेट</th>
-                <th class="p-3">कुल ₹</th>
-                <th class="p-3 text-center">हटाएं</th>
-              </tr>
-            </thead>
-            <tbody id="milkTableBody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== TAB 2: EXPENSES & LABOUR ADVANCE/SALARY ==================== -->
-    <section id="tabExpense" class="mt-5 hidden space-y-4">
-      
-      <!-- Expense & Advance Form -->
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+    <!-- ==================== TAB 2: EXPENSES ==================== -->
+    <section id="tabExpense" class="mt-4 hidden space-y-4">
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
         <div class="flex items-center justify-between mb-4">
           <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
             <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center text-sm">
               <i class="fa-solid fa-wallet text-purple-600"></i>
             </span>
-            फार्म खर्च व मजदूर एडवांस एंट्री
+            फार्म खर्च व मजदूर एडवांस
           </h2>
         </div>
 
@@ -577,7 +173,7 @@
           </div>
 
           <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">खर्च / भुगतान मद</label>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">खर्च / भुगतान प्रकार</label>
             <select id="expCategory" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-500 outline-none bg-white">
               <option value="मजदूर एडवांस (Advance)">मजदूर एडवांस (बीच में दिया गया पैसा)</option>
               <option value="चारा / खली / दाना (Feed)">चारा / खली / दाना (Feed)</option>
@@ -590,7 +186,7 @@
 
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">मजदूर का नाम / खर्च विवरण</label>
-            <input type="text" id="expDetail" required placeholder="उदा. रमेश (मजदूर) / 2 बोरी खली" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-500 outline-none" />
+            <input type="text" id="expDetail" required placeholder="उदा. कल्लू (मजदूर) / 2 बोरी खली" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-500 outline-none" />
           </div>
 
           <div>
@@ -608,19 +204,19 @@
       </div>
 
       <!-- Month End Salary Settlement Calculator -->
-      <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-5 rounded-2xl border border-purple-200 shadow-sm">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-7 h-7 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs">
+      <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 sm:p-5 rounded-2xl border border-purple-200 shadow-sm">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-7 h-7 rounded-lg bg-purple-700 text-white flex items-center justify-center text-xs">
             <i class="fa-solid fa-calculator"></i>
           </span>
           <h3 class="font-extrabold text-sm text-purple-950">महीने के अंत का वेतन हिसाब (Advance Minis करें)</h3>
         </div>
-        <p class="text-xs text-purple-800 mb-3">मजदूर का नाम और तय वेतन डालें, बीच में दिया गया एडवांस अपने-आप माइनस हो जाएगा:</p>
+        <p class="text-xs text-purple-800 mb-3">मजदूर का नाम और तय वेतन लिखें, बीच में दिया गया एडवांस अपने-आप माइनस हो जाएगा:</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
           <div>
             <label class="block text-[10px] font-bold text-purple-900 uppercase mb-1">मजदूर का नाम</label>
-            <input type="text" id="settleLabourName" oninput="calculateSettlement()" placeholder="उदा. रमेश" class="w-full text-sm border border-purple-200 rounded-xl p-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500" />
+            <input type="text" id="settleLabourName" oninput="calculateSettlement()" placeholder="उदा. कल्लू" class="w-full text-sm border border-purple-200 rounded-xl p-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500" />
           </div>
 
           <div>
@@ -642,7 +238,7 @@
         <div class="mt-3 flex justify-end">
           <button onclick="saveSalarySettlement()" class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow flex items-center gap-1.5">
             <i class="fa-solid fa-check-double"></i>
-            यह फाइनल वेतन खर्च में दर्ज करें
+            यह फाइनल वेतन खर्च में जोड़ें
           </button>
         </div>
       </div>
@@ -650,13 +246,24 @@
       <!-- Expense List -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-list-ul text-purple-700"></i> कुल खर्च व भुगतान बही
-          </span>
-          <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full" id="expRecordCount">0 एंट्री</span>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-list-ul text-purple-700"></i> खर्च व भुगतान बही
+            </span>
+            <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full" id="expRecordCount">0 एंट्री</span>
+          </div>
+          <button onclick="printSection('expense')" class="bg-purple-100 hover:bg-purple-200 text-purple-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-purple-300 flex items-center gap-1 transition">
+            <i class="fa-solid fa-print"></i>
+            <span>PDF / प्रिंट</span>
+          </button>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
+
+        <!-- Mobile Card View -->
+        <div id="expenseMobileList" class="p-3 space-y-2.5 sm:hidden"></div>
+
+        <!-- Desktop Table View -->
+        <div class="hidden sm:block overflow-x-auto">
+          <table class="w-full text-left text-sm">
             <thead class="bg-slate-100 text-slate-600 text-[11px] uppercase border-b border-slate-200">
               <tr>
                 <th class="p-3">तारीख</th>
@@ -673,11 +280,11 @@
     </section>
 
     <!-- ==================== TAB 3: ATTENDANCE ==================== -->
-    <section id="tabAttendance" class="mt-5 hidden space-y-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+    <section id="tabAttendance" class="mt-4 hidden space-y-4">
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
         <div class="flex items-center justify-between mb-4">
           <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
+            <span class="w-8 h-8 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center text-sm">
               <i class="fa-solid fa-user-check"></i>
             </span>
             मजदूर हाजिरी (एकल व समूह कार्य)
@@ -688,62 +295,62 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">तारीख</label>
-              <input type="date" id="attDate" required class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" />
+              <input type="date" id="attDate" required class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-teal-600 outline-none" />
             </div>
 
             <div class="sm:col-span-2">
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">
-                मजदूर का नाम / नाम समूह (एक से ज्यादा नाम कॉमा लगा के लिख सकते हैं)
+                मजदूर का नाम / नाम समूह (उदा. कल्लू, मल्लू, दत्ती)
               </label>
-              <input type="text" id="attLabourName" required placeholder="उदा. रमेश, सुरेश, दिनेश (तीनों मिलकर)" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" />
+              <input type="text" id="attLabourName" required placeholder="उदा. कल्लू, मल्लू" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-teal-600 outline-none font-bold" />
             </div>
           </div>
 
           <!-- Shifts In-Out Timings -->
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <div class="text-xs font-bold text-slate-700 uppercase mb-2 flex items-center gap-1.5">
-              <i class="fa-regular fa-clock text-blue-600"></i> आने-जाने का समय (Shift Timings)
+          <div class="bg-teal-50/50 p-3.5 rounded-xl border border-teal-100">
+            <div class="text-xs font-bold text-teal-900 uppercase mb-2 flex items-center gap-1.5">
+              <i class="fa-regular fa-clock text-teal-600"></i> आने-जाने का समय (Shifts)
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               <div>
-                <label class="block text-[10px] font-bold text-slate-500">सुबह आगमन (In)</label>
+                <label class="block text-[10px] font-bold text-slate-600">सुबह आगमन (In)</label>
                 <input type="time" id="attMornIn" value="05:00" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2 bg-white" />
               </div>
               <div>
-                <label class="block text-[10px] font-bold text-rose-500">सुबह प्रस्थान (Out)</label>
+                <label class="block text-[10px] font-bold text-slate-600">सुबह प्रस्थान (Out)</label>
                 <input type="time" id="attMornOut" value="10:00" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2 bg-white" />
               </div>
               <div>
-                <label class="block text-[10px] font-bold text-slate-500">शाम आगमन (In)</label>
+                <label class="block text-[10px] font-bold text-slate-600">शाम आगमन (In)</label>
                 <input type="time" id="attEveIn" value="15:00" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2 bg-white" />
               </div>
               <div>
-                <label class="block text-[10px] font-bold text-rose-500">शाम प्रस्थान (Out)</label>
+                <label class="block text-[10px] font-bold text-slate-600">शाम प्रस्थान (Out)</label>
                 <input type="time" id="attEveOut" value="19:00" class="w-full text-xs sm:text-sm border border-slate-300 rounded-lg p-2 bg-white" />
               </div>
             </div>
           </div>
 
-          <!-- Work Category Checkboxes (Combined tasks) -->
+          <!-- Work Category Checkboxes -->
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">
-              किए गए काम (एक या कई काम चुन सकते हैं):
+              किए गए काम (एक या अधिक काम चुनें):
             </label>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
               <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="दूध दुहाई" checked class="rounded text-blue-600" />
+                <input type="checkbox" name="workTask" value="दूध दुहाई" checked class="rounded text-teal-600" />
                 <span>दूध दुहाई</span>
               </label>
               <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="चारा काटना व सानी" checked class="rounded text-blue-600" />
+                <input type="checkbox" name="workTask" value="चारा काटना व सानी" checked class="rounded text-teal-600" />
                 <span>चारा काटना व सानी</span>
               </label>
               <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="भैंस / गाय धुलाई" checked class="rounded text-blue-600" />
-                <span>भैंस / गाय धुलाई</span>
+                <input type="checkbox" name="workTask" value="भैंस / गाय धुलाई" checked class="rounded text-teal-600" />
+                <span>भैंस/गाय धुलाई</span>
               </label>
               <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="फार्म सफाई व गोबर उठाना" class="rounded text-blue-600" />
+                <input type="checkbox" name="workTask" value="फार्म सफाई व गोबर उठाना" class="rounded text-teal-600" />
                 <span>फार्म सफाई</span>
               </label>
             </div>
@@ -751,7 +358,7 @@
           </div>
 
           <div class="flex justify-end">
-            <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+            <button type="submit" class="w-full sm:w-auto bg-teal-700 hover:bg-teal-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
               <i class="fa-solid fa-clipboard-user"></i>
               हाजिरी दर्ज करें
             </button>
@@ -762,13 +369,24 @@
       <!-- Attendance List -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-user-clock text-blue-600"></i> दैनिक मजदूर रजिस्टर
-          </span>
-          <span class="text-xs bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full" id="attRecordCount">0 हाजिरी</span>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-user-clock text-teal-700"></i> दैनिक मजदूर रजिस्टर
+            </span>
+            <span class="text-xs bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded-full" id="attRecordCount">0 हाजिरी</span>
+          </div>
+          <button onclick="printSection('attendance')" class="bg-teal-100 hover:bg-teal-200 text-teal-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-teal-300 flex items-center gap-1 transition">
+            <i class="fa-solid fa-print"></i>
+            <span>PDF / प्रिंट</span>
+          </button>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
+
+        <!-- Mobile Clean Card View (Clean & Spacious) -->
+        <div id="attMobileList" class="p-3 space-y-3 sm:hidden"></div>
+
+        <!-- Desktop Table View -->
+        <div class="hidden sm:block overflow-x-auto">
+          <table class="w-full text-left text-sm">
             <thead class="bg-slate-100 text-slate-600 text-[11px] uppercase border-b border-slate-200">
               <tr>
                 <th class="p-3">तारीख</th>
@@ -787,8 +405,8 @@
   </main>
 
   <!-- ==================== POPUP MODAL: SUMMARY TOTALS ==================== -->
-  <div id="summaryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in duration-200">
+  <div id="summaryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200">
       
       <!-- Modal Header -->
       <div class="bg-emerald-900 text-white p-4 px-5 flex items-center justify-between border-b border-emerald-800">
@@ -798,7 +416,7 @@
           </button>
           <div>
             <h3 class="font-extrabold text-base text-amber-300">कुल डेयरी हिसाब-किताब</h3>
-            <p class="text-[11px] text-emerald-200">प्रजापति डेयरी फॉर्म का संचित विवरण</p>
+            <p class="text-[11px] text-emerald-200">प्रजापति डेयरी फॉर्म</p>
           </div>
         </div>
 
@@ -828,15 +446,15 @@
 
           <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200">
             <div class="text-[11px] font-bold text-purple-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-arrow-trend-down text-purple-600"></i> कुल खर्च व मजदूरी
+              <i class="fa-solid fa-wallet text-purple-600"></i> कुल खर्च व मजदूरी
             </div>
             <div class="text-2xl font-black text-purple-700 mt-1" id="modalExpenses">₹0</div>
-            <div class="text-[11px] text-purple-600 mt-0.5">चारा, दवाई व मजदूरी</div>
+            <div class="text-[11px] text-purple-600 mt-0.5">चारा, दवाई, मजदूरी</div>
           </div>
 
           <div class="bg-blue-50 p-4 rounded-2xl border border-blue-200">
             <div class="text-[11px] font-bold text-blue-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-wallet text-blue-600"></i> शुद्ध बचत (मुनाफा)
+              <i class="fa-solid fa-piggy-bank text-blue-600"></i> शुद्ध बचत (मुनाफा)
             </div>
             <div class="text-2xl font-black text-blue-700 mt-1" id="modalNetProfit">₹0</div>
             <div class="text-[11px] text-blue-600 mt-0.5">हाथ में बची रकम</div>
@@ -847,14 +465,17 @@
           <button onclick="changePasswordPrompt()" class="text-xs text-slate-600 hover:text-emerald-800 font-semibold flex items-center gap-1">
             <i class="fa-solid fa-key text-amber-500"></i> एडमिन पासवर्ड बदलें
           </button>
-          <button onclick="closeSummaryModal()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5">
-            <i class="fa-solid fa-arrow-left"></i> वापस जाएं
+          <button onclick="printSummaryReport()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1">
+            <i class="fa-solid fa-file-pdf"></i> पूरा रिपोर्ट प्रिंट करें
           </button>
         </div>
       </div>
 
     </div>
   </div>
+
+  <!-- Print Container -->
+  <div id="printableArea" class="p-6 bg-white hidden"></div>
 
   <!-- JavaScript Application Logic -->
   <script>
@@ -893,7 +514,7 @@
         document.getElementById('tabExpenseBtn').className = "py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-purple-700 text-white shadow";
       } else if (t === 'attendance') {
         document.getElementById('tabAttendance').classList.remove('hidden');
-        document.getElementById('tabAttBtn').className = "py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-blue-600 text-white shadow";
+        document.getElementById('tabAttBtn').className = "py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-teal-700 text-white shadow";
       }
     }
 
@@ -975,7 +596,6 @@
         return;
       }
 
-      // Find all Advance entries for this labour
       let totalAdvance = 0;
       expenseData.forEach(item => {
         if (item.category.includes('एडवांस') && item.detail.toLowerCase().includes(labourName)) {
@@ -1009,7 +629,7 @@
       });
 
       localStorage.setItem('prajapati_exp_records', JSON.stringify(expenseData));
-      alert(`${name} का फाइनल वेतन ₹${netPay} सफलतापूर्वक दर्ज हो गया है!`);
+      alert(`${name} का फाइनल वेतन ₹${netPay} दर्ज हो गया!`);
       
       document.getElementById('settleLabourName').value = '';
       document.getElementById('settleBaseSalary').value = '';
@@ -1062,14 +682,13 @@
           localStorage.removeItem('prajapati_exp_records');
           localStorage.removeItem('prajapati_att_records');
           renderAll();
-          alert("डेयरी का सारा रिकॉर्ड सफलतापूर्वक रीसेट हो गया है।");
+          alert("डेयरी का सारा रिकॉर्ड रीसेट हो गया है।");
         }
       } else {
-        alert("गलत पासवर्ड! आप डेटा डिलीट नहीं कर सकते।");
+        alert("गलत पासवर्ड!");
       }
     }
 
-    // Change Password
     function changePasswordPrompt() {
       const oldPass = prompt("वर्तमान पासवर्ड डालें:");
       if (oldPass !== adminPass) {
@@ -1083,19 +702,92 @@
       }
       adminPass = newP1;
       localStorage.setItem('prajapati_admin_pass', newP1);
-      alert("नया पासवर्ड सफलतापूर्वक सेट हो गया है! अब पिछला डिफॉल्ट पासवर्ड हट चुका है।");
+      alert("नया पासवर्ड सेट हो गया है!");
+    }
+
+    // PDF / PRINT SYSTEM
+    function printSection(section) {
+      const printDiv = document.getElementById('printableArea');
+      let content = `<div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #333; padding-bottom:10px;">
+        <h1 style="font-size:24px; font-weight:bold; margin:0;">प्रजापति डेयरी फॉर्म</h1>
+        <p style="font-size:12px; margin:4px 0;">दैनिक फार्म खाता व रजिस्टर रिपोर्ट • दिनांक: ${today}</p>
+      </div>`;
+
+      if (section === 'milk') {
+        content += `<h3 style="font-size:16px; font-weight:bold; margin-bottom:10px;">दूध बिक्री रिपोर्ट</h3>
+        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:12px;">
+          <tr style="background:#f0fdf4;"><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक</th><th>मात्रा</th><th>रेट</th><th>कुल ₹</th></tr>`;
+        let totM = 0, totR = 0;
+        milkData.forEach(d => {
+          totM += d.qty; totR += d.total;
+          content += `<tr><td>${d.date}</td><td>${d.shift}</td><td>${d.customer}</td><td>${d.qty} L</td><td>₹${d.rate}</td><td>₹${d.total}</td></tr>`;
+        });
+        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="3">कुल योग</td><td>${totM.toFixed(1)} L</td><td>-</td><td>₹${totR.toFixed(0)}</td></tr></table>`;
+      } else if (section === 'expense') {
+        content += `<h3 style="font-size:16px; font-weight:bold; margin-bottom:10px;">खर्च व मजदूरी भुगतान रिपोर्ट</h3>
+        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:12px;">
+          <tr style="background:#faf5ff;"><th>तारीख</th><th>मद</th><th>विवरण / नाम</th><th>रकम (₹)</th></tr>`;
+        let totE = 0;
+        expenseData.forEach(d => {
+          totE += d.amount;
+          content += `<tr><td>${d.date}</td><td>${d.category}</td><td>${d.detail}</td><td>₹${d.amount}</td></tr>`;
+        });
+        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="3">कुल खर्च योग</td><td>₹${totE.toFixed(0)}</td></tr></table>`;
+      } else if (section === 'attendance') {
+        content += `<h3 style="font-size:16px; font-weight:bold; margin-bottom:10px;">मजदूर हाजिरी रजिस्टर</h3>
+        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:12px;">
+          <tr style="background:#f0fdfa;"><th>तारीख</th><th>मजदूर / समूह</th><th>सुबह समय</th><th>शाम समय</th><th>किए गए कार्य</th></tr>`;
+        attendanceData.forEach(d => {
+          content += `<tr><td>${d.date}</td><td><b>${d.labour}</b></td><td>${fmtTime(d.mornIn)} - ${fmtTime(d.mornOut)}</td><td>${fmtTime(d.eveIn)} - ${fmtTime(d.eveOut)}</td><td>${d.tasks}</td></tr>`;
+        });
+        content += `</table>`;
+      }
+
+      printDiv.innerHTML = content;
+      printDiv.classList.remove('hidden');
+      window.print();
+      printDiv.classList.add('hidden');
+    }
+
+    function printSummaryReport() {
+      const printDiv = document.getElementById('printableArea');
+      let totM = 0, totR = 0, totE = 0;
+      milkData.forEach(d => { totM += d.qty; totR += d.total; });
+      expenseData.forEach(d => { totE += d.amount; });
+      const net = totR - totE;
+
+      let content = `<div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #333; padding-bottom:10px;">
+        <h1 style="font-size:24px; font-weight:bold; margin:0;">प्रजापति डेयरी फॉर्म</h1>
+        <p style="font-size:12px; margin:4px 0;">संपूर्ण वित्तीय सारांश रिपोर्ट • दिनांक: ${today}</p>
+      </div>
+      <table border="1" cellpadding="10" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:14px; margin-bottom:20px;">
+        <tr><td><b>कुल दूध बिक्री</b></td><td>${totM.toFixed(1)} Litres</td></tr>
+        <tr><td><b>दूध से कुल सकल आय</b></td><td>₹ ${totR.toFixed(0)}</td></tr>
+        <tr><td><b>कुल खर्च व मजदूरी</b></td><td>₹ ${totE.toFixed(0)}</td></tr>
+        <tr style="font-size:16px; background:#f1f5f9;"><td><b>शुद्ध बचत / मुनाफा</b></td><td><b>₹ ${net.toFixed(0)}</b></td></tr>
+      </table>
+      <p style="text-align:right; font-size:11px; margin-top:30px;">हस्ताक्षर: _______________________</p>`;
+
+      printDiv.innerHTML = content;
+      printDiv.classList.remove('hidden');
+      window.print();
+      printDiv.classList.add('hidden');
     }
 
     // Render Data
     function renderAll() {
-      // 1. Milk Table
+      // 1. Milk Render
       const mBody = document.getElementById('milkTableBody');
+      const mMobile = document.getElementById('milkMobileList');
       mBody.innerHTML = '';
-      let totQty = 0;
-      let totRev = 0;
+      mMobile.innerHTML = '';
+      let totQty = 0, totRev = 0;
+
       milkData.forEach(item => {
         totQty += item.qty;
         totRev += item.total;
+        
+        // Desktop Row
         mBody.innerHTML += `
           <tr class="hover:bg-slate-50">
             <td class="p-3 font-medium whitespace-nowrap">${item.date}</td>
@@ -1109,17 +801,39 @@
             </td>
           </tr>
         `;
+
+        // Mobile Spacious Card
+        mMobile.innerHTML += `
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs text-slate-500 font-semibold">${item.date} • ${item.shift}</span>
+                <h4 class="font-bold text-slate-900 text-base mt-0.5">${item.customer}</h4>
+              </div>
+              <button onclick="deleteMilk(${item.id})" class="text-rose-500 p-1 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+            <div class="flex justify-between items-center mt-3 pt-2.5 border-t border-slate-200/80">
+              <span class="text-xs text-slate-600">${item.qty} L × ₹${item.rate}</span>
+              <span class="text-base font-black text-emerald-800">₹${item.total.toFixed(2)}</span>
+            </div>
+          </div>
+        `;
       });
       document.getElementById('milkRecordCount').innerText = `${milkData.length} एंट्री`;
 
-      // 2. Expense Table
+      // 2. Expense Render
       const eBody = document.getElementById('expenseTableBody');
+      const eMobile = document.getElementById('expenseMobileList');
       eBody.innerHTML = '';
+      eMobile.innerHTML = '';
       let totExp = 0;
+
       expenseData.forEach(item => {
         totExp += item.amount;
         const isAdv = item.category.includes('एडवांस');
-        const badgeColor = isAdv ? 'bg-amber-100 text-amber-800' : 'bg-purple-100 text-purple-800';
+        const badgeColor = isAdv ? 'bg-amber-100 text-amber-900' : 'bg-purple-100 text-purple-900';
+
+        // Desktop Row
         eBody.innerHTML += `
           <tr class="hover:bg-slate-50">
             <td class="p-3 font-medium whitespace-nowrap">${item.date}</td>
@@ -1131,30 +845,84 @@
             </td>
           </tr>
         `;
+
+        // Mobile Card
+        eMobile.innerHTML += `
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs text-slate-500">${item.date}</span>
+                <div class="mt-1"><span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${badgeColor}">${item.category}</span></div>
+                <h4 class="font-semibold text-slate-900 text-sm mt-1.5">${item.detail}</h4>
+              </div>
+              <button onclick="deleteExpense(${item.id})" class="text-rose-500 p-1 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+            <div class="flex justify-end mt-2 pt-2 border-t border-slate-200/80">
+              <span class="text-base font-black text-purple-800">₹${item.amount.toFixed(2)}</span>
+            </div>
+          </div>
+        `;
       });
       document.getElementById('expRecordCount').innerText = `${expenseData.length} एंट्री`;
 
-      // 3. Attendance Table
+      // 3. Attendance Render (Clean Mobile Layout)
       const aBody = document.getElementById('attTableBody');
+      const aMobile = document.getElementById('attMobileList');
       aBody.innerHTML = '';
+      aMobile.innerHTML = '';
+
       attendanceData.forEach(item => {
+        // Desktop Row
         aBody.innerHTML += `
           <tr class="hover:bg-slate-50">
             <td class="p-3 font-medium whitespace-nowrap">${item.date}</td>
             <td class="p-3 font-extrabold text-slate-900">${item.labour}</td>
             <td class="p-3 text-xs">
-              <span class="text-emerald-700 font-bold">${fmtTime(item.mornIn)}</span> से 
-              <span class="text-rose-600 font-bold">${fmtTime(item.mornOut)}</span>
+              <span class="text-teal-700 font-bold">${fmtTime(item.mornIn)}</span> - <span class="text-slate-600">${fmtTime(item.mornOut)}</span>
             </td>
             <td class="p-3 text-xs">
-              <span class="text-emerald-700 font-bold">${fmtTime(item.eveIn)}</span> से 
-              <span class="text-rose-600 font-bold">${fmtTime(item.eveOut)}</span>
+              <span class="text-teal-700 font-bold">${fmtTime(item.eveIn)}</span> - <span class="text-slate-600">${fmtTime(item.eveOut)}</span>
             </td>
             <td class="p-3 text-xs text-slate-700 font-medium">${item.tasks}</td>
             <td class="p-3 text-center">
               <button onclick="deleteAttendance(${item.id})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>
             </td>
           </tr>
+        `;
+
+        // Mobile Spacious Card (Clears Overlapping Issue)
+        aMobile.innerHTML += `
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs text-slate-500 font-medium">${item.date}</span>
+                <h4 class="text-base font-extrabold text-slate-900 mt-0.5">${item.labour}</h4>
+              </div>
+              <button onclick="deleteAttendance(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5 text-sm bg-rose-50 rounded-lg">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+
+            <!-- Shifts Timings Badge Grid -->
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">सुबह शिफ्ट</span>
+                <span class="font-bold text-teal-800">${fmtTime(item.mornIn)}</span> से <span class="font-bold text-slate-700">${fmtTime(item.mornOut)}</span>
+              </div>
+              <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">शाम शिफ्ट</span>
+                <span class="font-bold text-teal-800">${fmtTime(item.eveIn)}</span> से <span class="font-bold text-slate-700">${fmtTime(item.eveOut)}</span>
+              </div>
+            </div>
+
+            <!-- Tasks Tags -->
+            <div class="pt-1">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">किए गए काम:</span>
+              <p class="text-xs font-semibold text-slate-700 bg-teal-50/60 p-2 rounded-lg border border-teal-100 leading-relaxed">
+                ${item.tasks}
+              </p>
+            </div>
+          </div>
         `;
       });
       document.getElementById('attRecordCount').innerText = `${attendanceData.length} हाजिरी`;
