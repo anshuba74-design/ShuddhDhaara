@@ -312,7 +312,7 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 3: LABOUR PROFILE & SALARY ==================== -->
+    <!-- ==================== TAB 3: LABOUR PROFILE, DIRECT CALL & LATE ALERT ==================== -->
     <section id="tabLabour" class="mt-4 hidden space-y-4">
       <div id="labourAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-slate-800">
         <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
@@ -323,18 +323,18 @@
               </span>
               नया मजदूर प्रोफाइल जोड़ें (Admin Mode)
             </h2>
-            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">जॉइनिंग तारीख के आधार पर हर महीने 5 दिन पहले अपने-आप सैलरी अलर्ट साउंड बजेगा।</p>
+            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">कॉलिंग, आगमन समय (आने में देरी अलर्ट) और सैलरी साइकिल सेट करें।</p>
           </div>
         </div>
 
-        <form onsubmit="addLabourProfile(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <form onsubmit="addLabourProfile(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मजदूर का पूरा नाम</label>
             <input type="text" id="labourName" required placeholder="उदा. कल्लू राम" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none font-bold" />
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर</label>
-            <input type="tel" id="labourPhone" placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none font-semibold" />
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर (कॉल हेतु)</label>
+            <input type="tel" id="labourPhone" required placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none font-bold text-emerald-900" />
           </div>
           <div>
             <label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">तय मासिक वेतन (Salary ₹)</label>
@@ -344,15 +344,32 @@
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख (Joining Date)</label>
             <input type="date" id="labourJoinDate" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none font-semibold" />
           </div>
+
+          <!-- New: Work Shift Time & Alert Mode Settings -->
+          <div>
+            <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">काम पर आने का समय (Duty Time)</label>
+            <input type="time" id="labourDutyTime" value="06:00" class="w-full text-sm border-2 border-rose-300 bg-rose-50/50 rounded-xl p-2.5 font-bold outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">देरी अलर्ट प्रकार (Alert Mode)</label>
+            <select id="labourAlertMode" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white font-semibold outline-none">
+              <option value="Daily Auto (दैनिक चेक)">Daily Auto (दैनिक चेक)</option>
+              <option value="Manual (1-क्लिक भेजें)">Manual (1-क्लिक भेजें)</option>
+            </select>
+          </div>
+
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">आधार संख्या (Optional)</label>
             <input type="text" id="labourAadhar" placeholder="उदा. 1234 5678 9012" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none" />
           </div>
+
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पता / कार्य विवरण</label>
-            <input type="text" id="labourAddress" placeholder="उदा. गांव, दूध दुहाई व सानी" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none" />
+            <input type="text" id="labourAddress" placeholder="उदा. दूध दुहाई व सानी" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none" />
           </div>
-          <div class="sm:col-span-2 lg:col-span-3 flex justify-end mt-1">
+
+          <div class="sm:col-span-2 lg:col-span-4 flex justify-end mt-1">
             <button type="submit" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-md border-2 border-slate-700 flex items-center justify-center gap-2">
               <i class="fa-solid fa-cloud-arrow-up text-cyan-300"></i> मजदूर प्रोफाइल सेव करें
             </button>
@@ -363,7 +380,7 @@
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
           <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-users text-slate-800"></i> पंजीकृत मजदूर प्रोफाइल
+            <i class="fa-solid fa-users text-slate-800"></i> पंजीकृत मजदूर प्रोफाइल व लाइव एक्शन
           </span>
           <span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full border border-slate-300" id="labourRecordCount">0 मजदूर</span>
         </div>
@@ -371,7 +388,7 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 4: ADVANCED SMART CATTLE MANAGEMENT ==================== -->
+    <!-- ==================== TAB 4: CATTLE MANAGEMENT ==================== -->
     <section id="tabCattle" class="mt-4 hidden space-y-4">
       <div id="catAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-amber-600">
         <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
@@ -391,7 +408,6 @@
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टैग / पहचान संख्या</label>
             <input type="text" id="catTag" required placeholder="उदा. मुर्राह भैंस 01" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none font-bold" />
           </div>
-
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">प्रकार व नस्ल</label>
             <select id="catBreed" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none bg-white font-semibold">
@@ -401,7 +417,6 @@
               <option value="अन्य पशु">अन्य पशु</option>
             </select>
           </div>
-
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">वर्तमान स्थिति (Status)</label>
             <select id="catStatus" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none bg-white font-bold">
@@ -411,30 +426,25 @@
               <option value="बीमार / इलाज जारी">बीमार / इलाज जारी</option>
             </select>
           </div>
-
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">औसत दैनिक दूध (Litre)</label>
             <input type="number" step="0.5" id="catDailyMilk" required placeholder="उदा. 14" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none font-black text-emerald-900" />
           </div>
-
           <div>
-            <label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">सीमन / AI तारीख (यदि गाभिन है)</label>
+            <label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">सीमन / AI तारीख</label>
             <input type="date" id="catAiDate" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none font-semibold" />
           </div>
-
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कीड़े की दवा तारीख (Deworming)</label>
             <input type="date" id="catDewormDate" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none" />
           </div>
-
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टीकाकरण (Vaccination Record)</label>
-            <input type="text" id="catVaccine" placeholder="उदा. FMD / गलघोंटू टीका लगा" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none" />
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टीकाकरण</label>
+            <input type="text" id="catVaccine" placeholder="उदा. FMD टीका" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none" />
           </div>
-
           <div class="flex items-end">
             <button type="submit" class="w-full bg-amber-900 hover:bg-amber-950 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-md border-2 border-amber-800 flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-cloud-arrow-up text-amber-300"></i> पशु प्रोफाइल जोड़ें
+              <i class="fa-solid fa-cloud-arrow-up text-amber-300"></i> पशु जोड़ें
             </button>
           </div>
         </form>
@@ -443,7 +453,7 @@
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
           <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-cow text-amber-900"></i> कुल पशु रिकॉर्ड व लाइव स्वास्थ्य/प्रसव कार्ड्स
+            <i class="fa-solid fa-cow text-amber-900"></i> कुल पशु रिकॉर्ड व लाइव कार्ड्स
           </span>
           <span class="text-xs bg-amber-100 text-amber-950 font-bold px-2.5 py-0.5 rounded-full border border-amber-300" id="cattleRecordCount">0 पशु</span>
         </div>
@@ -954,7 +964,6 @@
       }
     }
 
-    // Individual Animal Milk Logging Modal
     function openAnimalMilkModal(id, tag, morning, evening) {
       document.getElementById('modalAnimalId').value = id;
       document.getElementById('modalAnimalTag').innerText = tag + " - आज का दूध";
@@ -998,17 +1007,14 @@
     function renderCattle() {
       const cList = document.getElementById('cattleMobileList');
       cList.innerHTML = '';
-
       const now = new Date();
 
       cattleData.forEach(item => {
-        // Status Badge Logic
         let statusBadge = "bg-emerald-100 text-emerald-950 border-emerald-300";
         if (item.status && item.status.includes('गाभिन')) statusBadge = "bg-blue-100 text-blue-950 border-blue-300";
         else if (item.status && item.status.includes('ड्राई')) statusBadge = "bg-amber-100 text-amber-950 border-amber-300";
         else if (item.status && item.status.includes('बीमार')) statusBadge = "bg-rose-100 text-rose-950 border-rose-300";
 
-        // Gestation / Calving Calculator
         let calvingHtml = '';
         if (item.aiDate) {
           const aiD = new Date(item.aiDate);
@@ -1022,11 +1028,8 @@
           const diffTime = calvingDate.getTime() - now.getTime();
           const daysLeftToCalve = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-          // Heat Repeat (18 to 21 days from AI)
           const heatDiff = Math.floor((now.getTime() - aiD.getTime()) / (1000 * 60 * 60 * 24));
           const isHeatWindow = heatDiff >= 18 && heatDiff <= 22;
-
-          // Dry Period (within 60 days of calving)
           const isDryDue = daysLeftToCalve <= 60 && daysLeftToCalve > 0;
 
           calvingHtml = `
@@ -1045,7 +1048,6 @@
           `;
         }
 
-        // Deworming calculation (every 90 days)
         let dewormHtml = '';
         if (item.dewormDate) {
           const dwD = new Date(item.dewormDate);
@@ -1068,7 +1070,6 @@
               ${isAdmin ? `<button onclick="deleteCattle('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
             </div>
 
-            <!-- Daily Milk Block & Log Button -->
             <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
                 <span class="text-[10px] text-slate-400 uppercase font-bold block">दैनिक दूध (Live Log)</span>
@@ -1093,7 +1094,7 @@
       document.getElementById('cattleRecordCount').innerText = `${cattleData.length} पशु`;
     }
 
-    // ==================== LABOUR SALARY ALERTS ====================
+    // ==================== LABOUR, DIRECT CALL & LATE ARRIVAL ALERT ====================
     let hasAlertSoundPlayed = false;
     function checkSalaryAlerts() {
       const notifBanner = document.getElementById('salaryNotificationBanner');
@@ -1139,6 +1140,25 @@
       }
     }
 
+    // Direct Call Function
+    function directCallLabour(phone) {
+      if (!phone || phone === '-') {
+        alert("इस मजदूर का फोन नंबर उपलब्ध नहीं है!");
+        return;
+      }
+      window.location.href = `tel:${phone}`;
+    }
+
+    // Late Arrival WhatsApp / SMS Alert Trigger
+    function sendLateArrivalAlert(name, phone, dutyTime) {
+      if (!phone || phone === '-') {
+        alert("मजदूर का फोन नंबर मौजूद नहीं है!");
+        return;
+      }
+      const msg = `*प्रजापति डेयरी फॉर्म - आगमन चेतावनी*%0A--------------------------------%0Aनमस्ते *${name}*,%0Aआज फार्म पर आपके आने का निर्धारित समय *${dutyTime || 'निर्धारित समय'}* था।%0Aआप अभी तक फार्म पर नहीं पहुंचे हैं। कृपया तुरंत फार्म पर आएं अथवा संपर्क करें।%0A--------------------------------%0A- डेयरी व्यवस्थापक`;
+      window.open(`https://wa.me/91${phone.replace(/\D/g, '')}?text=${msg}`, '_blank');
+    }
+
     function addLabourProfile(e) {
       e.preventDefault();
       if (!isAdmin) { alert("सिर्फ एडमिन ही मजदूर जोड़ सकते हैं!"); return; }
@@ -1148,6 +1168,8 @@
         phone: document.getElementById('labourPhone').value.trim() || '-',
         salary: parseFloat(document.getElementById('labourSalary').value) || 0,
         joinDate: document.getElementById('labourJoinDate').value,
+        dutyTime: document.getElementById('labourDutyTime').value || '06:00',
+        alertMode: document.getElementById('labourAlertMode').value,
         aadhar: document.getElementById('labourAadhar').value.trim() || '-',
         address: document.getElementById('labourAddress').value.trim() || 'फार्म कार्य',
         timestamp: Date.now()
@@ -1202,25 +1224,36 @@
               ${isAdmin ? `<button onclick="deleteLabourProfile('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash-can"></i></button>` : ''}
             </div>
 
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 grid grid-cols-2 gap-2 text-xs">
+            <!-- Direct Quick Call & Late Arrival Alert Actions -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button onclick="directCallLabour('${item.phone}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition">
+                <i class="fa-solid fa-phone-volume text-amber-300"></i> कॉल करें
+              </button>
+              <button onclick="sendLateArrivalAlert('${item.name}', '${item.phone}', '${item.dutyTime}')" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition">
+                <i class="fa-brands fa-whatsapp text-white"></i> देरी चेतावनी
+              </button>
+            </div>
+
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 grid grid-cols-2 gap-2 text-xs">
               <div>
                 <span class="text-slate-400 block text-[10px] uppercase font-bold">मासिक वेतन</span>
                 <span class="text-emerald-900 font-black text-sm">₹ ${item.salary.toLocaleString('en-IN')}</span>
               </div>
               <div>
-                <span class="text-slate-400 block text-[10px] uppercase font-bold">सैलरी तारीख</span>
-                <span class="text-slate-900 font-extrabold">हर महीने की ${cycleDay} तारीख</span>
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">आगमन समय (Duty)</span>
+                <span class="text-rose-900 font-extrabold">${item.dutyTime || '06:00'} (${item.alertMode || 'Daily'})</span>
               </div>
             </div>
 
             <div class="text-xs space-y-1 text-slate-600 pt-1 border-t border-slate-100">
+              <div><b>सैलरी तारीख:</b> हर महीने की ${cycleDay} तारीख</div>
               <div><b>जॉइनिंग तारीख:</b> ${joinStr}</div>
-              <div><b>आधार:</b> ${item.aadhar}</div>
-              <div><b>विवरण:</b> ${item.address}</div>
+              <div><b>विवरण/कार्य:</b> ${item.address}</div>
             </div>
           </div>
         `;
       });
+
       document.getElementById('labourRecordCount').innerText = `${labourProfiles.length} मजदूर`;
     }
 
@@ -1763,11 +1796,11 @@
         });
         content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">कुल खर्च योग</td><td>₹${totE.toFixed(2)}</td></tr></table>
 
-        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">३. कुल पशु रिकॉर्ड सूची (${cattleData.length})</h3>
+        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">३. पंजीकृत मजदूर सूची (${labourProfiles.length})</h3>
         <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:25px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>टैग</th><th>नस्ल</th><th>स्थिति</th><th>दैनिक दूध</th><th>AI तारीख</th><th>टीकाकरण</th></tr>`;
-        cattleData.forEach((d, i) => {
-          content += `<tr><td>${i+1}</td><td><b>${d.tag}</b></td><td>${d.breed}</td><td>${d.status || '-'}</td><td>${d.milk} L</td><td>${d.aiDate || '-'}</td><td>${d.vaccine}</td></tr>`;
+          <tr style="background:#f1f5f9;"><th>क्र.</th><th>नाम</th><th>फोन</th><th>मासिक वेतन</th><th>ड्यूटी समय</th><th>जॉइनिंग तारीख</th></tr>`;
+        labourProfiles.forEach((d, i) => {
+          content += `<tr><td>${i+1}</td><td><b>${d.name}</b></td><td>${d.phone}</td><td>₹${d.salary}</td><td>${d.dutyTime || '-'}</td><td>${d.joinDate}</td></tr>`;
         });
         content += `</table>
 
