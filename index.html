@@ -64,7 +64,7 @@
           <i class="fa-solid fa-bars"></i>
         </button>
 
-        <!-- 3-Lines Dropdown Menu -->
+        <!-- Dropdown Menu -->
         <div id="sideMenuDropdown" class="hidden absolute right-0 top-12 mt-2 w-64 bg-slate-900 text-white rounded-2xl shadow-2xl border-2 border-amber-400 overflow-hidden z-50">
           <div class="p-3 bg-slate-950 border-b border-slate-800">
             <span class="text-[10px] text-slate-400 font-bold uppercase block">वर्तमान स्थिति</span>
@@ -84,15 +84,19 @@
               <span>Excel / CSV बैकअप डाउनलोड</span>
             </button>
 
-            <button onclick="openPaymentSettingsModal()" id="menuPaymentSettingsBtn" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-sky-300 transition border-t border-slate-800">
+            <button onclick="openPaymentSettingsModal()" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-sky-300 transition border-t border-slate-800">
               <i class="fa-solid fa-qrcode text-sky-400 text-sm"></i>
               <span>बैंक, UPI व QR सेटिंग्स</span>
             </button>
 
-            <!-- Sold Animals Archive Folder Button -->
             <button onclick="openSoldAnimalsFolderModal()" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-amber-300 transition border-t border-slate-800">
               <i class="fa-solid fa-folder-closed text-amber-400 text-sm"></i>
               <span>बेचे गए पशुओं का फोल्डर</span>
+            </button>
+
+            <button onclick="openVetDoctorModal()" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-rose-300 transition border-t border-slate-800">
+              <i class="fa-solid fa-user-doctor text-rose-400 text-sm"></i>
+              <span>पशु डॉक्टर संपर्क सूची</span>
             </button>
 
             <button onclick="openChangePasswordModal()" id="menuChangePassBtn" class="hidden w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-slate-200 transition border-t border-slate-800">
@@ -100,7 +104,6 @@
               <span>पासवर्ड बदलें</span>
             </button>
 
-            <!-- Factory Reset Option (Added) -->
             <button onclick="triggerFactoryReset()" id="menuResetBtn" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold hover:bg-rose-950/80 flex items-center gap-2.5 text-rose-400 transition border-t border-slate-800">
               <i class="fa-solid fa-triangle-exclamation text-rose-500 text-sm"></i>
               <span>फैक्ट्री रीसेट (सारा डेटा मिटाएं)</span>
@@ -111,7 +114,7 @@
     </div>
   </header>
 
-  <!-- Realtime Salary Notification Banner -->
+  <!-- Realtime Salary Notification Banner (With 5-Hour Snooze) -->
   <div id="salaryNotificationBanner" class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 hidden">
     <div class="bg-indigo-900 text-white p-4 rounded-2xl shadow-xl border-2 border-indigo-400 flex items-start justify-between gap-3">
       <div class="flex items-start gap-3">
@@ -124,21 +127,26 @@
         </div>
       </div>
       <button onclick="dismissSalaryAlert()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-4 py-2 rounded-xl text-xs shadow border border-amber-200 transition shrink-0 flex items-center gap-1">
-        <i class="fa-solid fa-check"></i> OK (हटाएं)
+        <i class="fa-solid fa-check"></i> OK (5 घंटे के लिए हटाएं)
       </button>
     </div>
   </div>
 
-  <!-- Realtime Feed Stock Warning Banner -->
+  <!-- Realtime Feed Stock Warning Banner (With 5-Hour Snooze) -->
   <div id="stockNotificationBanner" class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 hidden">
-    <div class="bg-rose-600 text-white p-3.5 rounded-2xl shadow-lg border-2 border-rose-400 flex items-start gap-3">
-      <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 text-xl text-amber-300">
-        <i class="fa-solid fa-bell animate-bounce"></i>
+    <div class="bg-rose-600 text-white p-3.5 rounded-2xl shadow-lg border-2 border-rose-400 flex items-start justify-between gap-3">
+      <div class="flex items-start gap-3">
+        <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 text-xl text-amber-300">
+          <i class="fa-solid fa-bell animate-bounce"></i>
+        </div>
+        <div class="flex-1">
+          <h4 class="font-black text-sm">चारा खत्म होने की चेतावनी (Stock Alert)!</h4>
+          <div id="stockNotificationList" class="text-xs text-rose-100 mt-1 space-y-1 font-semibold"></div>
+        </div>
       </div>
-      <div class="flex-1">
-        <h4 class="font-black text-sm">चारा खत्म होने की चेतावनी (Stock Alert)!</h4>
-        <div id="stockNotificationList" class="text-xs text-rose-100 mt-1 space-y-1 font-semibold"></div>
-      </div>
+      <button onclick="dismissStockAlert()" class="bg-white hover:bg-slate-100 text-rose-900 font-black px-3.5 py-1.5 rounded-xl text-xs shadow border border-rose-200 transition shrink-0 flex items-center gap-1">
+        <i class="fa-solid fa-check"></i> OK (5 घंटे हटाएं)
+      </button>
     </div>
   </div>
 
@@ -178,7 +186,7 @@
 
     </div>
 
-    <!-- ==================== TAB 1: MILK SALE ==================== -->
+    <!-- TAB 1: MILK SALE -->
     <section id="tabMilk" class="mt-4 space-y-4">
       <div class="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-900 text-white p-3.5 sm:p-4 rounded-2xl shadow-md border-2 border-emerald-600 grid grid-cols-3 gap-2 text-center">
         <div>
@@ -195,7 +203,6 @@
         </div>
       </div>
 
-      <!-- Milk Admin Form -->
       <div id="milkAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-emerald-600">
         <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
           <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
@@ -252,7 +259,6 @@
         </form>
       </div>
 
-      <!-- Milk Compact Heading Cards List with Date Filter -->
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
           <div class="flex items-center gap-2">
@@ -280,7 +286,7 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 2: EXPENSES ==================== -->
+    <!-- TAB 2: EXPENSES -->
     <section id="tabExpense" class="mt-4 hidden space-y-4">
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         <div class="bg-yellow-50 p-3 rounded-2xl border-2 border-yellow-300 shadow-sm"><span class="text-[10px] text-yellow-900 font-bold uppercase block">चारा / खली / दाना</span><span class="text-lg font-black text-yellow-950 mt-1 block" id="dispCatFeed">₹0</span></div>
@@ -294,15 +300,31 @@
         <form onsubmit="addExpenseEntry(event)" class="space-y-3">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="expDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खर्च प्रकार</label><select id="expCategory" onchange="toggleExpenseFields()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="चारा / खली / दाना (Feed)">चारा / खली / दाना (Feed)</option><option value="मजदूर एडवांस (Advance)">मजदूर एडवांस</option><option value="मासिक वेतन भुगतान (Final Salary)">मासिक वेतन भुगतान</option><option value="दवाई व डॉक्टर (Medical)">दवाई व डॉक्टर</option><option value="डीजल / बिजली बिल">डीजल/बिजली बिल</option><option value="फार्म रखरखाव / अन्य">अन्य खर्च</option></select></div>
-            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">विवरण / नाम</label><input type="text" id="expDetail" required placeholder="उदा. 4 बोरी खली" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
-            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रकम (₹)</label><input type="number" id="expAmount" required placeholder="₹ 0" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-black text-purple-950" /></div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खर्च प्रकार</label>
+              <select id="expCategory" onchange="toggleExpenseFields()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
+                <option value="चारा / खली / दाना (Feed)">चारा / खली / दाना (Feed)</option>
+                <option value="मजदूर एडवांस (Advance)">मजदूर एडवांस</option>
+                <option value="मासिक वेतन भुगतान (Final Salary)">मासिक वेतन भुगतान</option>
+                <option value="दवाई व डॉक्टर (Medical)">दवाई व डॉक्टर (Medical)</option>
+                <option value="डीजल / बिजली बिल">डीजल/बिजली बिल</option>
+                <option value="फार्म रखरखाव / अन्य">अन्य खर्च</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">संबंधित पशु टैग (दवाई/इलाज हेतु)</label>
+              <select id="expAnimalTagRef" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white font-semibold">
+                <option value="">-- सामान्य / कोई विशेष पशु नहीं --</option>
+              </select>
+            </div>
+            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">विवरण / नाम</label><input type="text" id="expDetail" required placeholder="उदा. 4 बोरी खली या एंटीबायोटिक" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रकम (₹)</label><input type="number" id="expAmount" required placeholder="₹ 0" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-black text-purple-950" /></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान माध्यम</label><select id="expPaymentMode" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-semibold"><option value="PhonePe / UPI">PhonePe / UPI</option><option value="नकद (Cash)">नकद (Cash)</option><option value="दुकानदार उधारी (Vendor Due)">दुकानदार उधारी</option></select></div>
-            <div id="feedStockSyncRow" class="sm:col-span-2 p-2.5 bg-yellow-50 border-2 border-yellow-300 rounded-xl flex items-center justify-between gap-3">
+            <div id="feedStockSyncRow" class="p-2.5 bg-yellow-50 border-2 border-yellow-300 rounded-xl flex items-center justify-between gap-3">
               <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-yellow-950"><input type="checkbox" id="syncToStockCheckbox" checked class="w-4 h-4" /><span>चारा स्टॉक में भी जोड़ें? (+Stock)</span></label>
-              <div class="flex items-center gap-2"><input type="number" step="0.5" id="syncStockQty" placeholder="मात्रा (4)" class="w-24 text-xs border rounded-lg p-1.5 font-black bg-white" /><select id="syncStockUnit" class="text-xs border rounded-lg p-1.5 bg-white"><option value="बोरी (Bags)">बोरी</option><option value="क्विंटल (Quintal)">क्विंटल</option><option value="किलोग्राम (Kg)">Kg</option></select></div>
+              <div class="flex items-center gap-2"><input type="number" step="0.5" id="syncStockQty" placeholder="मात्रा (4)" class="w-20 text-xs border rounded-lg p-1.5 font-black bg-white" /><select id="syncStockUnit" class="text-xs border rounded-lg p-1.5 bg-white"><option value="बोरी (Bags)">बोरी</option><option value="क्विंटल (Quintal)">क्विंटल</option><option value="किलोग्राम (Kg)">Kg</option></select></div>
             </div>
           </div>
           <div class="flex justify-end pt-1"><button type="submit" class="w-full sm:w-auto bg-purple-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">खर्च दर्ज करें</button></div>
@@ -315,7 +337,7 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 3: LABOUR ==================== -->
+    <!-- TAB 3: LABOUR -->
     <section id="tabLabour" class="mt-4 hidden space-y-4">
       <div id="labourAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-slate-800">
         <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-user-plus text-cyan-700"></i> नया मजदूर प्रोफाइल जोड़ें</h2>
@@ -337,12 +359,15 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 4: CATTLE MANAGEMENT ==================== -->
+    <!-- TAB 4: CATTLE MANAGEMENT (SEPARATE COW & BUFFALO HIERARCHY) -->
     <section id="tabCattle" class="mt-4 space-y-4 hidden">
       <div class="flex flex-wrap items-center gap-2">
         <button onclick="toggleCattleSubForm('addAnimal')" id="subBtnAddAnimal" class="px-3.5 py-2 rounded-xl font-extrabold text-xs bg-slate-900 text-amber-300 border-2 border-slate-700 shadow">+ नया पशु जोड़ें</button>
         <button onclick="toggleCattleSubForm('addCalf')" id="subBtnAddCalf" class="px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border-2 border-slate-300 shadow">👶 बछड़ा / कटड़ा जन्म</button>
         <button onclick="toggleCattleSubForm('sellAnimal')" id="subBtnSellAnimal" class="px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-emerald-800 border-2 border-emerald-400 shadow">💰 पशु / कटड़ा बेचें</button>
+        <button onclick="openVetDoctorModal()" class="px-3.5 py-2 rounded-xl font-extrabold text-xs bg-rose-50 text-rose-800 border-2 border-rose-300 shadow flex items-center gap-1.5 ml-auto">
+          <i class="fa-solid fa-stethoscope text-rose-600"></i> पशु डॉक्टर संपर्क
+        </button>
       </div>
 
       <!-- Add / Edit Cattle Profile Form -->
@@ -350,14 +375,34 @@
         <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-shield-cat text-amber-600"></i> <span id="catFormTitle">नया पशु प्रोफाइल (Admin Mode)</span></h2>
         <input type="hidden" id="editCatRecordId" value="" />
         <form onsubmit="handleCattleFormSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टैग / पहचान संख्या</label><input type="text" id="catTag" required placeholder="उदा. भैंस 01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नस्ल</label><select id="catBreed" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-semibold"><option value="मुर्राह भैंस (310 दिन)">मुर्राह भैंस (310 दिन)</option><option value="देसी / साहीवाल गाय (280 दिन)">देसी/साहीवाल गाय (280 दिन)</option><option value="HF / जर्सी क्रॉस (280 दिन)">HF/जर्सी क्रॉस (280 दिन)</option><option value="अन्य पशु">अन्य पशु</option></select></div>
+          <div>
+            <label class="block text-[11px] font-bold text-amber-950 uppercase mb-1">पशु वर्ग (Category)</label>
+            <select id="catCategoryType" onchange="adjustBreedOptions()" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 font-bold">
+              <option value="भैंस (Buffalo)">भैंस (Buffalo)</option>
+              <option value="गाय (Cow)">गाय (Cow)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टैग / पहचान संख्या</label>
+            <input type="text" id="catTag" required placeholder="उदा. 01 या B-01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+            <span class="text-[10px] text-slate-400">गाय व भैंस दोनों का नंबर 01 अलग-अलग रख सकते हैं।</span>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नस्ल</label>
+            <select id="catBreed" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-semibold">
+              <option value="मुर्राह भैंस (310 दिन)">मुर्राह भैंस (310 दिन)</option>
+              <option value="नीली रावी भैंस (310 दिन)">नीली रावी भैंस (310 दिन)</option>
+              <option value="देसी / अन्य भैंस (310 दिन)">देसी / अन्य भैंस (310 दिन)</option>
+            </select>
+          </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">स्थिति (Status)</label><select id="catStatus" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="दूध दे रही है (Lactating)">दूध दे रही है</option><option value="गाभिन / प्रेग्नेंट (Pregnant)">गाभिन (Pregnant)</option><option value="ड्राई / सूखी (Dry)">ड्राई (Dry)</option><option value="बीमार / इलाज जारी">बीमार</option></select></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक दूध (L)</label><input type="number" step="0.5" id="catDailyMilk" required placeholder="14" class="w-full text-sm border-2 rounded-xl p-2.5 font-black text-emerald-950" /></div>
+          <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">खरीद तारीख (Buying Date)</label><input type="date" id="catBuyDate" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">खरीद लागत (₹)</label><input type="number" id="catBuyCost" placeholder="उदा. 70000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">AI / सीमन तारीख</label><input type="date" id="catAiDate" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 font-semibold" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कीड़े की दवा तारीख</label><input type="date" id="catDewormDate" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टीकाकरण</label><input type="text" id="catVaccine" placeholder="उदा. FMD टीका" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+          
           <div class="sm:col-span-2 lg:col-span-4 flex justify-end gap-2">
             <button type="button" onclick="cancelCattleEdit()" id="cancelCatEditBtn" class="hidden px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">रद्द करें</button>
             <button type="submit" id="saveCatBtn" class="bg-amber-900 hover:bg-amber-950 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition">सुरक्षित करें</button>
@@ -369,39 +414,71 @@
       <div id="calfAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-blue-500">
         <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-baby text-blue-600"></i> नया बछड़ा / कटड़ा जन्म रिकॉर्ड</h2>
         <form onsubmit="addCalfEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बछड़ा / कटड़ा टैग</label><input type="text" id="calfTag" required placeholder="उदा. कटड़ा C-01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माता का टैग</label><input type="text" id="calfMotherTag" required placeholder="उदा. भैंस 01" class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">लिंग (Gender)</label><select id="calfGender" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="कटड़ा (Male Buffalo)">कटड़ा (Male Buffalo)</option><option value="कटिया / पड़िया (Female Buffalo)">कटिया / पड़िया (Female Buffalo)</option><option value="बछड़ा (Male Calf)">बछड़ा (Male Calf)</option><option value="बछिया (Female Calf)">बछिया (Female Calf)</option></select></div>
+          <div>
+            <label class="block text-[11px] font-bold text-blue-900 uppercase mb-1">वर्ग (प्रकार)</label>
+            <select id="calfCategoryType" onchange="adjustCalfGenderOptions()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
+              <option value="भैंस का बच्चा (कटड़ा/कटिया)">भैंस का बच्चा (कटड़ा/कटिया)</option>
+              <option value="गाय का बच्चा (बछड़ा/बछिया)">गाय का बच्चा (बछड़ा/बछिया)</option>
+            </select>
+          </div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बच्चे का टैग</label><input type="text" id="calfTag" required placeholder="उदा. 01 या C-01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माता का चयन करें</label><select id="calfMotherTagSelect" required class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-semibold"></select></div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">लिंग (Gender)</label>
+            <select id="calfGender" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
+              <option value="कटड़ा (Male Buffalo)">कटड़ा (Male Buffalo)</option>
+              <option value="कटिया / पड़िया (Female Buffalo)">कटिया / पड़िया (Female Buffalo)</option>
+            </select>
+          </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जन्म तारीख</label><input type="date" id="calfBirthDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="submit" class="w-full sm:w-auto bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm">जन्म रिकॉर्ड सेव करें</button></div>
+          <div class="sm:col-span-2 lg:col-span-3 flex items-end justify-end"><button type="submit" class="w-full sm:w-auto bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm">जन्म रिकॉर्ड सेव करें</button></div>
         </form>
       </div>
 
-      <!-- Sell Animal Form -->
+      <!-- Sell Animal Form (Exact Selection) -->
       <div id="sellAnimalAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-emerald-600">
-        <h2 class="font-extrabold text-slate-900 text-base mb-1 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> पशु / कटड़ा बेचें</h2>
+        <h2 class="font-extrabold text-slate-900 text-base mb-1 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> पशु / बच्चा बेचें</h2>
+        <p class="text-xs text-slate-500 mb-3">यहाँ से पशु चुनने पर उसका अब तक का सारा दूध, इलाज खर्च व खरीद इतिहास अपने-आप 'बेचे गए पशुओं के फोल्डर' में ट्रांसफर हो जाएगा।</p>
         <form onsubmit="handleSellAnimalSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री तारीख</label><input type="date" id="saleAnimalDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु टैग चुनें</label>
-            <input type="text" id="saleAnimalTag" required placeholder="सटीक टैग लिखें (उदा. भैंस 01)" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-rose-800" />
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बेचा जाने वाला पशु/बच्चा चुनें</label>
+            <select id="saleSelectableAnimal" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold text-rose-800 bg-white">
+              <option value="">-- चुनें --</option>
+            </select>
           </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खरीदार का नाम</label><input type="text" id="saleBuyerName" required placeholder="उदा. सुरेश व्यापारी" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">बिक्री रकम (₹ प्राप्त)</label><input type="number" id="saleAnimalAmount" required placeholder="उदा. 75000" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-950" /></div>
-          <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="submit" class="w-full sm:w-auto bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm">पशु बेचें व आर्काइव करें</button></div>
+          <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="submit" class="w-full sm:w-auto bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm">पशु बेचें व संपूर्ण इतिहास आर्काइव करें</button></div>
         </form>
       </div>
 
+      <!-- Cattle Lists (Divided into Buffaloes and Cows) -->
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm">सक्रिय पशु व बछड़े</span>
+          <span class="font-bold text-slate-800 text-sm">सक्रिय पशु व बच्चे (अलग-अलग वर्ग)</span>
           <span class="text-xs bg-amber-100 text-amber-950 font-bold px-2 py-0.5 rounded-full" id="cattleRecordCount">0 पशु</span>
         </div>
-        <div id="cattleHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+        
+        <div class="p-3 space-y-4">
+          <div>
+            <h3 class="text-xs font-black uppercase text-amber-950 bg-amber-100 px-3 py-1.5 rounded-lg border border-amber-300 inline-block mb-2">
+              🐃 भैंस व कटड़ा/कटिया वर्ग
+            </h3>
+            <div id="buffaloHeadingList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-200">
+            <h3 class="text-xs font-black uppercase text-emerald-950 bg-emerald-100 px-3 py-1.5 rounded-lg border border-emerald-300 inline-block mb-2">
+              🐄 गाय व बछड़ा/बछिया वर्ग
+            </h3>
+            <div id="cowHeadingList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ==================== TAB 5: CUSTOMER LEDGER ==================== -->
+    <!-- TAB 5: CUSTOMER LEDGER -->
     <section id="tabCustomer" class="mt-4 hidden space-y-4">
       <div id="custAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-indigo-600">
         <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-address-book text-indigo-700"></i> ग्राहक जमा रकम एंट्री</h2>
@@ -423,7 +500,7 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 6: FEED STOCK ==================== -->
+    <!-- TAB 6: FEED STOCK -->
     <section id="tabStock" class="mt-4 hidden space-y-4">
       <div id="stockAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-yellow-600">
         <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wheat-awn text-yellow-700"></i> चारा स्टॉक एंट्री</h2>
@@ -444,7 +521,7 @@
 
   </main>
 
-  <!-- ==================== UNIVERSAL POPUP MODAL ==================== -->
+  <!-- UNIVERSAL DETAIL MODAL -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
     <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
       <div class="bg-slate-900 text-white p-4 px-5 flex items-center justify-between border-b shrink-0">
@@ -458,26 +535,50 @@
     </div>
   </div>
 
-  <!-- ==================== POPUP: SOLD ANIMALS ARCHIVE FOLDER ==================== -->
+  <!-- POPUP: SOLD ANIMALS ARCHIVE FOLDER (WITH FULL LIFECYCLE HISTORY) -->
   <div id="soldAnimalsFolderModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
-    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden border-4 border-amber-500 flex flex-col max-h-[90vh]">
+    <div class="bg-white rounded-3xl max-w-3xl w-full shadow-2xl overflow-hidden border-4 border-amber-500 flex flex-col max-h-[90vh]">
       <div class="bg-slate-950 text-white p-4 px-5 flex items-center justify-between border-b shrink-0">
         <div class="flex items-center gap-2">
           <i class="fa-solid fa-folder-open text-amber-400 text-xl"></i>
           <div>
-            <h3 class="font-black text-base text-amber-300">बेचे गए पशुओं का आर्काइव फोल्डर</h3>
-            <p class="text-[11px] text-slate-400">सभी बेचे गए पशु, खरीद मूल्य, बिकाऊ कीमत व संपूर्ण इतिहास</p>
+            <h3 class="font-black text-base text-amber-300">बेचे गए पशुओं का संपूर्ण जीवन-इतिहास फोल्डर</h3>
+            <p class="text-[11px] text-slate-400">खरीद से लेकर दूध, इलाज खर्च, बछड़ा और अंतिम बिक्री का पूरा ब्योरा</p>
           </div>
         </div>
         <button onclick="closeSoldAnimalsFolderModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center font-black">✕</button>
       </div>
       <div class="p-4 overflow-y-auto space-y-3">
-        <div id="soldAnimalsListContainer" class="space-y-2.5"></div>
+        <div id="soldAnimalsListContainer" class="space-y-3"></div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== POPUP: BANK, UPI & QR SETTINGS ==================== -->
+  <!-- POPUP: VET DOCTOR CONTACT DIRECTORY -->
+  <div id="vetDoctorModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border-4 border-rose-500 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-black text-slate-900 text-base flex items-center gap-2">
+          <i class="fa-solid fa-user-doctor text-rose-600"></i> पशु डॉक्टर विवरण व कॉल
+        </h3>
+        <button onclick="closeVetDoctorModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center font-black">✕</button>
+      </div>
+
+      <div id="vetAdminAddForm" class="hidden p-3 bg-rose-50 rounded-2xl border border-rose-200">
+        <h4 class="text-xs font-bold text-rose-950 mb-2">नया डॉक्टर जोड़ें</h4>
+        <form onsubmit="saveVetDoctor(event)" class="space-y-2">
+          <input type="text" id="vetDocName" required placeholder="डॉक्टर का नाम (उदा. डॉ. आर. के. सिंह)" class="w-full text-xs border rounded-xl p-2.5 font-bold" />
+          <input type="tel" id="vetDocPhone" required placeholder="मोबाइल नंबर (उदा. 9876543210)" class="w-full text-xs border rounded-xl p-2.5 font-bold" />
+          <input type="text" id="vetDocClinic" placeholder="अस्पताल / क्लिनिक नाम व पता" class="w-full text-xs border rounded-xl p-2.5" />
+          <button type="submit" class="w-full bg-rose-700 text-white text-xs font-bold py-2 rounded-xl">सुरक्षित करें</button>
+        </form>
+      </div>
+
+      <div id="vetDoctorList" class="space-y-2"></div>
+    </div>
+  </div>
+
+  <!-- POPUP: BANK, UPI & QR SETTINGS -->
   <div id="paymentSettingsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border-4 border-sky-500 space-y-4">
       <div class="flex justify-between items-center border-b pb-2">
@@ -565,7 +666,7 @@
     <div class="relative bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border-4 border-amber-400"><button onclick="closeChangePasswordModal()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 text-white rounded-full flex items-center justify-center font-black">✕</button><h3 class="font-extrabold text-slate-900 text-base mb-1">एडमिन पासवर्ड बदलें</h3><form onsubmit="handlePasswordChangeSubmit(event)" class="space-y-3 mt-3"><input type="password" id="oldPassInput" required placeholder="वर्तमान पासवर्ड" class="w-full text-sm border-2 rounded-xl p-2.5" /><input type="password" id="newPassInput" required placeholder="नया पासवर्ड" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /><input type="password" id="confirmNewPassInput" required placeholder="नया पासवर्ड दोबारा लिखें" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /><button type="submit" class="w-full bg-slate-900 text-amber-300 font-extrabold py-3 rounded-xl text-sm">पासवर्ड सेव करें</button></form></div>
   </div>
 
-  <!-- POPUP: FACTORY RESET BACKUP CONFIRMATION (ADDED) -->
+  <!-- POPUP: FACTORY RESET BACKUP CONFIRMATION -->
   <div id="resetBackupModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-4 border-rose-600 space-y-4">
       <div class="text-center">
@@ -574,7 +675,7 @@
         </div>
         <h3 class="text-xl font-black text-slate-900">फैक्ट्री रीसेट (Factory Reset)</h3>
         <p class="text-xs text-slate-600 mt-1 font-semibold leading-relaxed">
-          क्या आप रीसेट करने से पहले अपने पूरे डेटा का बैकअप (Excel / PDF) डाउनलोड करना चाहते हैं? रीसेट के बाद सारा रिकॉर्ड हमेशा के लिए मिट जाएगा।
+          क्या आप रीसेट करने से पहले अपने पूरे डेटा का बैकअप (Excel / PDF) डाउनलोड करना चाहते हैं?
         </p>
       </div>
 
@@ -603,7 +704,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Realtime Cloud Script -->
+  <!-- Realtime Script -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -679,6 +780,7 @@
     let customerPayments = [];
     let stockData = [];
     let setupCostData = [];
+    let vetDoctors = [];
 
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('milkDate').value = today;
@@ -687,27 +789,32 @@
     document.getElementById('custPayDate').value = today;
     document.getElementById('calfBirthDate').value = today;
     document.getElementById('saleAnimalDate').value = today;
+    document.getElementById('catBuyDate').value = today;
     document.getElementById('todayLabel1').innerText = "आज: " + today;
 
-    function playAlertChime() {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.6);
-      } catch (e) {}
-    }
+    // 5-HOUR SNOOZE TIMERS (18000000 ms)
+    const FIVE_HOURS_MS = 5 * 60 * 60 * 1000;
 
     function dismissSalaryAlert() {
+      const snoozeUntil = Date.now() + FIVE_HOURS_MS;
+      localStorage.setItem('prajapati_salary_snooze_until', snoozeUntil);
       document.getElementById('salaryNotificationBanner').classList.add('hidden');
+    }
+
+    function dismissStockAlert() {
+      const snoozeUntil = Date.now() + FIVE_HOURS_MS;
+      localStorage.setItem('prajapati_stock_snooze_until', snoozeUntil);
+      document.getElementById('stockNotificationBanner').classList.add('hidden');
+    }
+
+    function isSalarySnoozed() {
+      const val = localStorage.getItem('prajapati_salary_snooze_until');
+      return val && Date.now() < parseInt(val, 10);
+    }
+
+    function isStockSnoozed() {
+      const val = localStorage.getItem('prajapati_stock_snooze_until');
+      return val && Date.now() < parseInt(val, 10);
     }
 
     function toggleSideMenu() {
@@ -749,6 +856,7 @@
       const menuChangePassBtn = document.getElementById('menuChangePassBtn');
       const adminLogoArea = document.getElementById('adminLogoChangeArea');
       const setupAdminArea = document.getElementById('setupCostAdminForm');
+      const vetForm = document.getElementById('vetAdminAddForm');
 
       const adminForms = ['milkAdminForm', 'expAdminForm', 'labourAdminForm', 'catAdminForm', 'calfAdminForm', 'sellAnimalAdminForm', 'custAdminForm', 'stockAdminForm'];
 
@@ -760,12 +868,12 @@
         menuChangePassBtn.classList.remove('hidden');
         adminLogoArea.classList.remove('hidden');
         if (setupAdminArea) setupAdminArea.classList.remove('hidden');
+        if (vetForm) vetForm.classList.remove('hidden');
 
         adminForms.forEach(id => {
           const el = document.getElementById(id);
           if (el) el.classList.remove('hidden');
         });
-        document.querySelectorAll('.admin-action-col').forEach(el => el.classList.remove('hidden'));
       } else {
         badge.innerText = "User Mode";
         badge.className = "text-[9px] sm:text-[10px] bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded-full font-bold border border-slate-600";
@@ -774,17 +882,16 @@
         menuChangePassBtn.classList.add('hidden');
         adminLogoArea.classList.add('hidden');
         if (setupAdminArea) setupAdminArea.classList.add('hidden');
+        if (vetForm) vetForm.classList.add('hidden');
 
         adminForms.forEach(id => {
           const el = document.getElementById(id);
           if (el) el.classList.add('hidden');
         });
-        document.querySelectorAll('.admin-action-col').forEach(el => el.classList.add('hidden'));
       }
       renderAll();
     }
 
-    // ==================== UNIVERSAL POPUP DETAIL MODAL ====================
     function openUniversalModal(title, sub, htmlContent) {
       document.getElementById('universalModalTitle').innerText = title;
       document.getElementById('universalModalSub').innerText = sub;
@@ -795,7 +902,6 @@
       document.getElementById('universalDetailModal').classList.add('hidden');
     }
 
-    // ==================== PAYMENT SETTINGS MODAL ====================
     function openPaymentSettingsModal() {
       document.getElementById('sideMenuDropdown').classList.add('hidden');
       document.getElementById('paymentSettingsModal').classList.remove('hidden');
@@ -822,7 +928,6 @@
       });
     }
 
-    // ==================== EXCEL / CSV BACKUP EXPORT ====================
     function exportAllDataToCSV() {
       document.getElementById('sideMenuDropdown').classList.add('hidden');
       let csv = "प्रजापति डेयरी फॉर्म - सम्पूर्ण बैकअप डेटा\n\n";
@@ -832,14 +937,14 @@
         csv += `"${m.date}","${m.shift}","${m.saleType || 'retail'}","${m.customer}","${m.qty}","${m.rate}","${m.total}","${m.paymentStatus || 'Paid'}"\n`;
       });
 
-      csv += "\n2. फार्म खर्च रिकॉर्ड्स\nतारीख,मद,विवरण,भुगतान माध्यम,रकम (₹)\n";
+      csv += "\n2. फार्म खर्च रिकॉर्ड्स\nतारीख,मद,संबंधित पशु,विवरण,भुगतान माध्यम,रकम (₹)\n";
       expenseData.forEach(e => {
-        csv += `"${e.date}","${e.category}","${e.detail}","${e.paymentMode || 'UPI'}","${e.amount}"\n`;
+        csv += `"${e.date}","${e.category}","${e.animalTag || '-'}","${e.detail}","${e.paymentMode || 'UPI'}","${e.amount}"\n`;
       });
 
-      csv += "\n3. बेचे गए पशु आर्काइव रिकॉर्ड्स\nबिक्री तारीख,टैग,खरीदार,बिक्री रकम (₹),खरीद लागत\n";
+      csv += "\n3. बेचे गए पशु आर्काइव रिकॉर्ड्स\nबिक्री तारीख,वर्ग,टैग,खरीदार,बिक्री रकम (₹),खरीद लागत,इलाज खर्च\n";
       soldArchiveData.forEach(s => {
-        csv += `"${s.date}","${s.tag}","${s.buyer}","${s.amount}","${s.buyCost || '-'}"\n`;
+        csv += `"${s.date}","${s.categoryType || '-'}","${s.tag}","${s.buyer}","${s.amount}","${s.buyCost || '0'}","${s.totalMedicalExp || '0'}"\n`;
       });
 
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
@@ -852,17 +957,14 @@
       document.body.removeChild(link);
     }
 
-    // ==================== FACTORY RESET SYSTEM (NEW FEATURE) ====================
     function triggerFactoryReset() {
       document.getElementById('sideMenuDropdown').classList.add('hidden');
-      
       const pin = prompt("⚠️ चेतावनी: फैक्ट्री रीसेट हेतु कृपया एडमिन पासवर्ड दर्ज करें:");
       if (!pin) return;
       if (pin !== currentAdminPass) {
         alert("गलत एडमिन पासवर्ड! फैक्ट्री रीसेट निरस्त किया गया।");
         return;
       }
-
       document.getElementById('resetBackupModal').classList.remove('hidden');
     }
 
@@ -871,11 +973,8 @@
     }
 
     function downloadAndReset(format) {
-      if (format === 'excel') {
-        exportAllDataToCSV();
-      } else if (format === 'pdf') {
-        printOverallMasterReport();
-      }
+      if (format === 'excel') exportAllDataToCSV();
+      else if (format === 'pdf') printOverallMasterReport();
       setTimeout(() => {
         if (confirm("बैकअप प्रक्रिया शुरू हो चुकी है। क्या अब क्लाउड का सारा डेटा हमेशा के लिए डिलीट करें?")) {
           executeCompleteFactoryReset();
@@ -885,23 +984,13 @@
 
     function executeCompleteFactoryReset() {
       closeResetBackupModal();
-
       const pathsToWipe = [
-        'milk_records',
-        'expense_records',
-        'labour_profiles',
-        'cattle_records',
-        'calf_records',
-        'sold_animals_archive',
-        'animal_sales',
-        'customer_payments',
-        'stock_records',
-        'farm_setup_costs'
+        'milk_records', 'expense_records', 'labour_profiles', 'cattle_records',
+        'calf_records', 'sold_animals_archive', 'animal_sales', 'customer_payments',
+        'stock_records', 'farm_setup_costs', 'vet_doctors'
       ];
 
-      const deletePromises = pathsToWipe.map(p => db.ref(p).remove());
-
-      Promise.all(deletePromises).then(() => {
+      Promise.all(pathsToWipe.map(p => db.ref(p).remove())).then(() => {
         alert("✅ फैक्ट्री रीसेट सफल! फार्म का समस्त पुराना डेटा मिटा दिया गया है।");
         location.reload();
       }).catch(err => {
@@ -909,7 +998,896 @@
       });
     }
 
-    // ==================== MILK SALE: 2-DATE RANGE FILTER ====================
+    // ==================== VET DOCTOR CONTACT SYSTEM ====================
+    function openVetDoctorModal() {
+      document.getElementById('sideMenuDropdown').classList.add('hidden');
+      document.getElementById('vetDoctorModal').classList.remove('hidden');
+      renderVetDoctorList();
+    }
+    function closeVetDoctorModal() {
+      document.getElementById('vetDoctorModal').classList.add('hidden');
+    }
+    function saveVetDoctor(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const name = document.getElementById('vetDocName').value.trim();
+      const phone = document.getElementById('vetDocPhone').value.trim();
+      const clinic = document.getElementById('vetDocClinic').value.trim() || 'पशु चिकित्सालय';
+
+      db.ref('vet_doctors').push({ name, phone, clinic, timestamp: Date.now() }).then(() => {
+        document.getElementById('vetDocName').value = '';
+        document.getElementById('vetDocPhone').value = '';
+        document.getElementById('vetDocClinic').value = '';
+        alert("डॉक्टर विवरण सुरक्षित हुआ!");
+      });
+    }
+
+    function deleteVetDoctor(id) {
+      if (!isAdmin) return;
+      if (confirm("डॉक्टर संपर्क हटाएं?")) db.ref('vet_doctors/' + id).remove();
+    }
+
+    db.ref('vet_doctors').on('value', snap => {
+      const val = snap.val();
+      vetDoctors = [];
+      if (val) Object.keys(val).forEach(k => vetDoctors.push({ id: k, ...val[k] }));
+      renderVetDoctorList();
+    });
+
+    function renderVetDoctorList() {
+      const container = document.getElementById('vetDoctorList');
+      if (!container) return;
+      container.innerHTML = '';
+      if (vetDoctors.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">कोई डॉक्टर विवरण मौजूद नहीं है।</div>';
+        return;
+      }
+      vetDoctors.forEach(doc => {
+        const cleanPhone = doc.phone.replace(/\D/g, '');
+        container.innerHTML += `
+          <div class="p-3 bg-slate-50 border-2 border-slate-200 rounded-2xl flex items-center justify-between">
+            <div>
+              <h4 class="font-black text-slate-900 text-sm">${doc.name}</h4>
+              <p class="text-[11px] text-slate-500 font-semibold">${doc.clinic} • ${doc.phone}</p>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <a href="tel:${cleanPhone}" class="w-8 h-8 rounded-xl bg-emerald-700 text-white flex items-center justify-center text-xs shadow">
+                <i class="fa-solid fa-phone"></i>
+              </a>
+              <a href="https://wa.me/91${cleanPhone}?text=नमस्ते डॉ. साहब, प्रजापति डेयरी फार्म पर पशु स्वास्थ्य सहायता चाहिए।" target="_blank" class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xs shadow">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a>
+              ${isAdmin ? `<button onclick="deleteVetDoctor('${doc.id}')" class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xs border border-rose-300 ml-1"><i class="fa-solid fa-trash"></i></button>` : ''}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // ==================== CATTLE BREED & CATEGORY SELECTION ====================
+    function adjustBreedOptions() {
+      const type = document.getElementById('catCategoryType').value;
+      const breedSelect = document.getElementById('catBreed');
+      breedSelect.innerHTML = '';
+      if (type.includes('भैंस')) {
+        breedSelect.innerHTML = `
+          <option value="मुर्राह भैंस (310 दिन)">मुर्राह भैंस (310 दिन)</option>
+          <option value="नीली रावी भैंस (310 दिन)">नीली रावी भैंस (310 दिन)</option>
+          <option value="देसी / अन्य भैंस (310 दिन)">देसी / अन्य भैंस (310 दिन)</option>
+        `;
+      } else {
+        breedSelect.innerHTML = `
+          <option value="देसी / साहीवाल गाय (280 दिन)">देसी / साहीवाल गाय (280 दिन)</option>
+          <option value="HF / जर्सी क्रॉस (280 दिन)">HF / जर्सी क्रॉस (280 दिन)</option>
+          <option value="गीर गाय (280 दिन)">गीर गाय (280 दिन)</option>
+          <option value="अन्य गाय (280 दिन)">अन्य गाय (280 दिन)</option>
+        `;
+      }
+    }
+
+    function adjustCalfGenderOptions() {
+      const type = document.getElementById('calfCategoryType').value;
+      const genderSelect = document.getElementById('calfGender');
+      genderSelect.innerHTML = '';
+      if (type.includes('भैंस')) {
+        genderSelect.innerHTML = `
+          <option value="कटड़ा (Male Buffalo)">कटड़ा (Male Buffalo)</option>
+          <option value="कटिया / पड़िया (Female Buffalo)">कटिया / पड़िया (Female Buffalo)</option>
+        `;
+      } else {
+        genderSelect.innerHTML = `
+          <option value="बछड़ा (Male Calf)">बछड़ा (Male Calf)</option>
+          <option value="बछिया (Female Calf)">बछिया (Female Calf)</option>
+        `;
+      }
+      populateMotherOptions();
+    }
+
+    function populateMotherOptions() {
+      const calfType = document.getElementById('calfCategoryType').value;
+      const motherSelect = document.getElementById('calfMotherTagSelect');
+      motherSelect.innerHTML = '';
+      const isBuffalo = calfType.includes('भैंस');
+
+      const matchingMothers = cattleData.filter(c => isBuffalo ? (c.categoryType || '').includes('भैंस') : (c.categoryType || '').includes('गाय'));
+      if (matchingMothers.length === 0) {
+        motherSelect.innerHTML = '<option value="">कोई उपयुक्त माता उपलब्ध नहीं</option>';
+        return;
+      }
+      matchingMothers.forEach(m => {
+        motherSelect.innerHTML += `<option value="${m.tag}">${m.categoryType || ''} - टैग: ${m.tag} (${m.breed})</option>`;
+      });
+    }
+
+    function populateSelectableSellAnimals() {
+      const sel = document.getElementById('saleSelectableAnimal');
+      sel.innerHTML = '<option value="">-- चुनें --</option>';
+
+      sel.innerHTML += '<optgroup label="🐃 भैंस">';
+      cattleData.filter(c => (c.categoryType || '').includes('भैंस')).forEach(c => {
+        sel.innerHTML += `<option value="cattle_${c.id}">भैंस - टैग: ${c.tag} (${c.breed})</option>`;
+      });
+      sel.innerHTML += '</optgroup>';
+
+      sel.innerHTML += '<optgroup label="🐄 गाय">';
+      cattleData.filter(c => (c.categoryType || '').includes('गाय')).forEach(c => {
+        sel.innerHTML += `<option value="cattle_${c.id}">गाय - टैग: ${c.tag} (${c.breed})</option>`;
+      });
+      sel.innerHTML += '</optgroup>';
+
+      sel.innerHTML += '<optgroup label="👶 बछड़ा / कटड़ा">';
+      calfData.forEach(c => {
+        sel.innerHTML += `<option value="calf_${c.id}">${c.categoryType || 'बच्चा'} - टैग: ${c.tag} (${c.gender})</option>`;
+      });
+      sel.innerHTML += '</optgroup>';
+    }
+
+    function populateAnimalExpenseDropdown() {
+      const sel = document.getElementById('expAnimalTagRef');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">-- सामान्य / कोई विशेष पशु नहीं --</option>';
+      cattleData.forEach(c => {
+        sel.innerHTML += `<option value="${c.categoryType} #${c.tag}">${c.categoryType} (टैग: ${c.tag})</option>`;
+      });
+    }
+
+    // ==================== CATTLE SUBMIT WITH FULL LIFECYCLE ====================
+    function handleCattleFormSubmit(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const editId = document.getElementById('editCatRecordId').value;
+      const categoryType = document.getElementById('catCategoryType').value;
+      const tag = document.getElementById('catTag').value.trim();
+
+      const existingSame = cattleData.find(c => c.tag === tag && c.categoryType === categoryType && c.id !== editId);
+      if (existingSame) {
+        alert(`त्रुटि: ${categoryType} वर्ग में टैग संख्या '${tag}' पहले से मौजूद है!`);
+        return;
+      }
+
+      const pashuPayload = {
+        categoryType: categoryType,
+        tag: tag,
+        breed: document.getElementById('catBreed').value,
+        status: document.getElementById('catStatus').value,
+        milk: parseFloat(document.getElementById('catDailyMilk').value) || 0,
+        buyDate: document.getElementById('catBuyDate').value || today,
+        buyCost: parseFloat(document.getElementById('catBuyCost').value) || 0,
+        aiDate: document.getElementById('catAiDate').value || '',
+        dewormDate: document.getElementById('catDewormDate').value || '',
+        vaccine: document.getElementById('catVaccine').value.trim() || 'कोई नहीं',
+        timestamp: Date.now()
+      };
+
+      if (editId) {
+        db.ref('cattle_records/' + editId).update(pashuPayload).then(() => {
+          alert("पशु विवरण सफलतापूर्वक अपडेट हुआ!");
+          cancelCattleEdit();
+        });
+      } else {
+        db.ref('cattle_records').push(pashuPayload).then(() => {
+          alert("नया पशु प्रोफाइल सुरक्षित हुआ!");
+          cancelCattleEdit();
+        });
+      }
+    }
+
+    function addCalfEntry(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const categoryType = document.getElementById('calfCategoryType').value;
+      const tag = document.getElementById('calfTag').value.trim();
+      const motherTag = document.getElementById('calfMotherTagSelect').value;
+
+      db.ref('calf_records').push({
+        categoryType,
+        tag,
+        motherTag,
+        gender: document.getElementById('calfGender').value,
+        birthDate: document.getElementById('calfBirthDate').value,
+        timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('calfTag').value = '';
+        alert("बछड़ा / कटड़ा जन्म रिकॉर्ड सुरक्षित हुआ!");
+      });
+    }
+
+    // Sell Animal & Archive with Full History
+    function handleSellAnimalSubmit(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+
+      const date = document.getElementById('saleAnimalDate').value;
+      const selectedVal = document.getElementById('saleSelectableAnimal').value;
+      const buyer = document.getElementById('saleBuyerName').value.trim();
+      const amount = parseFloat(document.getElementById('saleAnimalAmount').value) || 0;
+
+      if (!selectedVal) {
+        alert("कृपया बेचा जाने वाला पशु या बच्चा चुनें!");
+        return;
+      }
+
+      const [type, id] = selectedVal.split('_');
+      let targetAnimal = null;
+      let isCalf = false;
+
+      if (type === 'cattle') {
+        targetAnimal = cattleData.find(c => c.id === id);
+      } else {
+        targetAnimal = calfData.find(c => c.id === id);
+        isCalf = true;
+      }
+
+      if (!targetAnimal) {
+        alert("पशु रिकॉर्ड नहीं मिला!");
+        return;
+      }
+
+      const tagKey = `${targetAnimal.categoryType} #${targetAnimal.tag}`;
+      const relevantExpenses = expenseData.filter(ex => ex.animalTag === tagKey);
+      const totalMedicalExp = relevantExpenses.reduce((sum, ex) => sum + (ex.amount || 0), 0);
+
+      const calvesBorn = calfData.filter(cal => cal.motherTag === targetAnimal.tag);
+
+      const archiveRecord = {
+        date: date,
+        tag: targetAnimal.tag,
+        categoryType: targetAnimal.categoryType || (isCalf ? 'बच्चा' : 'पशु'),
+        breed: targetAnimal.breed || targetAnimal.gender || 'सामान्य',
+        buyer: buyer,
+        amount: amount,
+        buyDate: targetAnimal.buyDate || targetAnimal.birthDate || '-',
+        buyCost: targetAnimal.buyCost || 0,
+        lastDailyMilk: targetAnimal.milk || 0,
+        totalMedicalExp: totalMedicalExp,
+        expenseHistory: relevantExpenses.map(re => ({ date: re.date, detail: re.detail, amount: re.amount })),
+        calvesCount: calvesBorn.length,
+        timestamp: Date.now()
+      };
+
+      db.ref('sold_animals_archive').push(archiveRecord).then(() => {
+        if (isCalf) db.ref('calf_records/' + id).remove();
+        else db.ref('cattle_records/' + id).remove();
+
+        db.ref('animal_sales').push({ date, tag: targetAnimal.tag, buyer, amount, timestamp: Date.now() });
+
+        document.getElementById('saleBuyerName').value = '';
+        document.getElementById('saleAnimalAmount').value = '';
+        alert(`सफलता! '${targetAnimal.tag}' का पूरा इतिहास 'बेचे गए पशुओं के फोल्डर' में सुरक्षित हो गया है।`);
+      });
+    }
+
+    // Render Sold Animals Full Lifecycle Archive
+    function renderSoldArchiveFolder() {
+      const container = document.getElementById('soldAnimalsListContainer');
+      container.innerHTML = '';
+
+      if (soldArchiveData.length === 0) {
+        container.innerHTML = '<div class="p-8 text-center text-xs text-slate-400">अभी तक कोई पशु नहीं बेचा गया है।</div>';
+        return;
+      }
+
+      soldArchiveData.forEach(item => {
+        const netProfit = (item.amount || 0) - ((item.buyCost || 0) + (item.totalMedicalExp || 0));
+        let expRows = '';
+        if (item.expenseHistory && item.expenseHistory.length > 0) {
+          expRows = item.expenseHistory.map(eh => `<div class="flex justify-between text-[11px] py-0.5 border-b border-slate-100"><span>• ${eh.date} - ${eh.detail}</span><span class="font-bold text-rose-700">₹${eh.amount}</span></div>`).join('');
+        } else {
+          expRows = '<div class="text-[11px] text-slate-400">कोई विशेष इलाज खर्च दर्ज नहीं</div>';
+        }
+
+        container.innerHTML += `
+          <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-300 space-y-2.5">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-200 text-amber-950">${item.categoryType}</span>
+                <h4 class="text-lg font-black text-slate-900 mt-1">टैग संख्या: ${item.tag} (${item.breed})</h4>
+                <p class="text-[11px] text-slate-500 font-medium">बिक्री तारीख: ${item.date} • खरीदार: <b>${item.buyer}</b></p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs text-slate-400 font-bold block uppercase">बिक्री मूल्य</span>
+                <span class="text-xl font-black text-emerald-800">₹ ${item.amount.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-200 text-xs">
+              <div class="p-2 bg-white rounded-xl border"><b>खरीद तारीख:</b> ${item.buyDate}</div>
+              <div class="p-2 bg-white rounded-xl border"><b>खरीद लागत:</b> ₹ ${item.buyCost.toLocaleString('en-IN')}</div>
+              <div class="p-2 bg-white rounded-xl border"><b>अंतिम दूध:</b> ${item.lastDailyMilk || 0} L/दिन</div>
+              <div class="p-2 bg-white rounded-xl border"><b>दिए गए बच्चे:</b> ${item.calvesCount || 0}</div>
+            </div>
+
+            <div class="p-3 bg-rose-50/60 rounded-xl border border-rose-200">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-rose-950">इस पशु पर कुल इलाज/दवाई खर्च:</span>
+                <span class="font-black text-rose-800 text-sm">₹ ${(item.totalMedicalExp || 0).toLocaleString('en-IN')}</span>
+              </div>
+              <div class="max-h-24 overflow-y-auto space-y-0.5">${expRows}</div>
+            </div>
+
+            <div class="p-2.5 bg-gradient-to-r ${netProfit >= 0 ? 'from-emerald-100 to-emerald-50 border-emerald-400 text-emerald-950' : 'from-rose-100 to-rose-50 border-rose-400 text-rose-950'} rounded-xl border flex justify-between items-center text-xs font-bold">
+              <span>शुद्ध मुनाफा / घाटा (बिक्री - खरीद - इलाज):</span>
+              <span class="text-base font-black">${netProfit >= 0 ? '+ ₹ ' + netProfit.toLocaleString('en-IN') : '- ₹ ' + Math.abs(netProfit).toLocaleString('en-IN')}</span>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // ==================== CATTLE RENDERING ====================
+    function renderCattleHeadings() {
+      const bufContainer = document.getElementById('buffaloHeadingList');
+      const cowContainer = document.getElementById('cowHeadingList');
+      bufContainer.innerHTML = '';
+      cowContainer.innerHTML = '';
+      const now = new Date();
+
+      cattleData.forEach(item => {
+        let calvingHtml = '';
+        if (item.aiDate) {
+          const aiD = new Date(item.aiDate);
+          const isBuffalo = (item.categoryType || '').includes('भैंस');
+          const calvingDate = new Date(aiD);
+          calvingDate.setDate(calvingDate.getDate() + (isBuffalo ? 310 : 280));
+          const diffDays = Math.ceil((calvingDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          calvingHtml = `<div class="p-2.5 bg-blue-50 rounded-xl border text-xs"><b>संभावित डिलीवरी:</b> ${calvingDate.toLocaleDateString('hi-IN', {day:'numeric',month:'short'})} (${diffDays} दिन बाकी)</div>`;
+        }
+
+        const isBuf = (item.categoryType || '').includes('भैंस');
+        const targetContainer = isBuf ? bufContainer : cowContainer;
+
+        const popupCattleHtml = `
+          <div class="space-y-3">
+            <div class="p-3 bg-amber-50 rounded-2xl border-2 border-amber-300 flex justify-between items-start">
+              <div><span class="text-[10px] font-bold text-amber-800 uppercase block">${item.categoryType} • ${item.breed}</span><h4 class="text-xl font-black text-amber-950">टैग: ${item.tag}</h4></div>
+              <span class="text-xs bg-emerald-100 text-emerald-900 font-bold px-2.5 py-1 rounded-full border border-emerald-300">${item.status || 'दूध दे रही है'}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>दैनिक दूध:</b> ${item.milk || 0} L/दिन</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>खरीद तारीख:</b> ${item.buyDate || '-'}</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>खरीद लागत:</b> ₹ ${item.buyCost || '0'}</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>AI तारीख:</b> ${item.aiDate || '-'}</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>टीकाकरण:</b> ${item.vaccine || '-'}</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>कीड़े की दवा:</b> ${item.dewormDate || '-'}</div>
+            </div>
+            ${calvingHtml}
+            <div class="pt-2 flex justify-between gap-2">
+              <button onclick="startEditCattle('${item.id}')" class="w-full bg-slate-900 text-amber-300 font-bold py-2.5 rounded-xl text-xs"><i class="fa-solid fa-pen-to-square"></i> विवरण एडिट करें</button>
+              ${isAdmin ? `<button onclick="deleteCattle('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300">डिलीट</button>` : ''}
+            </div>
+          </div>
+        `;
+
+        targetContainer.innerHTML += `
+          <div onclick="openUniversalModal('${item.categoryType} टैग: ${item.tag}', '${item.breed}', \`${popupCattleHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-amber-600 cursor-pointer transition flex items-center justify-between">
+            <div>
+              <h4 class="font-black text-slate-900 text-sm">टैग: ${item.tag}</h4>
+              <span class="text-[11px] text-slate-500">${item.breed} • ${item.milk || 0}L/दिन</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-950">${item.status ? item.status.split(' ')[0] : 'दूध'}</span>
+              <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+            </div>
+          </div>
+        `;
+      });
+
+      calfData.forEach(c => {
+        const isBuf = (c.categoryType || '').includes('भैंस');
+        const targetContainer = isBuf ? bufContainer : cowContainer;
+
+        const popupCalfHtml = `
+          <div class="space-y-3">
+            <div class="p-3 bg-blue-50 rounded-2xl border-2 border-blue-300">
+              <span class="text-[10px] font-bold text-blue-800 uppercase block">${c.categoryType}</span>
+              <h4 class="text-xl font-black text-blue-950">👶 टैग: ${c.tag} (${c.gender})</h4>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border text-xs space-y-1.5">
+              <div><b>माता का टैग:</b> ${c.motherTag}</div>
+              <div><b>जन्म तारीख:</b> ${c.birthDate}</div>
+            </div>
+            ${isAdmin ? `<div class="pt-2 flex justify-end"><button onclick="deleteCalf('${c.id}')" class="bg-rose-100 text-rose-700 font-bold py-2 px-4 rounded-xl text-xs border">डिलीट</button></div>` : ''}
+          </div>
+        `;
+
+        targetContainer.innerHTML += `
+          <div onclick="openUniversalModal('बच्चा टैग: ${c.tag}', '${c.categoryType} • माता: ${c.motherTag}', \`${popupCalfHtml.replace(/"/g, '&quot;')}\`)" class="bg-blue-50/60 p-3.5 rounded-2xl border-2 border-blue-300 shadow-sm hover:border-blue-600 cursor-pointer transition flex items-center justify-between">
+            <div>
+              <h4 class="font-black text-blue-950 text-sm">👶 टैग: ${c.tag}</h4>
+              <span class="text-[11px] text-blue-800">माता: ${c.motherTag} (${c.gender.split(' ')[0]})</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-blue-300 text-xs"></i>
+          </div>
+        `;
+      });
+
+      document.getElementById('cattleRecordCount').innerText = `${cattleData.length} बड़े + ${calfData.length} बच्चे`;
+      populateMotherOptions();
+      populateSelectableSellAnimals();
+      populateAnimalExpenseDropdown();
+    }
+
+    function startEditCattle(id) {
+      if (!isAdmin) return;
+      closeUniversalModal();
+      const item = cattleData.find(c => c.id === id);
+      if (!item) return;
+
+      document.getElementById('editCatRecordId').value = id;
+      document.getElementById('catCategoryType').value = item.categoryType || 'भैंस (Buffalo)';
+      adjustBreedOptions();
+      document.getElementById('catTag').value = item.tag || '';
+      document.getElementById('catBreed').value = item.breed || '';
+      document.getElementById('catStatus').value = item.status || 'दूध दे रही है (Lactating)';
+      document.getElementById('catDailyMilk').value = item.milk || 0;
+      document.getElementById('catBuyDate').value = item.buyDate || today;
+      document.getElementById('catBuyCost').value = item.buyCost || '';
+      document.getElementById('catAiDate').value = item.aiDate || '';
+      document.getElementById('catDewormDate').value = item.dewormDate || '';
+      document.getElementById('catVaccine').value = item.vaccine || '';
+
+      document.getElementById('catFormTitle').innerText = "पशु एडिट करें: " + item.tag;
+      document.getElementById('cancelCatEditBtn').classList.remove('hidden');
+      toggleCattleSubForm('addAnimal');
+      window.scrollTo({ top: 300, behavior: 'smooth' });
+    }
+
+    function cancelCattleEdit() {
+      document.getElementById('editCatRecordId').value = '';
+      document.getElementById('catTag').value = '';
+      document.getElementById('catDailyMilk').value = '';
+      document.getElementById('catBuyCost').value = '';
+      document.getElementById('catAiDate').value = '';
+      document.getElementById('catDewormDate').value = '';
+      document.getElementById('catVaccine').value = '';
+      document.getElementById('catFormTitle').innerText = "नया पशु प्रोफाइल (Admin Mode)";
+      document.getElementById('cancelCatEditBtn').classList.add('hidden');
+    }
+
+    function deleteCattle(id) {
+      if (!isAdmin) return;
+      if (confirm("यह पशु रिकॉर्ड हटाएं?")) {
+        db.ref('cattle_records/' + id).remove();
+        closeUniversalModal();
+      }
+    }
+    function deleteCalf(id) {
+      if (!isAdmin) return;
+      if (confirm("यह बच्चा रिकॉर्ड हटाएं?")) {
+        db.ref('calf_records/' + id).remove();
+        closeUniversalModal();
+      }
+    }
+
+    function toggleCattleSubForm(mode) {
+      document.getElementById('catAdminForm').classList.add('hidden');
+      document.getElementById('calfAdminForm').classList.add('hidden');
+      document.getElementById('sellAnimalAdminForm').classList.add('hidden');
+
+      document.getElementById('subBtnAddAnimal').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border-2 border-slate-300 shadow";
+      document.getElementById('subBtnAddCalf').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border-2 border-slate-300 shadow";
+      document.getElementById('subBtnSellAnimal').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-emerald-800 border-2 border-emerald-400 shadow";
+
+      if (mode === 'addAnimal') {
+        document.getElementById('catAdminForm').classList.remove('hidden');
+        document.getElementById('subBtnAddAnimal').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-slate-900 text-amber-300 border-2 border-slate-700 shadow";
+      } else if (mode === 'addCalf') {
+        document.getElementById('calfAdminForm').classList.remove('hidden');
+        document.getElementById('subBtnAddCalf').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-blue-900 text-white border-2 border-blue-700 shadow";
+      } else if (mode === 'sellAnimal') {
+        document.getElementById('sellAnimalAdminForm').classList.remove('hidden');
+        document.getElementById('subBtnSellAnimal').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-emerald-800 text-white border-2 border-emerald-600 shadow";
+      }
+    }
+
+    // ==================== EXPENSE MODULE ====================
+    function toggleExpenseFields() {
+      const cat = document.getElementById('expCategory').value;
+      const feedRow = document.getElementById('feedStockSyncRow');
+      if (cat.includes('चारा / खली')) feedRow.classList.remove('hidden');
+      else feedRow.classList.add('hidden');
+    }
+
+    function addExpenseEntry(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const date = document.getElementById('expDate').value;
+      const category = document.getElementById('expCategory').value;
+      const animalTag = document.getElementById('expAnimalTagRef').value;
+      const detail = document.getElementById('expDetail').value.trim();
+      const amount = parseFloat(document.getElementById('expAmount').value) || 0;
+      const paymentMode = document.getElementById('expPaymentMode').value;
+
+      db.ref('expense_records').push({
+        date, category, animalTag, detail, amount, paymentMode, timestamp: Date.now()
+      }).then(() => {
+        const isSyncStock = document.getElementById('syncToStockCheckbox').checked;
+        const syncQty = parseFloat(document.getElementById('syncStockQty').value) || 0;
+        const syncUnit = document.getElementById('syncStockUnit').value;
+
+        if (category.includes('चारा / खली') && isSyncStock && syncQty > 0) {
+          db.ref('stock_records').push({
+            name: detail, qty: syncQty, unit: syncUnit, dailyUse: 1, alertDays: 3, updatedAt: Date.now(), timestamp: Date.now()
+          });
+        }
+        document.getElementById('expDetail').value = '';
+        document.getElementById('expAmount').value = '';
+        document.getElementById('syncStockQty').value = '';
+        alert("खर्च दर्ज हो गया!");
+      });
+    }
+
+    function deleteExpense(id) {
+      if (!isAdmin) return;
+      if (confirm("यह खर्च हटाएं?")) {
+        db.ref('expense_records/' + id).remove();
+        closeUniversalModal();
+      }
+    }
+
+    function renderExpense() {
+      const container = document.getElementById('expenseHeadingList');
+      container.innerHTML = '';
+      let totFeed = 0, totLabour = 0, totMed = 0, totOther = 0;
+
+      expenseData.forEach(item => {
+        const cat = item.category || '';
+        const amt = item.amount || 0;
+        if (cat.includes('चारा')) totFeed += amt;
+        else if (cat.includes('मजदूर') || cat.includes('वेतन')) totLabour += amt;
+        else if (cat.includes('दवाई')) totMed += amt;
+        else totOther += amt;
+
+        const popupExpenseHtml = `
+          <div class="space-y-3">
+            <div class="p-3 bg-purple-50 rounded-2xl border-2 border-purple-200">
+              <span class="text-[10px] font-bold text-purple-700 uppercase block">${item.category}</span>
+              <h4 class="text-xl font-black text-purple-950 mt-1">₹ ${item.amount.toFixed(2)}</h4>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border text-xs space-y-1.5">
+              <div><b>तारीख:</b> ${item.date}</div>
+              <div><b>विवरण:</b> ${item.detail}</div>
+              <div><b>संबंधित पशु:</b> ${item.animalTag || 'सामान्य फार्म खर्च'}</div>
+              <div><b>भुगतान माध्यम:</b> ${item.paymentMode || 'PhonePe / UPI'}</div>
+            </div>
+            <div class="pt-2 flex justify-between items-center gap-2">
+              ${isAdmin ? `<button onclick="deleteExpense('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300"><i class="fa-solid fa-trash-can"></i> डिलीट</button>` : ''}
+            </div>
+          </div>
+        `;
+
+        container.innerHTML += `
+          <div onclick="openUniversalModal('${item.detail}', '${item.date} • ${item.category}', \`${popupExpenseHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-purple-600 cursor-pointer transition flex items-center justify-between">
+            <div>
+              <h4 class="font-black text-slate-900 text-sm">${item.detail}</h4>
+              <span class="text-[11px] text-slate-500 font-medium">${item.date} • ${item.animalTag ? item.animalTag : item.category}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-black text-purple-900 text-sm">₹${item.amount.toFixed(0)}</span>
+              <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('expRecordCount').innerText = `${expenseData.length} एंट्री`;
+      document.getElementById('dispCatFeed').innerText = '₹ ' + totFeed.toLocaleString('en-IN');
+      document.getElementById('dispCatLabour').innerText = '₹ ' + totLabour.toLocaleString('en-IN');
+      document.getElementById('dispCatMedical').innerText = '₹ ' + totMed.toLocaleString('en-IN');
+      document.getElementById('dispCatOther').innerText = '₹ ' + totOther.toLocaleString('en-IN');
+    }
+
+    // ==================== CUSTOMER & QR BILL WHATSAPP ====================
+    function addCustomerPayment(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      db.ref('customer_payments').push({
+        date: document.getElementById('custPayDate').value,
+        name: document.getElementById('custPayName').value.trim(),
+        amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
+        note: document.getElementById('custPayNote').value.trim() || 'जमा',
+        timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('custPayName').value = '';
+        document.getElementById('custPayAmount').value = '';
+      });
+    }
+
+    function sendWhatsAppPaymentReminder(custName, balance) {
+      const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
+      const phoneText = paymentSettings.upiPhone ? `%0A*PhonePe / GPay:* ${paymentSettings.upiPhone}` : '';
+      const bankText = paymentSettings.bankAcc ? `%0A*बैंक खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})` : '';
+
+      // QR Link injection for WhatsApp
+      let qrText = '';
+      if (paymentSettings.qrImage) {
+        qrText = `%0A*भुगतान QR कोड देखें:* ${window.location.origin}/#payment-qr (या स्क्रीनशॉट से स्कैन करें)`;
+      }
+
+      const msg = `*प्रजापति डेयरी फॉर्म - उधारी भुगतान तगादा*%0A--------------------------------%0Aनमस्ते *${custName}*,%0Aडेयरी बहीखाते के अनुसार आपकी कुल बकाया रकम *₹ ${balance.toFixed(2)}* है।%0Aकृपया नीचे दिए गए UPI, बैंक विवरण अथवा QR कोड से ऑनलाइन भुगतान करने का कष्ट करें:${upiText}${phoneText}${bankText}${qrText}%0A--------------------------------%0Aभुगतान के पश्चात स्क्रीनशॉट अवश्य साझा करें। धन्यवाद!`;
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
+    }
+
+    function renderCustomerSummary() {
+      const custSummary = {};
+      milkData.forEach(m => {
+        if(!custSummary[m.customer]) custSummary[m.customer] = { totalMilk: 0, totalBill: 0, totalPaid: 0 };
+        custSummary[m.customer].totalMilk += m.qty;
+        custSummary[m.customer].totalBill += m.total;
+      });
+      customerPayments.forEach(p => {
+        if(!custSummary[p.name]) custSummary[p.name] = { totalMilk: 0, totalBill: 0, totalPaid: 0 };
+        custSummary[p.name].totalPaid += p.amount;
+      });
+
+      const container = document.getElementById('customerHeadingList');
+      container.innerHTML = '';
+      Object.keys(custSummary).forEach(name => {
+        const data = custSummary[name];
+        const balance = data.totalBill - data.totalPaid;
+        const isDue = balance > 0;
+
+        const qrPreviewBlock = paymentSettings.qrImage ? `
+          <div class="p-2.5 bg-sky-50 rounded-xl border border-sky-200 text-center">
+            <span class="text-[10px] font-bold text-sky-900 block mb-1">स्कैन करके भुगतान करने हेतु QR कोड</span>
+            <img src="${paymentSettings.qrImage}" alt="QR" class="w-24 h-24 mx-auto object-contain border rounded-lg shadow-sm" />
+          </div>
+        ` : '';
+
+        const popupCustHtml = `
+          <div class="space-y-3">
+            <div class="p-3 bg-slate-50 rounded-2xl border flex justify-between items-center">
+              <div><h4 class="text-xl font-black text-slate-900">${name}</h4><span class="text-xs text-slate-500">कुल दूध लिया: ${data.totalMilk.toFixed(1)} L</span></div>
+              <span class="text-xl font-black ${isDue ? 'text-rose-700':'text-emerald-700'}">₹ ${balance.toFixed(2)}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>कुल बिल:</b> ₹ ${data.totalBill.toFixed(0)}</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>जमा रकम:</b> ₹ ${data.totalPaid.toFixed(0)}</div>
+            </div>
+            ${qrPreviewBlock}
+            <div class="pt-2 flex flex-col gap-2">
+              ${isDue ? `
+                <button onclick="sendWhatsAppPaymentReminder('${name}', ${balance})" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
+                  <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp पर तगादा व बैंक/QR भेजें
+                </button>
+              ` : '<span class="text-xs text-emerald-700 font-bold text-center">हिसाब चुकता है</span>'}
+            </div>
+          </div>
+        `;
+
+        container.innerHTML += `
+          <div onclick="openUniversalModal('${name}', 'बकाया: ₹${balance.toFixed(0)}', \`${popupCustHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-indigo-600 cursor-pointer transition flex items-center justify-between">
+            <div>
+              <h4 class="font-black text-slate-900 text-sm">${name}</h4>
+              <span class="text-[11px] text-slate-500">दूध: ${data.totalMilk.toFixed(0)}L • जमा: ₹${data.totalPaid.toFixed(0)}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-black text-sm ${isDue ? 'text-rose-700' : 'text-emerald-700'}">₹${balance.toFixed(0)}</span>
+              <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // ==================== FEED STOCK ====================
+    function addStockItem(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      db.ref('stock_records').push({
+        name: document.getElementById('stockName').value.trim(),
+        qty: parseFloat(document.getElementById('stockQty').value) || 0,
+        unit: document.getElementById('stockUnit').value,
+        dailyUse: parseFloat(document.getElementById('stockDailyUse').value) || 1,
+        alertDays: parseFloat(document.getElementById('stockAlertDays').value) || 3,
+        updatedAt: Date.now(), timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('stockName').value = '';
+        document.getElementById('stockQty').value = '';
+      });
+    }
+
+    function updateStockQty(id, change) {
+      if (!isAdmin) return;
+      const item = stockData.find(x => x.id === id);
+      if (item) {
+        db.ref('stock_records/' + id).update({ qty: Math.max(0, item.qty + change), updatedAt: Date.now() });
+        closeUniversalModal();
+      }
+    }
+    function deleteStock(id) {
+      if (!isAdmin) return;
+      if (confirm("यह स्टॉक हटाएं?")) {
+        db.ref('stock_records/' + id).remove();
+        closeUniversalModal();
+      }
+    }
+
+    function renderStock() {
+      const container = document.getElementById('stockHeadingList');
+      container.innerHTML = '';
+      let warningAlerts = [];
+
+      stockData.forEach(item => {
+        const daysLeft = Math.floor(item.qty / (item.dailyUse || 1));
+        const finishDate = new Date(); finishDate.setDate(finishDate.getDate() + daysLeft);
+        const isLow = daysLeft <= (item.alertDays || 3);
+        if (isLow && item.qty > 0) warningAlerts.push(`⚠️ <b>${item.name}</b> मात्र <b>${daysLeft} दिन</b> चलेगा! नया चारा मंगाएं।`);
+
+        const popupStockHtml = `
+          <div class="space-y-3">
+            <div class="p-3 bg-yellow-50 rounded-2xl border-2 border-yellow-300">
+              <span class="text-[10px] font-bold text-yellow-800 uppercase block">चारा / दाना</span>
+              <h4 class="text-xl font-black text-yellow-950">${item.name}</h4>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>वर्तमान स्टॉक:</b> ${item.qty} ${item.unit}</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>दैनिक खपत:</b> ${item.dailyUse || 1} ${item.unit}/दिन</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>शेष दिन:</b> ${daysLeft} दिन</div>
+              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>खत्म तारीख:</b> ${finishDate.toLocaleDateString('hi-IN', {day:'numeric',month:'short'})}</div>
+            </div>
+            ${isAdmin ? `
+              <div class="p-2.5 bg-slate-100 rounded-xl flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-700">स्टॉक मात्रा बदलें:</span>
+                <div class="flex gap-2">
+                  <button onclick="updateStockQty('${item.id}', -1)" class="w-9 h-9 bg-slate-200 hover:bg-slate-300 font-black rounded-lg">-1</button>
+                  <button onclick="updateStockQty('${item.id}', 1)" class="w-9 h-9 bg-slate-900 text-white font-black rounded-lg">+1</button>
+                </div>
+              </div>
+              <div class="pt-2 flex justify-end">
+                <button onclick="deleteStock('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2 px-4 rounded-xl text-xs border">डिलीट स्टॉक</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        container.innerHTML += `
+          <div onclick="openUniversalModal('${item.name}', 'स्टॉक: ${item.qty} ${item.unit}', \`${popupStockHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-yellow-600 cursor-pointer transition flex items-center justify-between">
+            <div>
+              <h4 class="font-black text-slate-900 text-sm">${item.name}</h4>
+              <span class="text-[11px] text-slate-500">${item.qty} ${item.unit} • ${daysLeft} दिन शेष</span>
+            </div>
+            <div class="flex items-center gap-2">
+              ${isLow ? '<span class="text-[10px] font-black bg-rose-600 text-white px-2 py-0.5 rounded-full">कम स्टॉक</span>' : ''}
+              <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('stockRecordCount').innerText = `${stockData.length} आइटम`;
+      if (warningAlerts.length > 0 && isAdmin && !isStockSnoozed()) {
+        document.getElementById('stockNotificationList').innerHTML = warningAlerts.map(msg => `<div>${msg}</div>`).join('');
+        document.getElementById('stockNotificationBanner').classList.remove('hidden');
+      } else {
+        document.getElementById('stockNotificationBanner').classList.add('hidden');
+      }
+    }
+
+    // ==================== LABOUR & SALARY SNOOZE CHECK ====================
+    function addLabourProfile(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      db.ref('labour_profiles').push({
+        name: document.getElementById('labourName').value.trim(),
+        phone: document.getElementById('labourPhone').value.trim() || '-',
+        salary: parseFloat(document.getElementById('labourSalary').value) || 0,
+        joinDate: document.getElementById('labourJoinDate').value,
+        dutyTime: document.getElementById('labourDutyTime').value || '06:00',
+        alertMode: document.getElementById('labourAlertMode').value,
+        aadhar: document.getElementById('labourAadhar').value.trim() || '-',
+        address: document.getElementById('labourAddress').value.trim() || 'फार्म कार्य',
+        timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('labourName').value = '';
+        document.getElementById('labourPhone').value = '';
+        document.getElementById('labourSalary').value = '';
+        alert("मजदूर प्रोफाइल जोड़ी गई!");
+      });
+    }
+
+    function checkSalaryAlerts() {
+      const notifBanner = document.getElementById('salaryNotificationBanner');
+      const notifList = document.getElementById('salaryNotificationList');
+      notifList.innerHTML = '';
+      let salaryAlerts = [];
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const currentDate = now.getDate();
+
+      labourProfiles.forEach(labour => {
+        if (!labour.joinDate) return;
+        const jDate = new Date(labour.joinDate);
+        const cycleDay = jDate.getDate();
+        let targetSalaryDate = new Date(currentYear, currentMonth, cycleDay);
+        if (targetSalaryDate < now && Math.abs(currentDate - cycleDay) > 5) {
+          targetSalaryDate = new Date(currentYear, currentMonth + 1, cycleDay);
+        }
+        const diffDays = Math.ceil((targetSalaryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0 && diffDays <= 5) {
+          salaryAlerts.push(`💰 <b>${labour.name}</b> का वेतन <b>₹${labour.salary.toLocaleString('en-IN')}</b> आगामी देय है (${diffDays} दिन शेष)!`);
+        }
+      });
+
+      if (salaryAlerts.length > 0 && isAdmin && !isSalarySnoozed()) {
+        notifList.innerHTML = salaryAlerts.map(msg => `<div>${msg}</div>`).join('');
+        notifBanner.classList.remove('hidden');
+      } else {
+        notifBanner.classList.add('hidden');
+      }
+    }
+
+    function renderLabourProfiles() {
+      const container = document.getElementById('labourHeadingList');
+      container.innerHTML = '';
+      labourProfiles.forEach(item => {
+        const jDate = new Date(item.joinDate);
+        const joinStr = jDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        const cycleDay = jDate.getDate();
+
+        const popupLabourHtml = `
+          <div class="space-y-3">
+            <div class="p-3 bg-slate-50 rounded-2xl border flex justify-between items-center">
+              <div><h4 class="text-lg font-black text-slate-900">${item.name}</h4><span class="text-xs text-slate-500">${item.phone}</span></div>
+              <span class="text-base font-black text-emerald-900">₹ ${item.salary.toLocaleString('en-IN')} / माह</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <a href="tel:${item.phone}" class="bg-emerald-700 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-phone"></i> कॉल करें</a>
+              <a href="https://wa.me/91${item.phone.replace(/\D/g, '')}?text=नमस्ते ${item.name}, प्रजापति डेयरी फार्म पर आपके आने का समय ${item.dutyTime || '06:00'} है।" target="_blank" class="bg-rose-600 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border text-xs space-y-1">
+              <div><b>ड्यूटी समय:</b> ${item.dutyTime || '06:00'}</div>
+              <div><b>सैलरी तारीख:</b> हर महीने की ${cycleDay} तारीख</div>
+              <div><b>जॉइनिंग:</b> ${joinStr}</div>
+              <div><b>कार्य:</b> ${item.address}</div>
+            </div>
+            ${isAdmin ? `<div class="pt-2 flex justify-end"><button onclick="deleteLabourProfile('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2 px-4 rounded-xl text-xs border">डिलीट</button></div>` : ''}
+          </div>
+        `;
+
+        container.innerHTML += `
+          <div onclick="openUniversalModal('${item.name}', 'वेतन: ₹${item.salary} • ड्यूटी: ${item.dutyTime || '06:00'}', \`${popupLabourHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-slate-800 cursor-pointer transition flex items-center justify-between">
+            <div>
+              <h4 class="font-black text-slate-900 text-sm">${item.name}</h4>
+              <span class="text-[11px] text-slate-500">₹${item.salary}/माह • ${item.phone}</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+          </div>
+        `;
+      });
+      document.getElementById('labourRecordCount').innerText = `${labourProfiles.length} मजदूर`;
+    }
+
+    function deleteLabourProfile(id) {
+      if (!isAdmin) return;
+      if (confirm("मजदूर हटाएं?")) {
+        db.ref('labour_profiles/' + id).remove();
+        closeUniversalModal();
+      }
+    }
+
+    // ==================== MILK SALES & FILTER ====================
     let currentMilkFilter = 'all';
     let milkCustomStart = '';
     let milkCustomEnd = '';
@@ -966,7 +1944,7 @@
 
     function addMilkEntry(e) {
       e.preventDefault();
-      if (!isAdmin) { alert("सिर्फ एडमिन एंट्री कर सकते हैं!"); return; }
+      if (!isAdmin) return;
 
       const date = document.getElementById('milkDate').value;
       const shift = document.getElementById('milkShift').value;
@@ -978,8 +1956,7 @@
       const total = qty * rate;
 
       db.ref('milk_records').push({
-        date: date, shift: shift, saleType: saleType, customer: customer, qty: qty, rate: rate, total: total,
-        paymentStatus: paymentStatus, timestamp: Date.now()
+        date, shift, saleType, customer, qty, rate, total, paymentStatus, timestamp: Date.now()
       }).then(() => {
         document.getElementById('milkCustomer').value = '';
         document.getElementById('milkQty').value = '';
@@ -994,11 +1971,6 @@
         db.ref('milk_records/' + id).remove();
         closeUniversalModal();
       }
-    }
-
-    function sendCustomerMilkBill(name, date, qty, rate, total, status) {
-      const msg = `*प्रजापति डेयरी फॉर्म - दूध रसीद*%0A--------------------------------%0A*ग्राहक:* ${name}%0A*तारीख:* ${date}%0A*दूध मात्रा:* ${qty} L%0A*रेट:* ₹ ${rate}/L%0A*कुल रकम:* ₹ ${total}%0A*भुगतान स्थिति:* ${status}%0A--------------------------------%0Aधन्यवाद!`;
-      window.open(`https://wa.me/?text=${msg}`, '_blank');
     }
 
     function renderMilkSummaryStats() {
@@ -1058,9 +2030,6 @@
               <span class="text-xl font-black text-emerald-900">₹ ${item.total.toFixed(2)}</span>
             </div>
             <div class="pt-2 flex justify-between items-center gap-2">
-              <button onclick="sendCustomerMilkBill('${item.customer}', '${item.date}', ${item.qty}, ${item.rate}, ${item.total}, '${item.paymentStatus}')" class="w-full bg-emerald-700 text-white font-extrabold py-2.5 rounded-xl text-xs shadow flex items-center justify-center gap-1.5">
-                <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद भेजें
-              </button>
               ${isAdmin ? `<button onclick="deleteMilk('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300"><i class="fa-solid fa-trash-can"></i> डिलीट</button>` : ''}
             </div>
           </div>
@@ -1087,737 +2056,7 @@
       renderMilkSummaryStats();
     }
 
-    // ==================== EXPENSE ====================
-    function toggleExpenseFields() {
-      const cat = document.getElementById('expCategory').value;
-      const feedRow = document.getElementById('feedStockSyncRow');
-      if (cat.includes('चारा / खली')) feedRow.classList.remove('hidden');
-      else feedRow.classList.add('hidden');
-    }
-
-    function addExpenseEntry(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      const date = document.getElementById('expDate').value;
-      const category = document.getElementById('expCategory').value;
-      const detail = document.getElementById('expDetail').value.trim();
-      const amount = parseFloat(document.getElementById('expAmount').value) || 0;
-      const paymentMode = document.getElementById('expPaymentMode').value;
-
-      db.ref('expense_records').push({
-        date: date, category: category, detail: detail, amount: amount, paymentMode: paymentMode, timestamp: Date.now()
-      }).then(() => {
-        const isSyncStock = document.getElementById('syncToStockCheckbox').checked;
-        const syncQty = parseFloat(document.getElementById('syncStockQty').value) || 0;
-        const syncUnit = document.getElementById('syncStockUnit').value;
-
-        if (category.includes('चारा / खली') && isSyncStock && syncQty > 0) {
-          db.ref('stock_records').push({
-            name: detail, qty: syncQty, unit: syncUnit, dailyUse: 1, alertDays: 3, updatedAt: Date.now(), timestamp: Date.now()
-          });
-        }
-        document.getElementById('expDetail').value = '';
-        document.getElementById('expAmount').value = '';
-        document.getElementById('syncStockQty').value = '';
-        alert("खर्च दर्ज हो गया!");
-      });
-    }
-
-    function deleteExpense(id) {
-      if (!isAdmin) return;
-      if (confirm("यह खर्च हटाएं?")) {
-        db.ref('expense_records/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-
-    function sendLabourSalarySlip(name, detail, amount, date) {
-      const msg = `*प्रजापति डेयरी फॉर्म - वेतन/भुगतान पर्ची*%0A--------------------------------%0A*नाम:* ${name}%0A*तारीख:* ${date}%0A*विवरण:* ${detail}%0A*भुगतान रकम:* ₹ ${amount}%0A--------------------------------%0Aधन्यवाद!`;
-      window.open(`https://wa.me/?text=${msg}`, '_blank');
-    }
-
-    function renderExpense() {
-      const container = document.getElementById('expenseHeadingList');
-      container.innerHTML = '';
-
-      let totFeed = 0, totLabour = 0, totMed = 0, totOther = 0;
-
-      expenseData.forEach(item => {
-        const cat = item.category || '';
-        const amt = item.amount || 0;
-        if (cat.includes('चारा')) totFeed += amt;
-        else if (cat.includes('मजदूर') || cat.includes('वेतन')) totLabour += amt;
-        else if (cat.includes('दवाई')) totMed += amt;
-        else totOther += amt;
-
-        const isLabourExp = cat.includes('मजदूर') || cat.includes('वेतन');
-
-        const popupExpenseHtml = `
-          <div class="space-y-3">
-            <div class="p-3 bg-purple-50 rounded-2xl border-2 border-purple-200">
-              <span class="text-[10px] font-bold text-purple-700 uppercase block">${item.category}</span>
-              <h4 class="text-xl font-black text-purple-950 mt-1">₹ ${item.amount.toFixed(2)}</h4>
-            </div>
-            <div class="p-3 bg-slate-50 rounded-xl border text-xs space-y-1.5">
-              <div><b>तारीख:</b> ${item.date}</div>
-              <div><b>विवरण:</b> ${item.detail}</div>
-              <div><b>भुगतान माध्यम:</b> ${item.paymentMode || 'PhonePe / UPI'}</div>
-            </div>
-            <div class="pt-2 flex justify-between items-center gap-2">
-              ${isLabourExp ? `<button onclick="sendLabourSalarySlip('${item.detail}', '${item.category}', ${item.amount}, '${item.date}')" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp पर्ची</button>` : ''}
-              ${isAdmin ? `<button onclick="deleteExpense('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300"><i class="fa-solid fa-trash-can"></i> डिलीट</button>` : ''}
-            </div>
-          </div>
-        `;
-
-        container.innerHTML += `
-          <div onclick="openUniversalModal('${item.detail}', '${item.date} • ${item.category}', \`${popupExpenseHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-purple-600 cursor-pointer transition flex items-center justify-between">
-            <div>
-              <h4 class="font-black text-slate-900 text-sm">${item.detail}</h4>
-              <span class="text-[11px] text-slate-500 font-medium">${item.date} • ${item.category}</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="font-black text-purple-900 text-sm">₹${item.amount.toFixed(0)}</span>
-              <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
-            </div>
-          </div>
-        `;
-      });
-
-      document.getElementById('expRecordCount').innerText = `${expenseData.length} एंट्री`;
-      document.getElementById('dispCatFeed').innerText = '₹ ' + totFeed.toLocaleString('en-IN');
-      document.getElementById('dispCatLabour').innerText = '₹ ' + totLabour.toLocaleString('en-IN');
-      document.getElementById('dispCatMedical').innerText = '₹ ' + totMed.toLocaleString('en-IN');
-      document.getElementById('dispCatOther').innerText = '₹ ' + totOther.toLocaleString('en-IN');
-    }
-
-    // ==================== CATTLE & ARCHIVE ====================
-    function toggleCattleSubForm(mode) {
-      document.getElementById('catAdminForm').classList.add('hidden');
-      document.getElementById('calfAdminForm').classList.add('hidden');
-      document.getElementById('sellAnimalAdminForm').classList.add('hidden');
-
-      document.getElementById('subBtnAddAnimal').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border-2 border-slate-300 shadow";
-      document.getElementById('subBtnAddCalf').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border-2 border-slate-300 shadow";
-      document.getElementById('subBtnSellAnimal').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-emerald-800 border-2 border-emerald-400 shadow";
-
-      if (mode === 'addAnimal') {
-        document.getElementById('catAdminForm').classList.remove('hidden');
-        document.getElementById('subBtnAddAnimal').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-slate-900 text-amber-300 border-2 border-slate-700 shadow";
-      } else if (mode === 'addCalf') {
-        document.getElementById('calfAdminForm').classList.remove('hidden');
-        document.getElementById('subBtnAddCalf').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-blue-900 text-white border-2 border-blue-700 shadow";
-      } else if (mode === 'sellAnimal') {
-        document.getElementById('sellAnimalAdminForm').classList.remove('hidden');
-        document.getElementById('subBtnSellAnimal').className = "px-3.5 py-2 rounded-xl font-extrabold text-xs bg-emerald-800 text-white border-2 border-emerald-600 shadow";
-      }
-    }
-
-    function startEditCattle(id) {
-      if (!isAdmin) return;
-      closeUniversalModal();
-      const item = cattleData.find(c => c.id === id);
-      if (!item) return;
-
-      document.getElementById('editCatRecordId').value = id;
-      document.getElementById('catTag').value = item.tag || '';
-      document.getElementById('catBreed').value = item.breed || 'मुर्राह भैंस (310 दिन)';
-      document.getElementById('catStatus').value = item.status || 'दूध दे रही है (Lactating)';
-      document.getElementById('catDailyMilk').value = item.milk || 0;
-      document.getElementById('catBuyCost').value = item.buyCost || '';
-      document.getElementById('catAiDate').value = item.aiDate || '';
-      document.getElementById('catDewormDate').value = item.dewormDate || '';
-      document.getElementById('catVaccine').value = item.vaccine || '';
-
-      document.getElementById('catFormTitle').innerText = "पशु विवरण एडिट करें (ID: " + item.tag + ")";
-      document.getElementById('cancelCatEditBtn').classList.remove('hidden');
-      toggleCattleSubForm('addAnimal');
-      window.scrollTo({ top: 300, behavior: 'smooth' });
-    }
-
-    function cancelCattleEdit() {
-      document.getElementById('editCatRecordId').value = '';
-      document.getElementById('catTag').value = '';
-      document.getElementById('catDailyMilk').value = '';
-      document.getElementById('catBuyCost').value = '';
-      document.getElementById('catAiDate').value = '';
-      document.getElementById('catDewormDate').value = '';
-      document.getElementById('catVaccine').value = '';
-      document.getElementById('catFormTitle').innerText = "नया पशु प्रोफाइल (Admin Mode)";
-      document.getElementById('cancelCatEditBtn').classList.add('hidden');
-    }
-
-    function handleCattleFormSubmit(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      const editId = document.getElementById('editCatRecordId').value;
-
-      const pashuPayload = {
-        tag: document.getElementById('catTag').value.trim(),
-        breed: document.getElementById('catBreed').value,
-        status: document.getElementById('catStatus').value,
-        milk: parseFloat(document.getElementById('catDailyMilk').value) || 0,
-        buyCost: parseFloat(document.getElementById('catBuyCost').value) || 0,
-        aiDate: document.getElementById('catAiDate').value || '',
-        dewormDate: document.getElementById('catDewormDate').value || '',
-        vaccine: document.getElementById('catVaccine').value.trim() || 'कोई नहीं',
-        timestamp: Date.now()
-      };
-
-      if (editId) {
-        db.ref('cattle_records/' + editId).update(pashuPayload).then(() => {
-          alert("पशु विवरण सफलतापूर्वक अपडेट हो गया!");
-          cancelCattleEdit();
-        });
-      } else {
-        pashuPayload.morningMilk = pashuPayload.milk / 2;
-        pashuPayload.eveningMilk = pashuPayload.milk / 2;
-        db.ref('cattle_records').push(pashuPayload).then(() => {
-          alert("नया पशु प्रोफाइल जुड़ गया!");
-          cancelCattleEdit();
-        });
-      }
-    }
-
-    function handleSellAnimalSubmit(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-
-      const date = document.getElementById('saleAnimalDate').value;
-      const tag = document.getElementById('saleAnimalTag').value.trim();
-      const buyer = document.getElementById('saleBuyerName').value.trim();
-      const amount = parseFloat(document.getElementById('saleAnimalAmount').value) || 0;
-
-      let existingAdult = cattleData.find(c => c.tag.toLowerCase() === tag.toLowerCase());
-      let existingCalf = calfData.find(c => c.tag.toLowerCase() === tag.toLowerCase());
-
-      if (!existingAdult && !existingCalf) {
-        if (!confirm(`'${tag}' सक्रिय सूची में नहीं मिला। क्या आप फिर भी इसे बेचे गए फोल्डर में सुरक्षित करना चाहते हैं?`)) {
-          return;
-        }
-      }
-
-      const archiveRecord = {
-        date: date,
-        tag: tag,
-        buyer: buyer,
-        amount: amount,
-        type: existingCalf ? 'बछड़ा/कटड़ा' : 'पशु',
-        buyCost: existingAdult ? (existingAdult.buyCost || 0) : 0,
-        breed: existingAdult ? existingAdult.breed : (existingCalf ? existingCalf.gender : 'अन्य'),
-        timestamp: Date.now()
-      };
-
-      db.ref('sold_animals_archive').push(archiveRecord).then(() => {
-        if (existingAdult) {
-          db.ref('cattle_records/' + existingAdult.id).remove();
-        } else if (existingCalf) {
-          db.ref('calf_records/' + existingCalf.id).remove();
-        }
-
-        db.ref('animal_sales').push({
-          date: date, tag: tag, buyer: buyer, amount: amount, timestamp: Date.now()
-        });
-
-        document.getElementById('saleAnimalTag').value = '';
-        document.getElementById('saleBuyerName').value = '';
-        document.getElementById('saleAnimalAmount').value = '';
-        alert(`सफलता! '${tag}' सक्रिय सूची से हटा दिया गया है और फोल्डर में सुरक्षित हो गया है।`);
-      });
-    }
-
-    function addCalfEntry(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('calf_records').push({
-        tag: document.getElementById('calfTag').value.trim(),
-        motherTag: document.getElementById('calfMotherTag').value.trim(),
-        gender: document.getElementById('calfGender').value,
-        birthDate: document.getElementById('calfBirthDate').value,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('calfTag').value = '';
-        document.getElementById('calfMotherTag').value = '';
-        alert("बछड़ा / कटड़ा जन्म रिकॉर्ड सुरक्षित हो गया!");
-      });
-    }
-
-    function deleteCattle(id) {
-      if (!isAdmin) return;
-      if (confirm("यह पशु रिकॉर्ड हटाएं?")) {
-        db.ref('cattle_records/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-    function deleteCalf(id) {
-      if (!isAdmin) return;
-      if (confirm("यह बछड़ा रिकॉर्ड हटाएं?")) {
-        db.ref('calf_records/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-
-    db.ref('cattle_records').on('value', snap => {
-      const val = snap.val();
-      cattleData = [];
-      if (val) Object.keys(val).forEach(k => cattleData.push({ id: k, ...val[k] }));
-      cattleData.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-      renderCattleHeadings(); renderMilkSummaryStats();
-    });
-
-    db.ref('calf_records').on('value', snap => {
-      const val = snap.val();
-      calfData = [];
-      if (val) Object.keys(val).forEach(k => calfData.push({ id: k, ...val[k] }));
-      renderCattleHeadings();
-    });
-
-    db.ref('sold_animals_archive').on('value', snap => {
-      const val = snap.val();
-      soldArchiveData = [];
-      if (val) Object.keys(val).forEach(k => soldArchiveData.push({ id: k, ...val[k] }));
-      soldArchiveData.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-      renderSoldArchiveFolder();
-    });
-
-    db.ref('animal_sales').on('value', snap => {
-      const val = snap.val();
-      animalSaleData = [];
-      if (val) Object.keys(val).forEach(k => animalSaleData.push({ id: k, ...val[k] }));
-      renderTotals();
-    });
-
-    function renderCattleHeadings() {
-      const container = document.getElementById('cattleHeadingList');
-      container.innerHTML = '';
-      const now = new Date();
-
-      cattleData.forEach(item => {
-        let calvingHtml = '';
-        if (item.aiDate) {
-          const aiD = new Date(item.aiDate);
-          const isBuffalo = item.breed && item.breed.includes('भैंस');
-          const calvingDate = new Date(aiD);
-          calvingDate.setDate(calvingDate.getDate() + (isBuffalo ? 310 : 280));
-          const diffDays = Math.ceil((calvingDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-          calvingHtml = `<div class="p-2.5 bg-blue-50 rounded-xl border text-xs"><b>संभावित डिलीवरी:</b> ${calvingDate.toLocaleDateString('hi-IN', {day:'numeric',month:'short'})} (${diffDays} दिन बाकी)</div>`;
-        }
-
-        const popupCattleHtml = `
-          <div class="space-y-3">
-            <div class="p-3 bg-amber-50 rounded-2xl border-2 border-amber-300 flex justify-between items-start">
-              <div><span class="text-[10px] font-bold text-amber-800 uppercase block">${item.breed}</span><h4 class="text-xl font-black text-amber-950">${item.tag}</h4></div>
-              <span class="text-xs bg-emerald-100 text-emerald-900 font-bold px-2.5 py-1 rounded-full border border-emerald-300">${item.status || 'दूध दे रही है'}</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>दैनिक दूध:</b> ${item.milk || 0} L/दिन</div>
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>खरीद लागत:</b> ₹ ${item.buyCost || '0'}</div>
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>AI तारीख:</b> ${item.aiDate || '-'}</div>
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>टीकाकरण:</b> ${item.vaccine || '-'}</div>
-            </div>
-            ${calvingHtml}
-            <div class="pt-2 flex justify-between gap-2">
-              <button onclick="startEditCattle('${item.id}')" class="w-full bg-slate-900 text-amber-300 font-bold py-2.5 rounded-xl text-xs"><i class="fa-solid fa-pen-to-square"></i> विवरण एडिट करें</button>
-              ${isAdmin ? `<button onclick="deleteCattle('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300">डिलीट</button>` : ''}
-            </div>
-          </div>
-        `;
-
-        container.innerHTML += `
-          <div onclick="openUniversalModal('${item.tag}', '${item.breed} • ${item.status || 'Active'}', \`${popupCattleHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-amber-600 cursor-pointer transition flex items-center justify-between">
-            <div>
-              <h4 class="font-black text-slate-900 text-sm">${item.tag}</h4>
-              <span class="text-[11px] text-slate-500">${item.breed} • ${item.milk || 0}L/दिन</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-950">${item.status ? item.status.split(' ')[0] : 'दूध'}</span>
-              <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
-            </div>
-          </div>
-        `;
-      });
-
-      calfData.forEach(c => {
-        const popupCalfHtml = `
-          <div class="space-y-3">
-            <div class="p-3 bg-blue-50 rounded-2xl border-2 border-blue-300">
-              <span class="text-[10px] font-bold text-blue-800 uppercase block">${c.gender}</span>
-              <h4 class="text-xl font-black text-blue-950">${c.tag}</h4>
-            </div>
-            <div class="p-3 bg-slate-50 rounded-xl border text-xs space-y-1.5">
-              <div><b>माता का टैग:</b> ${c.motherTag}</div>
-              <div><b>जन्म तारीख:</b> ${c.birthDate}</div>
-            </div>
-            ${isAdmin ? `<div class="pt-2 flex justify-end"><button onclick="deleteCalf('${c.id}')" class="bg-rose-100 text-rose-700 font-bold py-2 px-4 rounded-xl text-xs border">डिलीट</button></div>` : ''}
-          </div>
-        `;
-
-        container.innerHTML += `
-          <div onclick="openUniversalModal('${c.tag}', 'बछड़ा/कटड़ा • माता: ${c.motherTag}', \`${popupCalfHtml.replace(/"/g, '&quot;')}\`)" class="bg-blue-50/60 p-3.5 rounded-2xl border-2 border-blue-300 shadow-sm hover:border-blue-600 cursor-pointer transition flex items-center justify-between">
-            <div>
-              <h4 class="font-black text-blue-950 text-sm">👶 ${c.tag}</h4>
-              <span class="text-[11px] text-blue-800">माता: ${c.motherTag} (${c.gender})</span>
-            </div>
-            <i class="fa-solid fa-chevron-right text-blue-300 text-xs"></i>
-          </div>
-        `;
-      });
-
-      document.getElementById('cattleRecordCount').innerText = `${cattleData.length} बड़े + ${calfData.length} बछड़े`;
-    }
-
-    function openSoldAnimalsFolderModal() {
-      document.getElementById('sideMenuDropdown').classList.add('hidden');
-      document.getElementById('soldAnimalsFolderModal').classList.remove('hidden');
-      renderSoldArchiveFolder();
-    }
-    function closeSoldAnimalsFolderModal() {
-      document.getElementById('soldAnimalsFolderModal').classList.add('hidden');
-    }
-
-    function renderSoldArchiveFolder() {
-      const container = document.getElementById('soldAnimalsListContainer');
-      container.innerHTML = '';
-
-      if (soldArchiveData.length === 0) {
-        container.innerHTML = '<div class="p-8 text-center text-xs text-slate-400">अभी तक कोई पशु नहीं बेचा गया है।</div>';
-        return;
-      }
-
-      soldArchiveData.forEach(item => {
-        container.innerHTML += `
-          <div class="bg-slate-50 p-3.5 rounded-2xl border-2 border-slate-200 space-y-1.5 text-xs">
-            <div class="flex justify-between items-start">
-              <div>
-                <span class="text-[10px] font-bold text-slate-400 block">${item.date} • ${item.type || 'पशु'}</span>
-                <h4 class="text-base font-black text-slate-900">${item.tag}</h4>
-              </div>
-              <span class="text-base font-black text-emerald-800">₹ ${item.amount.toLocaleString('en-IN')}</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200 text-[11px]">
-              <div><b>खरीदार:</b> ${item.buyer}</div>
-              <div><b>प्रारंभिक खरीद लागत:</b> ₹ ${item.buyCost || '0'}</div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    // ==================== LABOUR ====================
-    function addLabourProfile(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('labour_profiles').push({
-        name: document.getElementById('labourName').value.trim(),
-        phone: document.getElementById('labourPhone').value.trim() || '-',
-        salary: parseFloat(document.getElementById('labourSalary').value) || 0,
-        joinDate: document.getElementById('labourJoinDate').value,
-        dutyTime: document.getElementById('labourDutyTime').value || '06:00',
-        alertMode: document.getElementById('labourAlertMode').value,
-        aadhar: document.getElementById('labourAadhar').value.trim() || '-',
-        address: document.getElementById('labourAddress').value.trim() || 'फार्म कार्य',
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('labourName').value = '';
-        document.getElementById('labourPhone').value = '';
-        document.getElementById('labourSalary').value = '';
-        alert("मजदूर प्रोफाइल जोड़ी गई!");
-      });
-    }
-
-    function deleteLabourProfile(id) {
-      if (!isAdmin) return;
-      if (confirm("मजदूर हटाएं?")) {
-        db.ref('labour_profiles/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-    function directCallLabour(phone) {
-      if (!phone || phone === '-') { alert("फोन नंबर उपलब्ध नहीं है!"); return; }
-      window.location.href = `tel:${phone}`;
-    }
-    function sendLateArrivalAlert(name, phone, dutyTime) {
-      if (!phone || phone === '-') { alert("फोन नंबर मौजूद नहीं है!"); return; }
-      const msg = `*प्रजापति डेयरी फॉर्म - आगमन चेतावनी*%0Aनमस्ते *${name}*, आज आपके आने का समय *${dutyTime || '06:00'}* था। कृपया तुरंत संपर्क करें।`;
-      window.open(`https://wa.me/91${phone.replace(/\D/g, '')}?text=${msg}`, '_blank');
-    }
-
-    db.ref('labour_profiles').on('value', snap => {
-      const val = snap.val();
-      labourProfiles = [];
-      if (val) Object.keys(val).forEach(k => labourProfiles.push({ id: k, ...val[k] }));
-      renderLabourProfiles(); checkSalaryAlerts();
-    });
-
-    function renderLabourProfiles() {
-      const container = document.getElementById('labourHeadingList');
-      container.innerHTML = '';
-      labourProfiles.forEach(item => {
-        const jDate = new Date(item.joinDate);
-        const joinStr = jDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-        const cycleDay = jDate.getDate();
-
-        const popupLabourHtml = `
-          <div class="space-y-3">
-            <div class="p-3 bg-slate-50 rounded-2xl border flex justify-between items-center">
-              <div><h4 class="text-lg font-black text-slate-900">${item.name}</h4><span class="text-xs text-slate-500">${item.phone}</span></div>
-              <span class="text-base font-black text-emerald-900">₹ ${item.salary.toLocaleString('en-IN')} / माह</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 pt-1">
-              <button onclick="directCallLabour('${item.phone}')" class="bg-emerald-700 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-phone"></i> कॉल करें</button>
-              <button onclick="sendLateArrivalAlert('${item.name}', '${item.phone}', '${item.dutyTime}')" class="bg-rose-600 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp"></i> देरी चेतावनी</button>
-            </div>
-            <div class="p-3 bg-slate-50 rounded-xl border text-xs space-y-1">
-              <div><b>ड्यूटी समय:</b> ${item.dutyTime || '06:00'}</div>
-              <div><b>सैलरी तारीख:</b> हर महीने की ${cycleDay} तारीख</div>
-              <div><b>जॉइनिंग:</b> ${joinStr}</div>
-              <div><b>कार्य:</b> ${item.address}</div>
-            </div>
-            ${isAdmin ? `<div class="pt-2 flex justify-end"><button onclick="deleteLabourProfile('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2 px-4 rounded-xl text-xs border">डिलीट प्रोफाइल</button></div>` : ''}
-          </div>
-        `;
-
-        container.innerHTML += `
-          <div onclick="openUniversalModal('${item.name}', 'वेतन: ₹${item.salary} • ड्यूटी: ${item.dutyTime || '06:00'}', \`${popupLabourHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-slate-800 cursor-pointer transition flex items-center justify-between">
-            <div>
-              <h4 class="font-black text-slate-900 text-sm">${item.name}</h4>
-              <span class="text-[11px] text-slate-500">₹${item.salary}/माह • ${item.phone}</span>
-            </div>
-            <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
-          </div>
-        `;
-      });
-      document.getElementById('labourRecordCount').innerText = `${labourProfiles.length} मजदूर`;
-    }
-
-    function checkSalaryAlerts() {
-      const notifBanner = document.getElementById('salaryNotificationBanner');
-      const notifList = document.getElementById('salaryNotificationList');
-      notifList.innerHTML = '';
-      let salaryAlerts = [];
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth();
-      const currentDate = now.getDate();
-
-      labourProfiles.forEach(labour => {
-        if (!labour.joinDate) return;
-        const jDate = new Date(labour.joinDate);
-        const cycleDay = jDate.getDate();
-        let targetSalaryDate = new Date(currentYear, currentMonth, cycleDay);
-        if (targetSalaryDate < now && Math.abs(currentDate - cycleDay) > 5) {
-          targetSalaryDate = new Date(currentYear, currentMonth + 1, cycleDay);
-        }
-        const diffDays = Math.ceil((targetSalaryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (diffDays >= 0 && diffDays <= 5) {
-          salaryAlerts.push(`💰 <b>${labour.name}</b> का वेतन <b>₹${labour.salary.toLocaleString('en-IN')}</b> आगामी देय है (${diffDays} दिन शेष)!`);
-        }
-      });
-
-      if (salaryAlerts.length > 0 && isAdmin) {
-        notifList.innerHTML = salaryAlerts.map(msg => `<div>${msg}</div>`).join('');
-        notifBanner.classList.remove('hidden');
-      } else {
-        notifBanner.classList.add('hidden');
-      }
-    }
-
-    // ==================== CUSTOMER ====================
-    function addCustomerPayment(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('customer_payments').push({
-        date: document.getElementById('custPayDate').value,
-        name: document.getElementById('custPayName').value.trim(),
-        amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
-        note: document.getElementById('custPayNote').value.trim() || 'जमा',
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('custPayName').value = '';
-        document.getElementById('custPayAmount').value = '';
-      });
-    }
-
-    function sendWhatsAppBill(custName, totalMilk, totalBill, totalPaid, balance) {
-      const msg = `*प्रजापति डेयरी फॉर्म - लेजर बिल*%0A--------------------------------%0A*ग्राहक:* ${custName}%0A*कुल दूध:* ${totalMilk.toFixed(1)} L%0A*कुल बिल:* ₹ ${totalBill.toFixed(2)}%0A*जमा रकम:* ₹ ${totalPaid.toFixed(2)}%0A*बकाया उधारी:* ₹ ${balance.toFixed(2)}%0A--------------------------------%0Aधन्यवाद!`;
-      window.open(`https://wa.me/?text=${msg}`, '_blank');
-    }
-
-    function sendWhatsAppPaymentReminder(custName, balance) {
-      const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
-      const phoneText = paymentSettings.upiPhone ? `%0A*PhonePe / GPay:* ${paymentSettings.upiPhone}` : '';
-      const bankText = paymentSettings.bankAcc ? `%0A*बैंक खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})` : '';
-
-      const msg = `*प्रजापति डेयरी फॉर्म - उधारी भुगतान तगादा*%0A--------------------------------%0Aनमस्ते *${custName}*,%0Aडेयरी बहीखाते के अनुसार आपकी कुल बकाया रकम *₹ ${balance.toFixed(2)}* है।%0Aकृपया नीचे दिए गए UPI अथवा बैंक विवरण से ऑनलाइन भुगतान करने का कष्ट करें:${upiText}${phoneText}${bankText}%0A--------------------------------%0Aभुगतान के पश्चात स्क्रीनशॉट अवश्य साझा करें। धन्यवाद!`;
-      window.open(`https://wa.me/?text=${msg}`, '_blank');
-    }
-
-    db.ref('customer_payments').on('value', snap => {
-      const val = snap.val();
-      customerPayments = [];
-      if (val) Object.keys(val).forEach(k => customerPayments.push({ id: k, ...val[k] }));
-      renderCustomerSummary();
-    });
-
-    function renderCustomerSummary() {
-      const custSummary = {};
-      milkData.forEach(m => {
-        if(!custSummary[m.customer]) custSummary[m.customer] = { totalMilk: 0, totalBill: 0, totalPaid: 0 };
-        custSummary[m.customer].totalMilk += m.qty;
-        custSummary[m.customer].totalBill += m.total;
-      });
-      customerPayments.forEach(p => {
-        if(!custSummary[p.name]) custSummary[p.name] = { totalMilk: 0, totalBill: 0, totalPaid: 0 };
-        custSummary[p.name].totalPaid += p.amount;
-      });
-
-      const container = document.getElementById('customerHeadingList');
-      container.innerHTML = '';
-      Object.keys(custSummary).forEach(name => {
-        const data = custSummary[name];
-        const balance = data.totalBill - data.totalPaid;
-        const isDue = balance > 0;
-
-        const popupCustHtml = `
-          <div class="space-y-3">
-            <div class="p-3 bg-slate-50 rounded-2xl border flex justify-between items-center">
-              <div><h4 class="text-xl font-black text-slate-900">${name}</h4><span class="text-xs text-slate-500">कुल दूध लिया: ${data.totalMilk.toFixed(1)} L</span></div>
-              <span class="text-xl font-black ${isDue ? 'text-rose-700':'text-emerald-700'}">₹ ${balance.toFixed(2)}</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>कुल बिल:</b> ₹ ${data.totalBill.toFixed(0)}</div>
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>जमा रकम:</b> ₹ ${data.totalPaid.toFixed(0)}</div>
-            </div>
-            <div class="pt-2 flex flex-col gap-2">
-              <button onclick="sendWhatsAppBill('${name}', ${data.totalMilk}, ${data.totalBill}, ${data.totalPaid}, ${balance})" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2.5 rounded-xl border">
-                <i class="fa-solid fa-receipt"></i> पूरा हिसाब रसीद भेजें
-              </button>
-              ${isDue ? `
-                <button onclick="sendWhatsAppPaymentReminder('${name}', ${balance})" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
-                  <i class="fa-brands fa-whatsapp text-sm"></i> तगादा भेजें (UPI व बैंक विवरण सहित)
-                </button>
-              ` : '<span class="text-xs text-emerald-700 font-bold text-center">हिसाब चुकता है</span>'}
-            </div>
-          </div>
-        `;
-
-        container.innerHTML += `
-          <div onclick="openUniversalModal('${name}', 'बकाया: ₹${balance.toFixed(0)}', \`${popupCustHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-indigo-600 cursor-pointer transition flex items-center justify-between">
-            <div>
-              <h4 class="font-black text-slate-900 text-sm">${name}</h4>
-              <span class="text-[11px] text-slate-500">दूध: ${data.totalMilk.toFixed(0)}L • जमा: ₹${data.totalPaid.toFixed(0)}</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="font-black text-sm ${isDue ? 'text-rose-700' : 'text-emerald-700'}">₹${balance.toFixed(0)}</span>
-              <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    // ==================== FEED STOCK ====================
-    function addStockItem(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('stock_records').push({
-        name: document.getElementById('stockName').value.trim(),
-        qty: parseFloat(document.getElementById('stockQty').value) || 0,
-        unit: document.getElementById('stockUnit').value,
-        dailyUse: parseFloat(document.getElementById('stockDailyUse').value) || 1,
-        alertDays: parseFloat(document.getElementById('stockAlertDays').value) || 3,
-        updatedAt: Date.now(), timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('stockName').value = '';
-        document.getElementById('stockQty').value = '';
-      });
-    }
-
-    function updateStockQty(id, change) {
-      if (!isAdmin) return;
-      const item = stockData.find(x => x.id === id);
-      if (item) {
-        db.ref('stock_records/' + id).update({ qty: Math.max(0, item.qty + change), updatedAt: Date.now() });
-        closeUniversalModal();
-      }
-    }
-    function deleteStock(id) {
-      if (!isAdmin) return;
-      if (confirm("यह स्टॉक हटाएं?")) {
-        db.ref('stock_records/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-
-    db.ref('stock_records').on('value', snap => {
-      const val = snap.val();
-      stockData = [];
-      if (val) Object.keys(val).forEach(k => stockData.push({ id: k, ...val[k] }));
-      renderStock();
-    });
-
-    function renderStock() {
-      const container = document.getElementById('stockHeadingList');
-      container.innerHTML = '';
-      let warningAlerts = [];
-
-      stockData.forEach(item => {
-        const daysLeft = Math.floor(item.qty / (item.dailyUse || 1));
-        const finishDate = new Date(); finishDate.setDate(finishDate.getDate() + daysLeft);
-        const isLow = daysLeft <= (item.alertDays || 3);
-        if (isLow && item.qty > 0) warningAlerts.push(`⚠️ <b>${item.name}</b> मात्र <b>${daysLeft} दिन</b> चलेगा! नया चारा मंगाएं।`);
-
-        const popupStockHtml = `
-          <div class="space-y-3">
-            <div class="p-3 bg-yellow-50 rounded-2xl border-2 border-yellow-300">
-              <span class="text-[10px] font-bold text-yellow-800 uppercase block">चारा / दाना</span>
-              <h4 class="text-xl font-black text-yellow-950">${item.name}</h4>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>वर्तमान स्टॉक:</b> ${item.qty} ${item.unit}</div>
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>दैनिक खपत:</b> ${item.dailyUse || 1} ${item.unit}/दिन</div>
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>शेष दिन:</b> ${daysLeft} दिन</div>
-              <div class="p-2.5 bg-slate-50 rounded-xl border"><b>खत्म तारीख:</b> ${finishDate.toLocaleDateString('hi-IN', {day:'numeric',month:'short'})}</div>
-            </div>
-            ${isAdmin ? `
-              <div class="p-2.5 bg-slate-100 rounded-xl flex items-center justify-between">
-                <span class="text-xs font-bold text-slate-700">स्टॉक मात्रा बदलें:</span>
-                <div class="flex gap-2">
-                  <button onclick="updateStockQty('${item.id}', -1)" class="w-9 h-9 bg-slate-200 hover:bg-slate-300 font-black rounded-lg">-1</button>
-                  <button onclick="updateStockQty('${item.id}', 1)" class="w-9 h-9 bg-slate-900 text-white font-black rounded-lg">+1</button>
-                </div>
-              </div>
-              <div class="pt-2 flex justify-end">
-                <button onclick="deleteStock('${item.id}')" class="bg-rose-100 text-rose-700 font-bold py-2 px-4 rounded-xl text-xs border">डिलीट स्टॉक</button>
-              </div>
-            ` : ''}
-          </div>
-        `;
-
-        container.innerHTML += `
-          <div onclick="openUniversalModal('${item.name}', 'स्टॉक: ${item.qty} ${item.unit}', \`${popupStockHtml.replace(/"/g, '&quot;')}\`)" class="bg-white p-3.5 rounded-2xl border-2 border-slate-300 shadow-sm hover:border-yellow-600 cursor-pointer transition flex items-center justify-between">
-            <div>
-              <h4 class="font-black text-slate-900 text-sm">${item.name}</h4>
-              <span class="text-[11px] text-slate-500">${item.qty} ${item.unit} • ${daysLeft} दिन शेष</span>
-            </div>
-            <div class="flex items-center gap-2">
-              ${isLow ? '<span class="text-[10px] font-black bg-rose-600 text-white px-2 py-0.5 rounded-full">कम स्टॉक</span>' : ''}
-              <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
-            </div>
-          </div>
-        `;
-      });
-
-      document.getElementById('stockRecordCount').innerText = `${stockData.length} आइटम`;
-      if (warningAlerts.length > 0 && isAdmin) {
-        document.getElementById('stockNotificationList').innerHTML = warningAlerts.map(msg => `<div>${msg}</div>`).join('');
-        document.getElementById('stockNotificationBanner').classList.remove('hidden');
-      } else {
-        document.getElementById('stockNotificationBanner').classList.add('hidden');
-      }
-    }
-
-    // ==================== TOTALS ====================
+    // ==================== TOTALS & SUMMARY ====================
     function renderTotals() {
       let totQty = 0, totRev = 0, totExp = 0, animalSaleRev = 0;
       milkData.forEach(item => { totQty += item.qty; totRev += item.total; });
@@ -1847,7 +2086,6 @@
       }
     }
 
-    // ==================== FARM SETUP COST ====================
     function openSetupCostModal() { document.getElementById('setupCostModal').classList.remove('hidden'); renderSetupCostList(); }
     function closeSetupCostModal() { document.getElementById('setupCostModal').classList.add('hidden'); }
 
@@ -1868,13 +2106,6 @@
       if (!isAdmin) return;
       if (confirm("यह लागत मद हटाएं?")) db.ref('farm_setup_costs/' + id).remove();
     }
-
-    db.ref('farm_setup_costs').on('value', snap => {
-      const val = snap.val();
-      setupCostData = [];
-      if (val) Object.keys(val).forEach(k => setupCostData.push({ id: k, ...val[k] }));
-      renderSetupCostList();
-    });
 
     function renderSetupCostList() {
       const container = document.getElementById('setupCostListContainer');
@@ -1984,6 +2215,8 @@
 
     function openSummaryModal() { document.getElementById('summaryModal').classList.remove('hidden'); }
     function closeSummaryModal() { document.getElementById('summaryModal').classList.add('hidden'); }
+    function openSoldAnimalsFolderModal() { document.getElementById('soldAnimalsFolderModal').classList.remove('hidden'); renderSoldArchiveFolder(); }
+    function closeSoldAnimalsFolderModal() { document.getElementById('soldAnimalsFolderModal').classList.add('hidden'); }
 
     function renderAll() {
       renderMilk();
@@ -1995,6 +2228,7 @@
       renderTotals();
       renderSetupCostList();
       renderMilkSummaryStats();
+      renderVetDoctorList();
     }
 
     function getPrintHeaderHtml() {
@@ -2040,6 +2274,7 @@
       printDiv.classList.add('hidden');
     }
 
+    // FIREBASE LISTENERS
     db.ref('milk_records').on('value', snap => {
       const val = snap.val();
       milkData = [];
@@ -2056,6 +2291,66 @@
       renderExpense(); renderTotals();
     });
 
+    db.ref('cattle_records').on('value', snap => {
+      const val = snap.val();
+      cattleData = [];
+      if (val) Object.keys(val).forEach(k => cattleData.push({ id: k, ...val[k] }));
+      cattleData.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+      renderCattleHeadings(); renderMilkSummaryStats();
+    });
+
+    db.ref('calf_records').on('value', snap => {
+      const val = snap.val();
+      calfData = [];
+      if (val) Object.keys(val).forEach(k => calfData.push({ id: k, ...val[k] }));
+      renderCattleHeadings();
+    });
+
+    db.ref('sold_animals_archive').on('value', snap => {
+      const val = snap.val();
+      soldArchiveData = [];
+      if (val) Object.keys(val).forEach(k => soldArchiveData.push({ id: k, ...val[k] }));
+      soldArchiveData.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+      renderSoldArchiveFolder();
+    });
+
+    db.ref('animal_sales').on('value', snap => {
+      const val = snap.val();
+      animalSaleData = [];
+      if (val) Object.keys(val).forEach(k => animalSaleData.push({ id: k, ...val[k] }));
+      renderTotals();
+    });
+
+    db.ref('labour_profiles').on('value', snap => {
+      const val = snap.val();
+      labourProfiles = [];
+      if (val) Object.keys(val).forEach(k => labourProfiles.push({ id: k, ...val[k] }));
+      renderLabourProfiles(); checkSalaryAlerts();
+    });
+
+    db.ref('customer_payments').on('value', snap => {
+      const val = snap.val();
+      customerPayments = [];
+      if (val) Object.keys(val).forEach(k => customerPayments.push({ id: k, ...val[k] }));
+      renderCustomerSummary();
+    });
+
+    db.ref('stock_records').on('value', snap => {
+      const val = snap.val();
+      stockData = [];
+      if (val) Object.keys(val).forEach(k => stockData.push({ id: k, ...val[k] }));
+      renderStock();
+    });
+
+    db.ref('farm_setup_costs').on('value', snap => {
+      const val = snap.val();
+      setupCostData = [];
+      if (val) Object.keys(val).forEach(k => setupCostData.push({ id: k, ...val[k] }));
+      renderSetupCostList();
+    });
+
+    adjustBreedOptions();
+    adjustCalfGenderOptions();
     updateAdminUI();
   </script>
 </body>
