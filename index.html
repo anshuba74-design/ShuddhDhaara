@@ -300,11 +300,11 @@
         </button>
       </div>
 
-      <!-- Add Cattle Form -->
+      <!-- Add Cattle Form (DIRECT ONCLICK FIX) -->
       <div id="catAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-amber-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-cow text-amber-600"></i> <span id="catFormTitle">नया पशु प्रोफाइल</span></h2>
         <input type="hidden" id="editCatRecordId" value="" />
-        <form onsubmit="handleCattleFormSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div>
             <label class="block text-[11px] font-bold text-amber-950 uppercase mb-1">पशु वर्ग</label>
             <select id="catCategoryType" onchange="adjustBreedOptions()" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 font-bold">
@@ -312,43 +312,43 @@
               <option value="गाय (Cow)">गाय (Cow)</option>
             </select>
           </div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टैग संख्या</label><input type="text" id="catTag" required placeholder="उदा. 01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टैग संख्या</label><input type="text" id="catTag" placeholder="उदा. 01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नस्ल</label><select id="catBreed" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-semibold"></select></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">स्थिति</label><select id="catStatus" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="दूध दे रही है">दूध दे रही है</option><option value="गाभिन">गाभिन (Pregnant)</option><option value="ड्राई">ड्राई (Dry)</option><option value="बीमार">बीमार</option></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक दूध (L)</label><input type="number" step="0.5" id="catDailyMilk" required placeholder="14" class="w-full text-sm border-2 rounded-xl p-2.5 font-black text-emerald-950" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक दूध (L)</label><input type="number" step="0.5" id="catDailyMilk" placeholder="14" class="w-full text-sm border-2 rounded-xl p-2.5 font-black text-emerald-950" /></div>
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">खरीद तारीख</label><input type="date" id="catBuyDate" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">खरीद मूल्य (₹)</label><input type="number" id="catBuyCost" placeholder="70000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">AI / सीमन तारीख</label><input type="date" id="catAiDate" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 font-semibold" /></div>
           <div class="sm:col-span-2 lg:col-span-4 flex justify-end gap-2">
             <button type="button" onclick="cancelCattleEdit()" id="cancelCatEditBtn" class="hidden px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">रद्द करें</button>
-            <button type="submit" class="bg-amber-900 text-white font-bold py-2.5 px-6 rounded-xl text-sm shadow">सुरक्षित करें</button>
+            <button type="button" id="cattleSaveBtn" onclick="saveDirectCattle()" class="bg-amber-900 text-white font-bold py-2.5 px-6 rounded-xl text-sm shadow">सुरक्षित करें</button>
           </div>
-        </form>
+        </div>
       </div>
 
       <!-- Add Calf Form -->
       <div id="calfAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-blue-500">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-baby text-blue-600"></i> बच्चा जन्म रिकॉर्ड</h2>
-        <form onsubmit="addCalfEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-blue-900 uppercase mb-1">वर्ग</label><select id="calfCategoryType" onchange="adjustCalfGenderOptions()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="भैंस का बच्चा (कटड़ा/कटिया)">भैंस का बच्चा</option><option value="गाय का बच्चा (बछड़ा/बछिया)">गाय का बच्चा</option></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बच्चे का टैग</label><input type="text" id="calfTag" required placeholder="उदा. C-01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माता का चयन</label><select id="calfMotherTagSelect" required class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बच्चे का टैग</label><input type="text" id="calfTag" placeholder="उदा. C-01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माता का चयन</label><select id="calfMotherTagSelect" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"></select></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">लिंग</label><select id="calfGender" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जन्म तारीख</label><input type="date" id="calfBirthDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div class="sm:col-span-2 lg:col-span-3 flex items-end justify-end"><button type="submit" class="bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">जन्म दर्ज करें</button></div>
-        </form>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जन्म तारीख</label><input type="date" id="calfBirthDate" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+          <div class="sm:col-span-2 lg:col-span-3 flex items-end justify-end"><button type="button" onclick="saveDirectCalf()" class="bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">जन्म दर्ज करें</button></div>
+        </div>
       </div>
 
       <!-- Sell Animal Form -->
       <div id="sellAnimalAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-emerald-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> पशु बेचें (आर्काइव में जाएगा)</h2>
-        <form onsubmit="handleSellAnimalSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री तारीख</label><input type="date" id="saleAnimalDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु / बच्चा चुनें</label><select id="saleSelectableAnimal" required class="w-full text-sm border-2 rounded-xl p-2.5 font-bold bg-white text-rose-800"></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खरीदार</label><input type="text" id="saleBuyerName" required placeholder="उदा. रमेश व्यापारी" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री रकम (₹)</label><input type="number" id="saleAnimalAmount" required placeholder="75000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
-          <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="submit" class="bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">पशु बेचें व आर्काइव करें</button></div>
-        </form>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री तारीख</label><input type="date" id="saleAnimalDate" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु / बच्चा चुनें</label><select id="saleSelectableAnimal" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold bg-white text-rose-800"></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खरीदार</label><input type="text" id="saleBuyerName" placeholder="उदा. रमेश व्यापारी" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री रकम (₹)</label><input type="number" id="saleAnimalAmount" placeholder="75000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
+          <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="button" onclick="saveDirectSellAnimal()" class="bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">पशु बेचें व आर्काइव करें</button></div>
+        </div>
       </div>
 
       <!-- Divided Cattle List -->
@@ -517,7 +517,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Cloud Script (Optimized & Bug-Free) -->
+  <!-- Core Cloud Script (Direct Click & Instant Feedback) -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -699,10 +699,8 @@
       cattleData.forEach(c => sel.innerHTML += `<option value="${c.categoryType} #${c.tag}">${c.categoryType} #${c.tag}</option>`);
     }
 
-    // FIXED CATTLE FORM SUBMIT HANDLER
-    function handleCattleFormSubmit(e) {
-      e.preventDefault();
-
+    // DIRECT CLICK CATTLE SAVE FUNCTION (NO FORM BLOCKAGE)
+    function saveDirectCattle() {
       if (!isAdmin) {
         const pin = prompt("डेटा सुरक्षित करने के लिए एडमिन पिन दर्ज करें:");
         if (pin === currentAdminPass) {
@@ -726,7 +724,7 @@
       const aiDateVal = document.getElementById('catAiDate').value || '';
 
       if (!tagVal) {
-        alert("कृपया टैग संख्या अवश्य दर्ज करें!");
+        alert("कृपया टैग संख्या दर्ज करें!");
         return;
       }
 
@@ -750,11 +748,8 @@
         timestamp: Date.now()
       };
 
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerText = "सुरक्षित हो रहा है...";
-      }
+      const btn = document.getElementById('cattleSaveBtn');
+      if (btn) { btn.disabled = true; btn.innerText = "सुरक्षित हो रहा है..."; }
 
       if (editId) {
         db.ref('cattle_records/' + editId).update(pashuPayload)
@@ -763,31 +758,24 @@
             cancelCattleEdit();
           })
           .catch(err => {
-            alert("डेटा अपडेट करने में समस्या: " + err.message);
+            alert("Firebase त्रुटि: " + err.message);
           })
           .finally(() => {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerText = "सुरक्षित करें";
-            }
+            if (btn) { btn.disabled = false; btn.innerText = "सुरक्षित करें"; }
           });
       } else {
         db.ref('cattle_records').push(pashuPayload)
           .then(() => {
             alert("✅ नया पशु सफलतापूर्वक सुरक्षित हो गया!");
-            cancelCattleEdit();
             document.getElementById('catTag').value = '';
             document.getElementById('catDailyMilk').value = '';
             document.getElementById('catBuyCost').value = '';
           })
           .catch(err => {
-            alert("डेटा सुरक्षित करने में समस्या: " + err.message);
+            alert("Firebase त्रुटि: " + err.message);
           })
           .finally(() => {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerText = "सुरक्षित करें";
-            }
+            if (btn) { btn.disabled = false; btn.innerText = "सुरक्षित करें"; }
           });
       }
     }
@@ -801,22 +789,26 @@
       document.getElementById('cancelCatEditBtn').classList.add('hidden');
     }
 
-    function addCalfEntry(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
+    function saveDirectCalf() {
+      if (!isAdmin) { alert("केवल एडमिन ही दर्ज कर सकते हैं!"); return; }
+      const tagVal = document.getElementById('calfTag').value.trim();
+      if (!tagVal) { alert("कृपया बच्चे का टैग लिखें!"); return; }
+
       db.ref('calf_records').push({
         categoryType: document.getElementById('calfCategoryType').value,
-        tag: document.getElementById('calfTag').value.trim(),
+        tag: tagVal,
         motherTag: document.getElementById('calfMotherTagSelect').value,
         gender: document.getElementById('calfGender').value,
         birthDate: document.getElementById('calfBirthDate').value,
         timestamp: Date.now()
-      }).then(() => { document.getElementById('calfTag').value = ''; alert("बच्चा रिकॉर्ड सुरक्षित!"); });
+      }).then(() => {
+        document.getElementById('calfTag').value = '';
+        alert("✅ बच्चा जन्म रिकॉर्ड सुरक्षित!");
+      }).catch(err => alert("Firebase त्रुटि: " + err.message));
     }
 
-    function handleSellAnimalSubmit(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
+    function saveDirectSellAnimal() {
+      if (!isAdmin) { alert("केवल एडमिन ही दर्ज कर सकते हैं!"); return; }
       const selected = document.getElementById('saleSelectableAnimal').value;
       if (!selected) { alert("कृपया पशु चुनें!"); return; }
 
@@ -845,8 +837,8 @@
         db.ref('animal_sales').push({ date, tag: target.tag, buyer, amount, timestamp: Date.now() });
         document.getElementById('saleBuyerName').value = '';
         document.getElementById('saleAnimalAmount').value = '';
-        alert("पशु बेच दिया गया व संपूर्ण इतिहास सुरक्षित!");
-      });
+        alert("✅ पशु बेच दिया गया व संपूर्ण इतिहास सुरक्षित!");
+      }).catch(err => alert("Firebase त्रुटि: " + err.message));
     }
 
     function renderSoldArchive() {
@@ -885,8 +877,8 @@
         document.getElementById('vetDocName').value = '';
         document.getElementById('vetDocPhone').value = '';
         document.getElementById('vetDocClinic').value = '';
-        alert("डॉक्टर सुरक्षित!");
-      });
+        alert("✅ डॉक्टर सुरक्षित!");
+      }).catch(err => alert("Firebase त्रुटि: " + err.message));
     }
 
     function renderVetDoctors() {
@@ -1149,7 +1141,7 @@
       if (ab) ab.className = "shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-amber-300 shadow border-2 border-slate-700";
     }
 
-    // Debounced Realtime Sync from Firebase
+    // Realtime Sync from Firebase
     let renderTimeout = null;
     function scheduleRender() {
       clearTimeout(renderTimeout);
