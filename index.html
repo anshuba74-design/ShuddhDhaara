@@ -1,282 +1,518 @@
 <!DOCTYPE html>
-<html lang="hi" class="scroll-smooth">
+<html lang="hi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>शुद्ध डेयरी फार्म | ताजा दूध और देसी घी की होम डिलीवरी</title>
-  <!-- Tailwind CSS CDN -->
+  <title>डेयरी फार्म प्रबंधन और खाता बही</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
-<body class="bg-stone-50 text-stone-800 antialiased">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-12">
 
-  <!-- हेडर -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-stone-200">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-cow text-emerald-700 text-2xl"></i>
-        <span class="text-xl font-extrabold tracking-tight text-emerald-900">PURE DAIRY</span>
-        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">100% शुद्ध</span>
+  <!-- Header -->
+  <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-emerald-700 rounded-full flex items-center justify-center text-xl">
+          <i class="fa-solid fa-cow"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold leading-tight">डेयरी फार्म दैनिक खाता</h1>
+          <p class="text-xs text-emerald-200">दूध बिक्री • खर्च • मजदूर हाजिरी</p>
+        </div>
       </div>
-      <a href="#order-form" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold px-4 py-2 rounded-lg transition shadow-sm">
-        दूध बुक करें
-      </a>
+      <button onclick="clearAllData()" class="text-xs bg-red-600/80 hover:bg-red-700 px-3 py-1.5 rounded-lg border border-red-400">
+        <i class="fa-solid fa-trash-can mr-1"></i> रीसेट
+      </button>
     </div>
   </header>
 
-  <!-- हीरो सेक्शन -->
-  <section class="bg-gradient-to-b from-emerald-900 to-emerald-950 text-white py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center space-y-5">
-      <span class="inline-flex items-center gap-1.5 bg-emerald-800/80 border border-emerald-600/50 text-emerald-200 text-xs tracking-wider uppercase px-3 py-1 rounded-full font-semibold">
-        <i class="fa-solid fa-certificate text-amber-400"></i> सीधे फार्म से आपके दरवाजे तक
-      </span>
-      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-        बिना मिलावट का ताजा दूध, <br class="hidden sm:inline" />हर सुबह आपकी रसोई में
-      </h1>
-      <p class="text-emerald-100 text-sm sm:text-base max-w-2xl mx-auto">
-        मुर्राह भैंस और देसी गाय का 100% शुद्ध, गाढ़ा और प्राकृतिक दूध। बिना किसी केमिकल, प्रिजर्वेटिव या पानी की मिलावट के।
-      </p>
-      <div class="pt-3 flex flex-wrap justify-center gap-3">
-        <a href="#order-form" class="bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold px-6 py-3 rounded-xl shadow-lg transition">
-          1 दिन का ट्रायल बुक करें
-        </a>
-        <a href="#products" class="border border-emerald-400/40 hover:bg-emerald-800 text-white font-medium px-6 py-3 rounded-xl transition">
-          रेट लिस्ट देखें
-        </a>
+  <!-- Overview Summary Cards -->
+  <main class="max-w-6xl mx-auto px-4 mt-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <div class="text-xs text-slate-500 font-bold uppercase">कुल दूध बिक्री</div>
+        <div class="text-2xl font-black text-emerald-700 mt-1" id="sumMilkQty">0 L</div>
+        <div class="text-[11px] text-slate-400 mt-0.5">सभी दिनों का कुल दूध</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <div class="text-xs text-slate-500 font-bold uppercase">कुल दूध कमाई</div>
+        <div class="text-2xl font-black text-slate-900 mt-1" id="sumMilkRev">₹0</div>
+        <div class="text-[11px] text-slate-400 mt-0.5">बिक्री से कुल आय</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <div class="text-xs text-slate-500 font-bold uppercase">कुल फार्म खर्च</div>
+        <div class="text-2xl font-black text-rose-600 mt-1" id="sumExpenses">₹0</div>
+        <div class="text-[11px] text-slate-400 mt-0.5">चारा, मजदूरी व अन्य खर्च</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <div class="text-xs text-slate-500 font-bold uppercase">शुद्ध बचत / मुनाफा</div>
+        <div class="text-2xl font-black text-blue-600 mt-1" id="netProfit">₹0</div>
+        <div class="text-[11px] text-slate-400 mt-0.5">आय में से कुल खर्च घटाकर</div>
       </div>
     </div>
-  </section>
 
-  <!-- मुख्य विशेषताएं -->
-  <section class="py-8 bg-white border-b border-stone-200">
-    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="flex items-center gap-4 p-4 rounded-xl bg-stone-50 border border-stone-200/60">
-        <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
-          <i class="fa-solid fa-shield-halved text-xl"></i>
-        </div>
-        <div>
-          <h3 class="font-bold text-stone-900">100% शुद्धता की गारंटी</h3>
-          <p class="text-xs text-stone-600 mt-0.5">पानी या किसी केमिकल की शून्य मिलावट।</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-4 p-4 rounded-xl bg-stone-50 border border-stone-200/60">
-        <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
-          <i class="fa-solid fa-truck-fast text-xl"></i>
-        </div>
-        <div>
-          <h3 class="font-bold text-stone-900">सुबह 6:00 से 7:30 डिलीवरी</h3>
-          <p class="text-xs text-stone-600 mt-0.5">आपकी सुबह की चाय से पहले ताजा दूध आपके घर।</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-4 p-4 rounded-xl bg-stone-50 border border-stone-200/60">
-        <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
-          <i class="fa-solid fa-calendar-xmark text-xl"></i>
-        </div>
-        <div>
-          <h3 class="font-bold text-stone-900">आसान छुट्टी / पॉज</h3>
-          <p class="text-xs text-stone-600 mt-0.5">बाहर जाने पर 1 व्हाट्सएप मैसेज से डिलीवरी रोकें।</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- प्रोडक्ट्स सेक्शन -->
-  <section id="products" class="py-16 max-w-6xl mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl font-extrabold text-stone-900">फार्म के ताजा उत्पाद</h2>
-      <p class="text-stone-600 text-sm mt-1">शुद्ध आहार, स्वस्थ परिवार</p>
+    <!-- Tab Buttons -->
+    <div class="flex gap-2 border-b border-slate-200 mt-8 mb-6 overflow-x-auto">
+      <button onclick="switchTab('milk')" id="tabMilkBtn" class="px-5 py-2.5 font-bold text-sm border-b-2 border-emerald-700 text-emerald-800 flex items-center gap-2">
+        <i class="fa-solid fa-bottle-droplet"></i> 1. दूध बिक्री रजिस्टर
+      </button>
+      <button onclick="switchTab('expense')" id="tabExpenseBtn" class="px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <i class="fa-solid fa-receipt"></i> 2. खर्च व मजदूरी भुगतान
+      </button>
+      <button onclick="switchTab('attendance')" id="tabAttBtn" class="px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <i class="fa-solid fa-user-clock"></i> 3. मजदूर हाजिरी रजिस्टर
+      </button>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      
-      <!-- कार्ड 1 -->
-      <div class="bg-white rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between overflow-hidden">
-        <div class="p-5">
-          <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full uppercase">सर्वाधिक लोकप्रिय</span>
-          <h3 class="text-lg font-bold text-stone-900 mt-2">ताजा मुर्राह भैंस का दूध</h3>
-          <p class="text-xs text-stone-600 mt-2 leading-relaxed">मलाईदार, गाढ़ा और प्राकृतिक मिठास से भरपूर। चाय, दही और खीर के लिए सबसे उत्तम।</p>
-        </div>
-        <div class="p-5 pt-0 border-t border-stone-100 bg-stone-50/50">
-          <div class="flex items-baseline justify-between my-3">
-            <span class="text-2xl font-black text-emerald-800">₹70</span>
-            <span class="text-xs text-stone-500 font-medium">प्रति लीटर</span>
-          </div>
-          <button onclick="selectProduct('ताजा मुर्राह भैंस का दूध')" class="w-full bg-stone-900 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 rounded-lg transition">
-            ऑर्डर करें
-          </button>
-        </div>
-      </div>
-
-      <!-- कार्ड 2 -->
-      <div class="bg-white rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between overflow-hidden">
-        <div class="p-5">
-          <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full uppercase">A2 क्वालिटी</span>
-          <h3 class="text-lg font-bold text-stone-900 mt-2">देसी गाय का दूध</h3>
-          <p class="text-xs text-stone-600 mt-2 leading-relaxed">पाचन में हल्का और पोषण से भरपूर। बच्चों और बुजुर्गों के स्वास्थ्य के लिए सर्वोत्तम।</p>
-        </div>
-        <div class="p-5 pt-0 border-t border-stone-100 bg-stone-50/50">
-          <div class="flex items-baseline justify-between my-3">
-            <span class="text-2xl font-black text-emerald-800">₹65</span>
-            <span class="text-xs text-stone-500 font-medium">प्रति लीटर</span>
-          </div>
-          <button onclick="selectProduct('देसी गाय का दूध')" class="w-full bg-stone-900 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 rounded-lg transition">
-            ऑर्डर करें
-          </button>
-        </div>
-      </div>
-
-      <!-- कार्ड 3 -->
-      <div class="bg-white rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between overflow-hidden">
-        <div class="p-5">
-          <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full uppercase">दानेदार</span>
-          <h3 class="text-lg font-bold text-stone-900 mt-2">पारंपरिक देसी घी</h3>
-          <p class="text-xs text-stone-600 mt-2 leading-relaxed">धीमी आंच पर पकाया गया खुशबूदार दानेदार घी। कोई प्रिजर्वेटिव या रंग नहीं।</p>
-        </div>
-        <div class="p-5 pt-0 border-t border-stone-100 bg-stone-50/50">
-          <div class="flex items-baseline justify-between my-3">
-            <span class="text-2xl font-black text-emerald-800">₹850</span>
-            <span class="text-xs text-stone-500 font-medium">प्रति लीटर</span>
-          </div>
-          <button onclick="selectProduct('पारंपरिक देसी घी')" class="w-full bg-stone-900 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 rounded-lg transition">
-            ऑर्डर करें
-          </button>
-        </div>
-      </div>
-
-      <!-- कार्ड 4 -->
-      <div class="bg-white rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between overflow-hidden">
-        <div class="p-5">
-          <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full uppercase">फ्रेश मेड</span>
-          <h3 class="text-lg font-bold text-stone-900 mt-2">सॉफ्ट ताजा मलाई पनीर</h3>
-          <p class="text-xs text-stone-600 mt-2 leading-relaxed">सुबह के शुद्ध दूध से तैयार किया गया बेहद मुलायम और केमिकल-रहित ताजा पनीर।</p>
-        </div>
-        <div class="p-5 pt-0 border-t border-stone-100 bg-stone-50/50">
-          <div class="flex items-baseline justify-between my-3">
-            <span class="text-2xl font-black text-emerald-800">₹360</span>
-            <span class="text-xs text-stone-500 font-medium">प्रति किग्रा</span>
-          </div>
-          <button onclick="selectProduct('सॉफ्ट ताजा मलाई पनीर')" class="w-full bg-stone-900 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 rounded-lg transition">
-            ऑर्डर करें
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- बुकिंग / ऑर्डर फॉर्म -->
-  <section id="order-form" class="py-16 bg-emerald-50/50 border-t border-stone-200">
-    <div class="max-w-xl mx-auto px-4">
-      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-md border border-emerald-100">
-        <div class="text-center mb-6">
-          <h2 class="text-2xl font-extrabold text-stone-900">दूध डिलीवरी / ट्रायल बुक करें</h2>
-          <p class="text-xs text-stone-600 mt-1">नीचे फॉर्म भरें, विवरण सीधे हमारे व्हाट्सएप पर बुक हो जाएगा।</p>
-        </div>
-
-        <form id="dairyForm" onsubmit="sendToWhatsApp(event)" class="space-y-4">
+    <!-- TAB 1: MILK SALE ENTRY -->
+    <section id="tabMilk" class="space-y-6">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+        <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-circle-plus text-emerald-600"></i> नई दूध बिक्री दर्ज करें
+        </h3>
+        <form onsubmit="addMilkEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
           <div>
-            <label class="block text-xs font-bold text-stone-700 uppercase mb-1">आपका नाम</label>
-            <input type="text" id="custName" required placeholder="उदा. राहुल शर्मा" class="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm" />
+            <label class="block text-xs font-semibold text-slate-600 mb-1">तारीख</label>
+            <input type="date" id="milkDate" required class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-600 outline-none" />
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-stone-700 uppercase mb-1">मोबाइल नंबर</label>
-            <input type="tel" id="custPhone" required placeholder="उदा. 9876543210" class="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm" />
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-stone-700 uppercase mb-1">पूरा पता (मकान नंबर, एरिया, लैंडमार्क)</label>
-            <textarea id="custAddress" required rows="2" placeholder="उदा. मकान नं. 12, मेन रोड, नियर पार्क..." class="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm"></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-bold text-stone-700 uppercase mb-1">प्रोडक्ट</label>
-              <select id="custProduct" class="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm bg-white">
-                <option value="ताजा मुर्राह भैंस का दूध">ताजा मुर्राह भैंस का दूध</option>
-                <option value="देसी गाय का दूध">देसी गाय का दूध</option>
-                <option value="पारंपरिक देसी घी">पारंपरिक देसी घी</option>
-                <option value="सॉफ्ट ताजा मलाई पनीर">सॉफ्ट ताजा मलाई पनीर</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-stone-700 uppercase mb-1">मात्रा (Quantity)</label>
-              <select id="custQty" class="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm bg-white">
-                <option value="500 ml">500 ml</option>
-                <option value="1 लीटर" selected>1 लीटर</option>
-                <option value="1.5 लीटर">1.5 लीटर</option>
-                <option value="2 लीटर">2 लीटर</option>
-                <option value="3+ लीटर">3+ लीटर</option>
-                <option value="500 ग्राम (पनीर/घी)">500 ग्राम (पनीर/घी)</option>
-                <option value="1 किग्रा (पनीर/घी)">1 किग्रा (पनीर/घी)</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-stone-700 uppercase mb-1">डिलीवरी का प्रकार</label>
-            <select id="custPlan" class="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm bg-white">
-              <option value="1 दिन का ट्रायल">1 दिन का ट्रायल (पहले टेस्ट करें)</option>
-              <option value="रोजाना (Daily Delivery)">रोजाना (Daily Delivery)</option>
-              <option value="एक दिन छोड़कर (Alternate Days)">एक दिन छोड़कर (Alternate Days)</option>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">समय (Shift)</label>
+            <select id="milkShift" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-600 outline-none bg-white">
+              <option value="सुबह (Morning)">सुबह (Morning)</option>
+              <option value="शाम (Evening)">शाम (Evening)</option>
             </select>
           </div>
 
-          <button type="submit" class="w-full mt-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 transition text-sm">
-            <i class="fa-brands fa-whatsapp text-lg"></i>
-            व्हाट्सएप पर ऑर्डर भेजें
-          </button>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">ग्राहक / डेयरी का नाम</label>
+            <input type="text" id="milkCustomer" required placeholder="उदा. राम जी / चिलिंग प्लांट" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-600 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">दूध (लीटर)</label>
+            <input type="number" step="0.5" id="milkQty" oninput="calcMilkTotal()" required placeholder="0" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-600 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">रेट (₹ प्रति लीटर)</label>
+            <input type="number" step="0.5" id="milkRate" oninput="calcMilkTotal()" required placeholder="₹ 65" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-600 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">कुल मूल्य (₹)</label>
+            <input type="text" id="milkTotal" readonly placeholder="₹ 0" class="w-full text-sm border border-slate-200 bg-slate-100 rounded-lg p-2 font-bold text-emerald-800" />
+          </div>
+
+          <div class="lg:col-span-6 flex justify-end mt-2">
+            <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-2 rounded-lg text-sm transition">
+              <i class="fa-solid fa-save mr-1"></i> दूध एंट्री सेव करें
+            </button>
+          </div>
         </form>
       </div>
-    </div>
-  </section>
 
-  <!-- फुटर -->
-  <footer class="bg-stone-900 text-stone-400 py-8 px-4 text-center text-xs">
-    <p class="font-bold text-stone-200 text-sm">Pure Farm Fresh Dairy Services</p>
-    <p class="mt-1">शुद्ध दूध, पनीर और बिलोना घी की भरोसेमंद होम डिलीवरी।</p>
-    <p class="mt-4 text-stone-500">© 2026 Pure Dairy. All rights reserved.</p>
-  </footer>
+      <!-- Milk Records Table -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+          <h4 class="font-bold text-slate-800 text-sm">दूध बिक्री रिकॉर्ड</h4>
+          <span class="text-xs text-slate-500 font-semibold" id="milkRecordCount">कुल एंट्री: 0</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <tr>
+                <th class="p-3">तारीख</th>
+                <th class="p-3">समय</th>
+                <th class="p-3">ग्राहक</th>
+                <th class="p-3">मात्रा</th>
+                <th class="p-3">रेट</th>
+                <th class="p-3">कुल ₹</th>
+                <th class="p-3 text-center">हटाएं</th>
+              </tr>
+            </thead>
+            <tbody id="milkTableBody" class="divide-y divide-slate-100">
+              <!-- Entries will load here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-  <!-- जावास्क्रिप्ट लॉजिक -->
+    <!-- TAB 2: EXPENSE & LABOUR PAYMENTS -->
+    <section id="tabExpense" class="hidden space-y-6">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+        <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-circle-plus text-rose-600"></i> नया खर्च या मजदूरी भुगतान दर्ज करें
+        </h3>
+        <form onsubmit="addExpenseEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">तारीख</label>
+            <input type="date" id="expDate" required class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-rose-500 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">खर्च का प्रकार</label>
+            <select id="expCategory" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-rose-500 outline-none bg-white">
+              <option value="मजदूर भुगतान (Labour Wage)">मजदूर भुगतान (Labour Wage)</option>
+              <option value="पशु आहार / चारा (Feed/Fodder)">पशु आहार / चारा (Feed/Fodder)</option>
+              <option value="दवाई व डॉक्टर खर्च (Medical)">दवाई व डॉक्टर खर्च (Medical)</option>
+              <option value="बिजली / सोलर / डीजल">बिजली / सोलर / डीजल</option>
+              <option value="फार्म मरम्मत / अन्य">फार्म मरम्मत / अन्य</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">किसको दिया / विवरण</label>
+            <input type="text" id="expDetail" required placeholder="उदा. सुरेश (मजदूर) / खली दाना" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-rose-500 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">रकम (₹)</label>
+            <input type="number" id="expAmount" required placeholder="₹ 0" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-rose-500 outline-none" />
+          </div>
+
+          <div class="flex items-end">
+            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">
+              <i class="fa-solid fa-save mr-1"></i> खर्च जोड़ें
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Expense Table -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+          <h4 class="font-bold text-slate-800 text-sm">खर्च का हिसाब</h4>
+          <span class="text-xs text-slate-500 font-semibold" id="expRecordCount">कुल एंट्री: 0</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <tr>
+                <th class="p-3">तारीख</th>
+                <th class="p-3">खर्च प्रकार</th>
+                <th class="p-3">विवरण / नाम</th>
+                <th class="p-3">रकम (₹)</th>
+                <th class="p-3 text-center">हटाएं</th>
+              </tr>
+            </thead>
+            <tbody id="expenseTableBody" class="divide-y divide-slate-100">
+              <!-- Entries will load here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: LABOUR ATTENDANCE -->
+    <section id="tabAttendance" class="hidden space-y-6">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+        <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-circle-plus text-blue-600"></i> मजदूर हाजिरी व समय दर्ज करें
+        </h3>
+        <form onsubmit="addAttendanceEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">तारीख</label>
+            <input type="date" id="attDate" required class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">मजदूर का नाम</label>
+            <input type="text" id="attLabourName" required placeholder="उदा. रमेश कुमार" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">आने का समय (In-Time)</label>
+            <input type="time" id="attInTime" required class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">जाने का समय (Out-Time)</label>
+            <input type="time" id="attOutTime" required class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">काम का प्रकार</label>
+            <select id="attWorkType" class="w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+              <option value="दूध दुहना व धुलाई">दूध दुहना व धुलाई</option>
+              <option value="चारा काटना व सानी">चारा काटना व सानी</option>
+              <option value="फार्म सफाई व देखरेख">फार्म सफाई व देखरेख</option>
+              <option value="पूरा दिन (Full Day)">पूरा दिन (Full Day)</option>
+            </select>
+          </div>
+
+          <div class="flex items-end">
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">
+              <i class="fa-solid fa-save mr-1"></i> हाजिरी लगाएं
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Attendance Table -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+          <h4 class="font-bold text-slate-800 text-sm">दैनिक हाजिरी रजिस्टर</h4>
+          <span class="text-xs text-slate-500 font-semibold" id="attRecordCount">कुल हाजिरी: 0</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <tr>
+                <th class="p-3">तारीख</th>
+                <th class="p-3">मजदूर का नाम</th>
+                <th class="p-3">आने का समय</th>
+                <th class="p-3">जाने का समय</th>
+                <th class="p-3">काम</th>
+                <th class="p-3 text-center">हटाएं</th>
+              </tr>
+            </thead>
+            <tbody id="attTableBody" class="divide-y divide-slate-100">
+              <!-- Entries will load here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
   <script>
-    // अपना व्हाट्सएप नंबर यहाँ बदलें (917398179546)
-    const MY_WHATSAPP_NUMBER = "919876543210"; 
+    // Local Data Storage Keys
+    let milkData = JSON.parse(localStorage.getItem('dairy_milk_records') || '[]');
+    let expenseData = JSON.parse(localStorage.getItem('dairy_expense_records') || '[]');
+    let attendanceData = JSON.parse(localStorage.getItem('dairy_att_records') || '[]');
 
-    function selectProduct(name) {
-      document.getElementById('custProduct').value = name;
-      document.getElementById('order-form').scrollIntoView({ behavior: 'smooth' });
+    // Default Today Date in Inputs
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('milkDate').value = todayStr;
+    document.getElementById('expDate').value = todayStr;
+    document.getElementById('attDate').value = todayStr;
+
+    // Real-time calculation for milk total
+    function calcMilkTotal() {
+      const qty = parseFloat(document.getElementById('milkQty').value) || 0;
+      const rate = parseFloat(document.getElementById('milkRate').value) || 0;
+      document.getElementById('milkTotal').value = '₹ ' + (qty * rate).toFixed(2);
     }
 
-    function sendToWhatsApp(e) {
+    // Switch Tabs
+    function switchTab(tab) {
+      document.getElementById('tabMilk').classList.add('hidden');
+      document.getElementById('tabExpense').classList.add('hidden');
+      document.getElementById('tabAttendance').classList.add('hidden');
+
+      document.getElementById('tabMilkBtn').className = "px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2";
+      document.getElementById('tabExpenseBtn').className = "px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2";
+      document.getElementById('tabAttBtn').className = "px-5 py-2.5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2";
+
+      if (tab === 'milk') {
+        document.getElementById('tabMilk').classList.remove('hidden');
+        document.getElementById('tabMilkBtn').className = "px-5 py-2.5 font-bold text-sm border-b-2 border-emerald-700 text-emerald-800 flex items-center gap-2";
+      } else if (tab === 'expense') {
+        document.getElementById('tabExpense').classList.remove('hidden');
+        document.getElementById('tabExpenseBtn').className = "px-5 py-2.5 font-bold text-sm border-b-2 border-rose-600 text-rose-700 flex items-center gap-2";
+      } else if (tab === 'attendance') {
+        document.getElementById('tabAttendance').classList.remove('hidden');
+        document.getElementById('tabAttBtn').className = "px-5 py-2.5 font-bold text-sm border-b-2 border-blue-600 text-blue-700 flex items-center gap-2";
+      }
+    }
+
+    // Add Milk
+    function addMilkEntry(e) {
       e.preventDefault();
-
-      const name = document.getElementById('custName').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const address = document.getElementById('custAddress').value.trim();
-      const product = document.getElementById('custProduct').value;
-      const qty = document.getElementById('custQty').value;
-      const plan = document.getElementById('custPlan').value;
-
-      const message = `*नमस्ते! नया डेयरी ऑर्डर अनुरोध:*%0A` +
-        `--------------------------------%0A` +
-        `*ग्राहक:* ${name}%0A` +
-        `*मोबाइल:* ${phone}%0A` +
-        `*पता:* ${address}%0A` +
-        `*प्रोडक्ट:* ${product}%0A` +
-        `*मात्रा:* ${qty}%0A` +
-        `*डिलीवरी प्लान:* ${plan}%0A` +
-        `--------------------------------%0A` +
-        `कृपया डिलीवरी की पुष्टि करें।`;
-
-      window.open(`https://wa.me/${MY_WHATSAPP_NUMBER}?text=${message}`, '_blank');
+      const qty = parseFloat(document.getElementById('milkQty').value);
+      const rate = parseFloat(document.getElementById('milkRate').value);
+      const item = {
+        id: Date.now(),
+        date: document.getElementById('milkDate').value,
+        shift: document.getElementById('milkShift').value,
+        customer: document.getElementById('milkCustomer').value,
+        qty: qty,
+        rate: rate,
+        total: qty * rate
+      };
+      milkData.unshift(item);
+      localStorage.setItem('dairy_milk_records', JSON.stringify(milkData));
+      document.getElementById('milkCustomer').value = '';
+      document.getElementById('milkQty').value = '';
+      document.getElementById('milkRate').value = '';
+      document.getElementById('milkTotal').value = '₹ 0';
+      renderAll();
     }
+
+    // Delete Milk
+    function deleteMilk(id) {
+      milkData = milkData.filter(item => item.id !== id);
+      localStorage.setItem('dairy_milk_records', JSON.stringify(milkData));
+      renderAll();
+    }
+
+    // Add Expense
+    function addExpenseEntry(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('expAmount').value);
+      const item = {
+        id: Date.now(),
+        date: document.getElementById('expDate').value,
+        category: document.getElementById('expCategory').value,
+        detail: document.getElementById('expDetail').value,
+        amount: amount
+      };
+      expenseData.unshift(item);
+      localStorage.setItem('dairy_expense_records', JSON.stringify(expenseData));
+      document.getElementById('expDetail').value = '';
+      document.getElementById('expAmount').value = '';
+      renderAll();
+    }
+
+    // Delete Expense
+    function deleteExpense(id) {
+      expenseData = expenseData.filter(item => item.id !== id);
+      localStorage.setItem('dairy_expense_records', JSON.stringify(expenseData));
+      renderAll();
+    }
+
+    // Add Attendance
+    function addAttendanceEntry(e) {
+      e.preventDefault();
+      const item = {
+        id: Date.now(),
+        date: document.getElementById('attDate').value,
+        name: document.getElementById('attLabourName').value,
+        inTime: document.getElementById('attInTime').value,
+        outTime: document.getElementById('attOutTime').value,
+        work: document.getElementById('attWorkType').value
+      };
+      attendanceData.unshift(item);
+      localStorage.setItem('dairy_att_records', JSON.stringify(attendanceData));
+      document.getElementById('attLabourName').value = '';
+      document.getElementById('attInTime').value = '';
+      document.getElementById('attOutTime').value = '';
+      renderAll();
+    }
+
+    // Delete Attendance
+    function deleteAttendance(id) {
+      attendanceData = attendanceData.filter(item => item.id !== id);
+      localStorage.setItem('dairy_att_records', JSON.stringify(attendanceData));
+      renderAll();
+    }
+
+    // Clear all
+    function clearAllData() {
+      if (confirm("क्या आप सच में सारा डेटा खाली करना चाहते हैं?")) {
+        localStorage.clear();
+        milkData = [];
+        expenseData = [];
+        attendanceData = [];
+        renderAll();
+      }
+    }
+
+    // Format Time (12hr)
+    function formatTime(t) {
+      if(!t) return '-';
+      const [h, m] = t.split(':');
+      const hour = parseInt(h);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const formattedHour = hour % 12 || 12;
+      return `${formattedHour}:${m} ${ampm}`;
+    }
+
+    // Render Everything
+    function renderAll() {
+      // 1. Milk Table
+      const milkTbody = document.getElementById('milkTableBody');
+      milkTbody.innerHTML = '';
+      let totalQty = 0;
+      let totalRev = 0;
+
+      milkData.forEach(item => {
+        totalQty += item.qty;
+        totalRev += item.total;
+        milkTbody.innerHTML += `
+          <tr class="hover:bg-slate-50">
+            <td class="p-3 font-medium">${item.date}</td>
+            <td class="p-3 text-slate-500 text-xs">${item.shift}</td>
+            <td class="p-3 font-semibold text-slate-900">${item.customer}</td>
+            <td class="p-3 font-bold text-emerald-700">${item.qty} L</td>
+            <td class="p-3 text-slate-600">₹${item.rate}</td>
+            <td class="p-3 font-extrabold text-slate-900">₹${item.total.toFixed(2)}</td>
+            <td class="p-3 text-center">
+              <button onclick="deleteMilk(${item.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('milkRecordCount').innerText = `कुल एंट्री: ${milkData.length}`;
+
+      // 2. Expense Table
+      const expTbody = document.getElementById('expenseTableBody');
+      expTbody.innerHTML = '';
+      let totalExp = 0;
+
+      expenseData.forEach(item => {
+        totalExp += item.amount;
+        expTbody.innerHTML += `
+          <tr class="hover:bg-slate-50">
+            <td class="p-3 font-medium">${item.date}</td>
+            <td class="p-3 text-xs font-semibold text-rose-700">${item.category}</td>
+            <td class="p-3 font-medium text-slate-900">${item.detail}</td>
+            <td class="p-3 font-bold text-rose-600">₹${item.amount.toFixed(2)}</td>
+            <td class="p-3 text-center">
+              <button onclick="deleteExpense(${item.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('expRecordCount').innerText = `कुल एंट्री: ${expenseData.length}`;
+
+      // 3. Attendance Table
+      const attTbody = document.getElementById('attTableBody');
+      attTbody.innerHTML = '';
+      attendanceData.forEach(item => {
+        attTbody.innerHTML += `
+          <tr class="hover:bg-slate-50">
+            <td class="p-3 font-medium">${item.date}</td>
+            <td class="p-3 font-bold text-slate-900">${item.name}</td>
+            <td class="p-3 text-emerald-700 font-semibold">${formatTime(item.inTime)}</td>
+            <td class="p-3 text-rose-600 font-semibold">${formatTime(item.outTime)}</td>
+            <td class="p-3 text-xs text-slate-600">${item.work}</td>
+            <td class="p-3 text-center">
+              <button onclick="deleteAttendance(${item.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('attRecordCount').innerText = `कुल हाजिरी: ${attendanceData.length}`;
+
+      // 4. Summaries
+      document.getElementById('sumMilkQty').innerText = totalQty.toFixed(1) + ' L';
+      document.getElementById('sumMilkRev').innerText = '₹' + totalRev.toFixed(0);
+      document.getElementById('sumExpenses').innerText = '₹' + totalExp.toFixed(0);
+      
+      const net = totalRev - totalExp;
+      const netEl = document.getElementById('netProfit');
+      netEl.innerText = '₹' + net.toFixed(0);
+      if(net < 0) {
+        netEl.className = "text-2xl font-black text-rose-600 mt-1";
+      } else {
+        netEl.className = "text-2xl font-black text-blue-600 mt-1";
+      }
+    }
+
+    // Initial load
+    renderAll();
   </script>
 </body>
 </html>
