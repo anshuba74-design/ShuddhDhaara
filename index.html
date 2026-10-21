@@ -197,11 +197,12 @@
           <i class="fa-solid fa-plus text-emerald-700"></i> दूध बिक्री दर्ज करें
         </h2>
         <form onsubmit="addMilkEntry(event)" class="space-y-3">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="milkDate" required class="w-full text-sm border-2 rounded-xl p-2.5 outline-none" /></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">समय</label><select id="milkShift" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white"><option value="सुबह (Morning)">सुबह (Morning)</option><option value="शाम (Evening)">शाम (Evening)</option></select></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री प्रकार</label><select id="milkSaleType" onchange="toggleMilkSaleType()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="retail">ग्राहक (Fixed Rate)</option><option value="plant">डेयरी प्लांट (FAT/SNF)</option></select></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक/प्लांट नाम</label><input type="text" id="milkCustomer" required placeholder="उदा. राम जी" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+            <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मोबाइल नंबर (WhatsApp)</label><input type="tel" id="milkCustomerPhone" placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-emerald-300 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
           </div>
 
           <div id="plantFatSnfBlock" class="hidden p-3 bg-rose-50 border-2 border-rose-300 rounded-xl grid grid-cols-3 gap-2">
@@ -300,7 +301,7 @@
         </button>
       </div>
 
-      <!-- Add Cattle Form (DIRECT ONCLICK FIX) -->
+      <!-- Add Cattle Form -->
       <div id="catAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-amber-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-cow text-amber-600"></i> <span id="catFormTitle">नया पशु प्रोफाइल</span></h2>
         <input type="hidden" id="editCatRecordId" value="" />
@@ -517,7 +518,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Cloud Script (Direct Click & Instant Feedback) -->
+  <!-- Core Script with Persistence & Direct Share -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -573,6 +574,49 @@
     function dismissStockAlert() {
       localStorage.setItem('prajapati_stk_snooze', Date.now() + FIVE_HOURS);
       document.getElementById('stockNotificationBanner').classList.add('hidden');
+    }
+
+    // Helper: Base64 dataURL to Blob for sharing QR Image
+    function dataURLtoBlob(dataurl) {
+      const arr = dataurl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], {type:mime});
+    }
+
+    // Share Bill / Due Reminder with QR Code photo attached
+    async function shareDirectBillWithQR(phone, textMsg) {
+      const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
+      
+      // If Web Share API is supported and QR exists, share with attached QR image file
+      if (paymentSettings.qrImage && navigator.canShare) {
+        try {
+          const qrBlob = dataURLtoBlob(paymentSettings.qrImage);
+          const file = new File([qrBlob], "Payment_QR.png", { type: qrBlob.type });
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              title: 'प्रजापति डेयरी फॉर्म बिल',
+              text: textMsg.replace(/%0A/g, '\n'),
+              files: [file]
+            });
+            return;
+          }
+        } catch (err) {
+          console.log("Web Share fallback:", err);
+        }
+      }
+
+      // Fallback: Direct WhatsApp Link
+      if (cleanPhone) {
+        window.open(`https://wa.me/91${cleanPhone}?text=${textMsg}`, '_blank');
+      } else {
+        window.open(`https://wa.me/?text=${textMsg}`, '_blank');
+      }
     }
 
     function toggleSideMenu() {
@@ -699,7 +743,6 @@
       cattleData.forEach(c => sel.innerHTML += `<option value="${c.categoryType} #${c.tag}">${c.categoryType} #${c.tag}</option>`);
     }
 
-    // DIRECT CLICK CATTLE SAVE FUNCTION (NO FORM BLOCKAGE)
     function saveDirectCattle() {
       if (!isAdmin) {
         const pin = prompt("डेटा सुरक्षित करने के लिए एडमिन पिन दर्ज करें:");
@@ -900,20 +943,25 @@
     }
 
     // Customer WhatsApp Reminder with QR code
-    function sendWhatsAppReminder(name, bal) {
-      let qrMsg = paymentSettings.qrImage ? `%0A*भुगतान QR:* (स्क्रीनशॉट से स्कैन करें या बैंक में ट्रांसफर करें)` : '';
-      const msg = `*प्रजापति डेयरी फॉर्म - उधारी तगादा*%0Aनमस्ते *${name}*,%0Aआपकी कुल बकाया रकम *₹ ${bal.toFixed(2)}* है।%0A*UPI ID:* ${paymentSettings.upiId}%0A*PhonePe/GPay:* ${paymentSettings.upiPhone}%0A*खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})${qrMsg}%0Aधन्यवाद!`;
-      window.open(`https://wa.me/?text=${msg}`, '_blank');
+    function sendWhatsAppReminder(name, bal, phone) {
+      const msg = `*प्रजापति डेयरी फॉर्म - उधारी तगादा*%0A--------------------------------%0Aनमस्ते *${name}*,%0Aडेयरी बहीखाते के अनुसार आपकी कुल बकाया रकम *₹ ${bal.toFixed(2)}* है।%0A*UPI ID:* ${paymentSettings.upiId}%0A*PhonePe/GPay:* ${paymentSettings.upiPhone}%0A*खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})%0A(कृपया संलग्न QR कोड को स्कैन करके भुगतान करें)%0A--------------------------------%0Aधन्यवाद!`;
+      shareDirectBillWithQR(phone, msg);
+    }
+
+    function sendCustomerMilkBill(name, date, qty, rate, total, status, phone) {
+      const msg = `*प्रजापति डेयरी फॉर्म - दूध रसीद*%0A--------------------------------%0A*ग्राहक:* ${name}%0A*तारीख:* ${date}%0A*मात्रा:* ${qty} L%0A*रेट:* ₹ ${rate}/L%0A*कुल बिल:* ₹ ${total}%0A*भुगतान स्थिति:* ${status}%0A*UPI ID:* ${paymentSettings.upiId}%0A*PhonePe/GPay:* ${paymentSettings.upiPhone}%0A--------------------------------%0Aधन्यवाद!`;
+      shareDirectBillWithQR(phone, msg);
     }
 
     function renderCustomers() {
       const map = {};
       milkData.forEach(m => {
-        if(!map[m.customer]) map[m.customer] = { milk: 0, bill: 0, paid: 0 };
+        if(!map[m.customer]) map[m.customer] = { milk: 0, bill: 0, paid: 0, phone: m.customerPhone || '' };
         map[m.customer].milk += m.qty; map[m.customer].bill += m.total;
+        if (m.customerPhone) map[m.customer].phone = m.customerPhone;
       });
       customerPayments.forEach(p => {
-        if(!map[p.name]) map[p.name] = { milk: 0, bill: 0, paid: 0 };
+        if(!map[p.name]) map[p.name] = { milk: 0, bill: 0, paid: 0, phone: '' };
         map[p.name].paid += p.amount;
       });
 
@@ -922,19 +970,20 @@
       Object.keys(map).forEach(name => {
         const bal = map[name].bill - map[name].paid;
         const due = bal > 0;
+        const custPhone = map[name].phone || '';
         const qrHtml = paymentSettings.qrImage ? `<div class="p-2 bg-sky-50 rounded-xl border text-center mt-2"><span class="text-[10px] font-bold block mb-1">पेमेंट QR कोड</span><img src="${paymentSettings.qrImage}" class="w-20 h-20 mx-auto object-contain border rounded" /></div>` : '';
 
         const pop = `
           <div class="space-y-2 text-xs">
-            <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between"><div><b>${name}</b><br>दूध: ${map[name].milk}L</div><div class="text-base font-black ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(2)}</div></div>
+            <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between"><div><b>${name}</b><br>दूध: ${map[name].milk}L<br><span class="text-[10px] text-slate-500 font-bold">मो: ${custPhone || '-'}</span></div><div class="text-base font-black ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(2)}</div></div>
             ${qrHtml}
-            ${due ? `<button onclick="sendWhatsAppReminder('${name}', ${bal})" class="w-full bg-emerald-700 text-white font-bold py-2 rounded-xl mt-2"><i class="fa-brands fa-whatsapp"></i> WhatsApp पर तगादा व QR भेजें</button>` : ''}
+            ${due ? `<button onclick="sendWhatsAppReminder('${name}', ${bal}, '${custPhone}')" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl mt-2 flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp पर QR फोटो व तगादा भेजें</button>` : '<span class="block text-center text-emerald-700 font-bold mt-2">हिसाब चुकता है</span>'}
           </div>
         `;
 
         c.innerHTML += `
           <div onclick="openUniversalModal('${name}', 'बकाया: ₹${bal.toFixed(0)}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center cursor-pointer hover:border-indigo-600 transition">
-            <div><h4 class="font-bold text-slate-900 text-sm">${name}</h4><span class="text-[10px] text-slate-500">दूध: ${map[name].milk}L</span></div>
+            <div><h4 class="font-bold text-slate-900 text-sm">${name}</h4><span class="text-[10px] text-slate-500">दूध: ${map[name].milk}L • ${custPhone}</span></div>
             <span class="font-bold text-xs ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(0)}</span>
           </div>
         `;
@@ -963,13 +1012,21 @@
       if (!isAdmin) return;
       const qty = parseFloat(document.getElementById('milkQty').value) || 0;
       const rate = parseFloat(document.getElementById('milkRate').value) || 0;
+      const phone = document.getElementById('milkCustomerPhone').value.trim();
+
       db.ref('milk_records').push({
         date: document.getElementById('milkDate').value,
         shift: document.getElementById('milkShift').value,
         saleType: document.getElementById('milkSaleType').value,
         customer: document.getElementById('milkCustomer').value.trim(),
+        customerPhone: phone,
         qty, rate, total: qty * rate, paymentStatus: document.getElementById('milkPaymentStatus').value, timestamp: Date.now()
-      }).then(() => { document.getElementById('milkCustomer').value = ''; document.getElementById('milkQty').value = ''; alert("दूध बिक्री दर्ज!"); });
+      }).then(() => {
+        document.getElementById('milkCustomer').value = '';
+        document.getElementById('milkCustomerPhone').value = '';
+        document.getElementById('milkQty').value = '';
+        alert("दूध बिक्री दर्ज!");
+      });
     }
 
     function renderMilk() {
@@ -979,8 +1036,28 @@
       cattleData.forEach(x => prod += (x.milk || 0));
       milkData.forEach(x => {
         if (x.date === today) sold += (x.qty || 0);
+
+        const pop = `
+          <div class="space-y-2.5 text-xs">
+            <div class="p-2.5 bg-slate-50 border rounded-xl">
+              <h4 class="font-black text-slate-900 text-sm">${x.customer}</h4>
+              <p class="text-[11px] text-slate-500 font-bold">मो: ${x.customerPhone || 'उपलब्ध नहीं'}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2 bg-slate-50 rounded-lg border"><b>तारीख:</b> ${x.date} (${x.shift})</div>
+              <div class="p-2 bg-slate-50 rounded-lg border"><b>रेट:</b> ₹${x.rate}</div>
+              <div class="p-2 bg-slate-50 rounded-lg border"><b>मात्रा:</b> ${x.qty} L</div>
+              <div class="p-2 bg-emerald-50 rounded-lg border text-emerald-900 font-bold"><b>कुल:</b> ₹${x.total}</div>
+            </div>
+            <button onclick="sendCustomerMilkBill('${x.customer}', '${x.date}', ${x.qty}, ${x.rate}, ${x.total}, '${x.paymentStatus}', '${x.customerPhone || ''}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
+              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद (QR फोटो सहित भेजें)
+            </button>
+            ${isAdmin ? `<button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
+          </div>
+        `;
+
         c.innerHTML += `
-          <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
+          <div onclick="openUniversalModal('${x.customer}', '${x.date} • ${x.shift}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-emerald-600 transition">
             <div><h4 class="font-bold text-slate-900">${x.customer}</h4><p class="text-[10px] text-slate-500">${x.date} • ${x.shift}</p></div>
             <div class="text-right"><span class="font-bold text-emerald-950">${x.qty}L</span><br><span class="font-bold text-slate-700">₹${x.total}</span></div>
           </div>
@@ -1129,6 +1206,7 @@
       renderVetDoctors();
     }
 
+    // Tab Switching with LocalStorage Persistence
     function switchTab(t) {
       ['milk', 'expense', 'labour', 'cattle', 'customer', 'stock'].forEach(tab => {
         const sec = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
@@ -1139,6 +1217,9 @@
       document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.remove('hidden');
       const ab = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
       if (ab) ab.className = "shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-amber-300 shadow border-2 border-slate-700";
+      
+      // Save active tab in localStorage
+      localStorage.setItem('prajapati_active_tab', t);
     }
 
     // Realtime Sync from Firebase
@@ -1163,6 +1244,10 @@
     adjustBreedOptions();
     adjustCalfGenderOptions();
     updateAdminUI();
+
+    // Restore last visited tab on page reload
+    const savedTab = localStorage.getItem('prajapati_active_tab') || 'milk';
+    switchTab(savedTab);
   </script>
 </body>
 </html>
