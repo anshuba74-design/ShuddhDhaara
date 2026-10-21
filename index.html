@@ -99,6 +99,12 @@
               <i class="fa-solid fa-key text-amber-400 text-sm"></i>
               <span>पासवर्ड बदलें</span>
             </button>
+
+            <!-- Factory Reset Option (Added) -->
+            <button onclick="triggerFactoryReset()" id="menuResetBtn" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold hover:bg-rose-950/80 flex items-center gap-2.5 text-rose-400 transition border-t border-slate-800">
+              <i class="fa-solid fa-triangle-exclamation text-rose-500 text-sm"></i>
+              <span>फैक्ट्री रीसेट (सारा डेटा मिटाएं)</span>
+            </button>
           </div>
         </div>
       </div>
@@ -172,7 +178,7 @@
 
     </div>
 
-    <!-- ==================== TAB 1: MILK SALE (CLEAN, NO EXPENSE OVERLAP) ==================== -->
+    <!-- ==================== TAB 1: MILK SALE ==================== -->
     <section id="tabMilk" class="mt-4 space-y-4">
       <div class="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-900 text-white p-3.5 sm:p-4 rounded-2xl shadow-md border-2 border-emerald-600 grid grid-cols-3 gap-2 text-center">
         <div>
@@ -250,7 +256,7 @@
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
           <div class="flex items-center gap-2">
-            <span class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-tower-broadcast text-emerald-700 animate-pulse"></i> दूध बिक्री रिकॉर्ड (क्लिक करें पूरा देखने हेतु)</span>
+            <span class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-tower-broadcast text-emerald-700 animate-pulse"></i> दूध बिक्री रिकॉर्ड</span>
             <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300" id="milkRecordCount">0 एंट्री</span>
           </div>
 
@@ -270,7 +276,6 @@
           </div>
         </div>
 
-        <!-- Rendered as Compact Clickable Boxes -->
         <div id="milkHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
       </div>
     </section>
@@ -305,7 +310,7 @@
       </div>
 
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">खर्च व भुगतान सूची (क्लिक करें पूरा देखने हेतु)</span><span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full" id="expRecordCount">0 एंट्री</span></div>
+        <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">खर्च व भुगतान सूची</span><span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full" id="expRecordCount">0 एंट्री</span></div>
         <div id="expenseHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
       </div>
     </section>
@@ -321,23 +326,23 @@
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख</label><input type="date" id="labourJoinDate" required class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
           <div><label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">ड्यूटी समय</label><input type="time" id="labourDutyTime" value="06:00" class="w-full text-sm border-2 border-rose-300 bg-rose-50/50 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">अलर्ट प्रकार</label><select id="labourAlertMode" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-semibold"><option value="Daily Auto">Daily Auto</option><option value="Manual">Manual</option></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">आधार संख्या</label><input type="text" id="labourAadhar" placeholder="Optional" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पहचान पत्र संख्या</label><input type="text" id="labourAadhar" placeholder="Optional" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कार्य विवरण</label><input type="text" id="labourAddress" placeholder="उदा. दूध दुहाई" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="submit" class="w-full sm:w-auto bg-slate-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm">मजदूर जोड़ें</button></div>
         </form>
       </div>
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">पंजीकृत मजदूर (क्लिक करें देखने हेतु)</span><span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full" id="labourRecordCount">0 मजदूर</span></div>
+        <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">पंजीकृत मजदूर</span><span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full" id="labourRecordCount">0 मजदूर</span></div>
         <div id="labourHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
       </div>
     </section>
 
-    <!-- ==================== TAB 4: CATTLE MANAGEMENT (WITH EDIT & ARCHIVE) ==================== -->
+    <!-- ==================== TAB 4: CATTLE MANAGEMENT ==================== -->
     <section id="tabCattle" class="mt-4 space-y-4 hidden">
       <div class="flex flex-wrap items-center gap-2">
         <button onclick="toggleCattleSubForm('addAnimal')" id="subBtnAddAnimal" class="px-3.5 py-2 rounded-xl font-extrabold text-xs bg-slate-900 text-amber-300 border-2 border-slate-700 shadow">+ नया पशु जोड़ें</button>
         <button onclick="toggleCattleSubForm('addCalf')" id="subBtnAddCalf" class="px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-slate-700 border-2 border-slate-300 shadow">👶 बछड़ा / कटड़ा जन्म</button>
-        <button onclick="toggleCattleSubForm('sellAnimal')" id="subBtnSellAnimal" class="px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-emerald-800 border-2 border-emerald-400 shadow">💰 पशु / कटड़ा बेचें (Archive Folder)</button>
+        <button onclick="toggleCattleSubForm('sellAnimal')" id="subBtnSellAnimal" class="px-3.5 py-2 rounded-xl font-extrabold text-xs bg-white text-emerald-800 border-2 border-emerald-400 shadow">💰 पशु / कटड़ा बेचें</button>
       </div>
 
       <!-- Add / Edit Cattle Profile Form -->
@@ -348,8 +353,8 @@
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टैग / पहचान संख्या</label><input type="text" id="catTag" required placeholder="उदा. भैंस 01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नस्ल</label><select id="catBreed" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-semibold"><option value="मुर्राह भैंस (310 दिन)">मुर्राह भैंस (310 दिन)</option><option value="देसी / साहीवाल गाय (280 दिन)">देसी/साहीवाल गाय (280 दिन)</option><option value="HF / जर्सी क्रॉस (280 दिन)">HF/जर्सी क्रॉस (280 दिन)</option><option value="अन्य पशु">अन्य पशु</option></select></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">स्थिति (Status)</label><select id="catStatus" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="दूध दे रही है (Lactating)">दूध दे रही है</option><option value="गाभिन / प्रेग्नेंट (Pregnant)">गाभिन (Pregnant)</option><option value="ड्राई / सूखी (Dry)">ड्राई (Dry)</option><option value="बीमार / इलाज जारी">बीमार</option></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक दूध (L)</label><input type="number" step="0.5" id="catDailyMilk" required placeholder="14" class="w-full text-sm border-2 rounded-xl p-2.5 font-black text-emerald-900" /></div>
-          <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">खरीद लागत / प्रारंभिक मूल्य (₹)</label><input type="number" id="catBuyCost" placeholder="उदा. 70000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक दूध (L)</label><input type="number" step="0.5" id="catDailyMilk" required placeholder="14" class="w-full text-sm border-2 rounded-xl p-2.5 font-black text-emerald-950" /></div>
+          <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">खरीद लागत (₹)</label><input type="number" id="catBuyCost" placeholder="उदा. 70000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">AI / सीमन तारीख</label><input type="date" id="catAiDate" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 font-semibold" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कीड़े की दवा तारीख</label><input type="date" id="catDewormDate" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टीकाकरण</label><input type="text" id="catVaccine" placeholder="उदा. FMD टीका" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
@@ -365,21 +370,20 @@
         <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-baby text-blue-600"></i> नया बछड़ा / कटड़ा जन्म रिकॉर्ड</h2>
         <form onsubmit="addCalfEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बछड़ा / कटड़ा टैग</label><input type="text" id="calfTag" required placeholder="उदा. कटड़ा C-01" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माता का टैग (Mother Tag)</label><input type="text" id="calfMotherTag" required placeholder="उदा. भैंस 01" class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माता का टैग</label><input type="text" id="calfMotherTag" required placeholder="उदा. भैंस 01" class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">लिंग (Gender)</label><select id="calfGender" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="कटड़ा (Male Buffalo)">कटड़ा (Male Buffalo)</option><option value="कटिया / पड़िया (Female Buffalo)">कटिया / पड़िया (Female Buffalo)</option><option value="बछड़ा (Male Calf)">बछड़ा (Male Calf)</option><option value="बछिया (Female Calf)">बछिया (Female Calf)</option></select></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जन्म तारीख</label><input type="date" id="calfBirthDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="submit" class="w-full sm:w-auto bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm">जन्म रिकॉर्ड सेव करें</button></div>
         </form>
       </div>
 
-      <!-- Sell Animal Form (Transfers to Sold Archive Folder) -->
+      <!-- Sell Animal Form -->
       <div id="sellAnimalAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-emerald-600">
-        <h2 class="font-extrabold text-slate-900 text-base mb-1 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> पशु / कटड़ा बेचें (Live List से हटकर फोल्डर में जाएगा)</h2>
-        <p class="text-xs text-slate-500 mb-3">यहाँ पशु का टैग डालते ही वह सक्रिय सूची से हटकर 'बेचे गए पशुओं के फोल्डर' में सुरक्षित हो जाएगा।</p>
+        <h2 class="font-extrabold text-slate-900 text-base mb-1 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> पशु / कटड़ा बेचें</h2>
         <form onsubmit="handleSellAnimalSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री तारीख</label><input type="date" id="saleAnimalDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बेचा जाने वाला पशु टैग चुनें</label>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु टैग चुनें</label>
             <input type="text" id="saleAnimalTag" required placeholder="सटीक टैग लिखें (उदा. भैंस 01)" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-rose-800" />
           </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खरीदार का नाम</label><input type="text" id="saleBuyerName" required placeholder="उदा. सुरेश व्यापारी" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
@@ -388,10 +392,9 @@
         </form>
       </div>
 
-      <!-- Cattle Heading List (Compact Boxes) -->
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm">सक्रिय पशु व बछड़े (क्लिक करें पूरा देखने हेतु)</span>
+          <span class="font-bold text-slate-800 text-sm">सक्रिय पशु व बछड़े</span>
           <span class="text-xs bg-amber-100 text-amber-950 font-bold px-2 py-0.5 rounded-full" id="cattleRecordCount">0 पशु</span>
         </div>
         <div id="cattleHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
@@ -413,7 +416,7 @@
 
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm">ग्राहक-वार स्थिति (क्लिक करें पूरा देखने हेतु)</span>
+          <span class="font-bold text-slate-800 text-sm">ग्राहक-वार स्थिति</span>
           <span class="text-xs bg-indigo-100 text-indigo-950 font-bold px-2 py-0.5 rounded-full">लाइव लेजर</span>
         </div>
         <div id="customerHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
@@ -434,16 +437,16 @@
         </form>
       </div>
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">चारा स्टॉक (क्लिक करें देखने हेतु)</span><span class="text-xs bg-yellow-100 text-yellow-950 font-bold px-2 py-0.5 rounded-full" id="stockRecordCount">0 आइटम</span></div>
+        <div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">चारा स्टॉक</span><span class="text-xs bg-yellow-100 text-yellow-950 font-bold px-2 py-0.5 rounded-full" id="stockRecordCount">0 आइटम</span></div>
         <div id="stockHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
       </div>
     </section>
 
   </main>
 
-  <!-- ==================== UNIVERSAL POPUP MODAL (FOR ALL COMPACT HEADINGS) ==================== -->
+  <!-- ==================== UNIVERSAL POPUP MODAL ==================== -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
-    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-150">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
       <div class="bg-slate-900 text-white p-4 px-5 flex items-center justify-between border-b shrink-0">
         <div>
           <h3 class="font-black text-base text-amber-300" id="universalModalTitle">विवरण</h3>
@@ -455,7 +458,7 @@
     </div>
   </div>
 
-  <!-- ==================== POPUP: SOLD ANIMALS ARCHIVE FOLDER (NEW) ==================== -->
+  <!-- ==================== POPUP: SOLD ANIMALS ARCHIVE FOLDER ==================== -->
   <div id="soldAnimalsFolderModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
     <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden border-4 border-amber-500 flex flex-col max-h-[90vh]">
       <div class="bg-slate-950 text-white p-4 px-5 flex items-center justify-between border-b shrink-0">
@@ -499,7 +502,7 @@
           <input type="text" id="settingBankIfsc" placeholder="IFSC कोड (Optional)" class="w-full border-2 rounded-xl p-2.5 text-sm font-semibold uppercase" />
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान QR Code फोटो अपलोड करें</label>
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान QR Code फोटो</label>
           <input type="file" id="settingQrFileInput" accept="image/*" onchange="handleQrUpload(event)" class="text-xs w-full" />
           <div id="qrPreviewWrap" class="mt-2 hidden text-center">
             <img id="qrPreviewImg" src="" alt="Payment QR" class="w-32 h-32 mx-auto object-contain border rounded-xl" />
@@ -512,7 +515,7 @@
     </div>
   </div>
 
-  <!-- POPUP: SUMMARY TOTALS (WITH PER LITRE COST CALC) -->
+  <!-- POPUP: SUMMARY TOTALS -->
   <div id="summaryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-2 border-slate-300">
       <div class="bg-emerald-950 text-white p-4 px-5 flex items-center justify-between border-b">
@@ -531,7 +534,7 @@
           <div class="bg-blue-50 p-4 rounded-2xl border"><span class="text-[11px] font-bold text-blue-900 uppercase block">शुद्ध बचत (मुनाफा)</span><div class="text-2xl font-black text-blue-950 mt-1" id="modalNetProfit">₹0</div></div>
         </div>
         <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-300 flex justify-between items-center text-xs">
-          <span class="font-bold text-emerald-950"><i class="fa-solid fa-cow text-emerald-700"></i> पशु / कटड़ा बिक्री से अतिरिक्त आय:</span>
+          <span class="font-bold text-emerald-950"><i class="fa-solid fa-cow text-emerald-700"></i> पशु बिक्री से अतिरिक्त आय:</span>
           <span class="text-base font-black text-emerald-900" id="dispAnimalSaleTotal">₹ 0</span>
         </div>
         <div class="flex justify-end pt-2"><button onclick="printOverallMasterReport()" class="bg-sky-600 text-white text-xs font-bold px-4 py-2 rounded-xl shadow">संपूर्ण PDF रिपोर्ट</button></div>
@@ -560,6 +563,42 @@
   <!-- POPUP: PASSWORD CHANGER -->
   <div id="changePassModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="relative bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border-4 border-amber-400"><button onclick="closeChangePasswordModal()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 text-white rounded-full flex items-center justify-center font-black">✕</button><h3 class="font-extrabold text-slate-900 text-base mb-1">एडमिन पासवर्ड बदलें</h3><form onsubmit="handlePasswordChangeSubmit(event)" class="space-y-3 mt-3"><input type="password" id="oldPassInput" required placeholder="वर्तमान पासवर्ड" class="w-full text-sm border-2 rounded-xl p-2.5" /><input type="password" id="newPassInput" required placeholder="नया पासवर्ड" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /><input type="password" id="confirmNewPassInput" required placeholder="नया पासवर्ड दोबारा लिखें" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /><button type="submit" class="w-full bg-slate-900 text-amber-300 font-extrabold py-3 rounded-xl text-sm">पासवर्ड सेव करें</button></form></div>
+  </div>
+
+  <!-- POPUP: FACTORY RESET BACKUP CONFIRMATION (ADDED) -->
+  <div id="resetBackupModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-4 border-rose-600 space-y-4">
+      <div class="text-center">
+        <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-black border border-rose-300 mb-2">
+          <i class="fa-solid fa-triangle-exclamation animate-pulse"></i>
+        </div>
+        <h3 class="text-xl font-black text-slate-900">फैक्ट्री रीसेट (Factory Reset)</h3>
+        <p class="text-xs text-slate-600 mt-1 font-semibold leading-relaxed">
+          क्या आप रीसेट करने से पहले अपने पूरे डेटा का बैकअप (Excel / PDF) डाउनलोड करना चाहते हैं? रीसेट के बाद सारा रिकॉर्ड हमेशा के लिए मिट जाएगा।
+        </p>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button onclick="downloadAndReset('excel')" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow transition">
+          <i class="fa-solid fa-file-excel text-base text-emerald-300"></i>
+          <span>Excel / CSV बैकअप डाउनलोड करें और फिर रीसेट करें</span>
+        </button>
+
+        <button onclick="downloadAndReset('pdf')" class="w-full bg-sky-700 hover:bg-sky-800 text-white font-extrabold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow transition">
+          <i class="fa-solid fa-file-pdf text-base text-amber-300"></i>
+          <span>संपूर्ण PDF रिपोर्ट डाउनलोड करें और फिर रीसेट करें</span>
+        </button>
+
+        <button onclick="executeCompleteFactoryReset()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow transition">
+          <i class="fa-solid fa-trash-can"></i>
+          <span>बिना बैकअप के अभी सीधा रीसेट करें (Delete All)</span>
+        </button>
+
+        <button onclick="closeResetBackupModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 px-4 rounded-xl text-xs transition">
+          रद्द करें (Cancel)
+        </button>
+      </div>
+    </div>
   </div>
 
   <div id="printableArea" class="hidden"></div>
@@ -813,6 +852,63 @@
       document.body.removeChild(link);
     }
 
+    // ==================== FACTORY RESET SYSTEM (NEW FEATURE) ====================
+    function triggerFactoryReset() {
+      document.getElementById('sideMenuDropdown').classList.add('hidden');
+      
+      const pin = prompt("⚠️ चेतावनी: फैक्ट्री रीसेट हेतु कृपया एडमिन पासवर्ड दर्ज करें:");
+      if (!pin) return;
+      if (pin !== currentAdminPass) {
+        alert("गलत एडमिन पासवर्ड! फैक्ट्री रीसेट निरस्त किया गया।");
+        return;
+      }
+
+      document.getElementById('resetBackupModal').classList.remove('hidden');
+    }
+
+    function closeResetBackupModal() {
+      document.getElementById('resetBackupModal').classList.add('hidden');
+    }
+
+    function downloadAndReset(format) {
+      if (format === 'excel') {
+        exportAllDataToCSV();
+      } else if (format === 'pdf') {
+        printOverallMasterReport();
+      }
+      setTimeout(() => {
+        if (confirm("बैकअप प्रक्रिया शुरू हो चुकी है। क्या अब क्लाउड का सारा डेटा हमेशा के लिए डिलीट करें?")) {
+          executeCompleteFactoryReset();
+        }
+      }, 1000);
+    }
+
+    function executeCompleteFactoryReset() {
+      closeResetBackupModal();
+
+      const pathsToWipe = [
+        'milk_records',
+        'expense_records',
+        'labour_profiles',
+        'cattle_records',
+        'calf_records',
+        'sold_animals_archive',
+        'animal_sales',
+        'customer_payments',
+        'stock_records',
+        'farm_setup_costs'
+      ];
+
+      const deletePromises = pathsToWipe.map(p => db.ref(p).remove());
+
+      Promise.all(deletePromises).then(() => {
+        alert("✅ फैक्ट्री रीसेट सफल! फार्म का समस्त पुराना डेटा मिटा दिया गया है।");
+        location.reload();
+      }).catch(err => {
+        alert("डेटा रीसेट करने में समस्या आई: " + err.message);
+      });
+    }
+
     // ==================== MILK SALE: 2-DATE RANGE FILTER ====================
     let currentMilkFilter = 'all';
     let milkCustomStart = '';
@@ -921,7 +1017,6 @@
       document.getElementById('dispTodayBalance').innerText = balance.toFixed(1) + ' L';
     }
 
-    // Render Compact Clickable Boxes for Milk
     function renderMilk() {
       const container = document.getElementById('milkHeadingList');
       container.innerHTML = '';
@@ -946,7 +1041,6 @@
           ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">नकद प्राप्त</span>'
           : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300">उधारी (Due)</span>';
 
-        // Popup Content Preparation
         const popupDetailHtml = `
           <div class="space-y-3">
             <div class="p-3 bg-slate-50 rounded-2xl border flex justify-between items-center">
@@ -993,7 +1087,7 @@
       renderMilkSummaryStats();
     }
 
-    // ==================== EXPENSE (COMPACT CLICKABLE BOXES) ====================
+    // ==================== EXPENSE ====================
     function toggleExpenseFields() {
       const cat = document.getElementById('expCategory').value;
       const feedRow = document.getElementById('feedStockSyncRow');
@@ -1097,7 +1191,7 @@
       document.getElementById('dispCatOther').innerText = '₹ ' + totOther.toLocaleString('en-IN');
     }
 
-    // ==================== CATTLE & ARCHIVE FOLDER ====================
+    // ==================== CATTLE & ARCHIVE ====================
     function toggleCattleSubForm(mode) {
       document.getElementById('catAdminForm').classList.add('hidden');
       document.getElementById('calfAdminForm').classList.add('hidden');
@@ -1119,7 +1213,6 @@
       }
     }
 
-    // Edit Cattle Handler
     function startEditCattle(id) {
       if (!isAdmin) return;
       closeUniversalModal();
@@ -1186,7 +1279,6 @@
       }
     }
 
-    // Animal Sale with Instant Removal from Active List & Save to Sold Folder
     function handleSellAnimalSubmit(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1196,7 +1288,6 @@
       const buyer = document.getElementById('saleBuyerName').value.trim();
       const amount = parseFloat(document.getElementById('saleAnimalAmount').value) || 0;
 
-      // Check if animal exists in adult cattle
       let existingAdult = cattleData.find(c => c.tag.toLowerCase() === tag.toLowerCase());
       let existingCalf = calfData.find(c => c.tag.toLowerCase() === tag.toLowerCase());
 
@@ -1217,16 +1308,13 @@
         timestamp: Date.now()
       };
 
-      // 1. Save in Sold Animals Archive Folder
       db.ref('sold_animals_archive').push(archiveRecord).then(() => {
-        // 2. Remove from active list
         if (existingAdult) {
           db.ref('cattle_records/' + existingAdult.id).remove();
         } else if (existingCalf) {
           db.ref('calf_records/' + existingCalf.id).remove();
         }
 
-        // 3. Add to overall animal sale income
         db.ref('animal_sales').push({
           date: date, tag: tag, buyer: buyer, amount: amount, timestamp: Date.now()
         });
@@ -1234,7 +1322,7 @@
         document.getElementById('saleAnimalTag').value = '';
         document.getElementById('saleBuyerName').value = '';
         document.getElementById('saleAnimalAmount').value = '';
-        alert(`सफलता! '${tag}' सक्रिय सूची से हटा दिया गया है और 'बेचे गए पशुओं के आर्काइव फोल्डर' में सुरक्षित हो गया है।`);
+        alert(`सफलता! '${tag}' सक्रिय सूची से हटा दिया गया है और फोल्डर में सुरक्षित हो गया है।`);
       });
     }
 
@@ -1299,7 +1387,6 @@
       renderTotals();
     });
 
-    // Render Compact Clickable Boxes for Cattle
     function renderCattleHeadings() {
       const container = document.getElementById('cattleHeadingList');
       container.innerHTML = '';
@@ -1379,7 +1466,6 @@
       document.getElementById('cattleRecordCount').innerText = `${cattleData.length} बड़े + ${calfData.length} बछड़े`;
     }
 
-    // Sold Animals Folder Modal Logic
     function openSoldAnimalsFolderModal() {
       document.getElementById('sideMenuDropdown').classList.add('hidden');
       document.getElementById('soldAnimalsFolderModal').classList.remove('hidden');
@@ -1417,7 +1503,7 @@
       });
     }
 
-    // ==================== LABOUR (COMPACT CLICKABLE BOXES) ====================
+    // ==================== LABOUR ====================
     function addLabourProfile(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1536,7 +1622,7 @@
       }
     }
 
-    // ==================== CUSTOMER (COMPACT CLICKABLE BOXES) ====================
+    // ==================== CUSTOMER ====================
     function addCustomerPayment(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1557,7 +1643,6 @@
       window.open(`https://wa.me/?text=${msg}`, '_blank');
     }
 
-    // 1-Click WhatsApp Payment Reminder with Bank & QR Info
     function sendWhatsAppPaymentReminder(custName, balance) {
       const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
       const phoneText = paymentSettings.upiPhone ? `%0A*PhonePe / GPay:* ${paymentSettings.upiPhone}` : '';
@@ -1631,7 +1716,7 @@
       });
     }
 
-    // ==================== FEED STOCK (COMPACT CLICKABLE BOXES) ====================
+    // ==================== FEED STOCK ====================
     function addStockItem(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1732,7 +1817,7 @@
       }
     }
 
-    // ==================== TOTALS & PER LITRE PROFIT CALCULATOR ====================
+    // ==================== TOTALS ====================
     function renderTotals() {
       let totQty = 0, totRev = 0, totExp = 0, animalSaleRev = 0;
       milkData.forEach(item => { totQty += item.qty; totRev += item.total; });
@@ -1954,6 +2039,22 @@
       window.print();
       printDiv.classList.add('hidden');
     }
+
+    db.ref('milk_records').on('value', snap => {
+      const val = snap.val();
+      milkData = [];
+      if (val) Object.keys(val).forEach(k => milkData.push({ id: k, ...val[k] }));
+      milkData.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+      renderMilk(); renderTotals(); renderCustomerSummary();
+    });
+
+    db.ref('expense_records').on('value', snap => {
+      const val = snap.val();
+      expenseData = [];
+      if (val) Object.keys(val).forEach(k => expenseData.push({ id: k, ...val[k] }));
+      expenseData.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+      renderExpense(); renderTotals();
+    });
 
     updateAdminUI();
   </script>
