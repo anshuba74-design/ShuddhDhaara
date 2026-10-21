@@ -8,16 +8,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Firebase Live SDKs -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     @media print {
-      body * { visibility: hidden; }
-      #printableArea, #printableArea * { visibility: visible; }
-      #printableArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 15px; }
+      body * { visibility: hidden !important; }
+      #printableArea, #printableArea * { visibility: visible !important; }
+      #printableArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 12px; display: block !important; }
       .no-print { display: none !important; }
     }
   </style>
@@ -492,7 +492,7 @@
     </div>
   </div>
 
-  <!-- POPUP: SETUP COST & RECOVERY LINE (FIXED) -->
+  <!-- POPUP: SETUP COST & RECOVERY LINE (FIXED & LOCKED) -->
   <div id="setupCostModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-amber-400 flex flex-col max-h-[90vh]">
       <div class="bg-emerald-950 text-white p-4 flex items-center justify-between border-b shrink-0">
@@ -512,7 +512,7 @@
           </div>
         </div>
 
-        <!-- RECOVERY PROGRESS BOX & LINE (RESTORED & LOCKED) -->
+        <!-- RECOVERY PROGRESS BOX & LINE -->
         <div class="p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-300 space-y-2">
           <div class="flex items-center justify-between">
             <div>
@@ -633,7 +633,6 @@
       document.getElementById('stockNotificationBanner').classList.add('hidden');
     }
 
-    // Helper: Base64 dataURL to Blob for sharing QR Image
     function dataURLtoBlob(dataurl) {
       const arr = dataurl.split(',');
       const mime = arr[0].match(/:(.*?);/)[1];
@@ -1193,7 +1192,7 @@
       });
     }
 
-    // FIXED: Remaining Milk Calculation
+    // Remaining Milk Calculation
     function renderMilkSummaryStats() {
       const selDate = document.getElementById('milkDate')?.value || today;
       let prod = 0;
@@ -1485,7 +1484,7 @@
       });
     }
 
-    // FIXED: Setup Cost Add & Calculation
+    // FIXED & LOCKED: Setup Cost Add & Calculation
     function addSetupCostItem(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1601,6 +1600,165 @@
       }
     }
 
+    // COMPLETE 5-SECTION MASTER PDF PRINT (SAFE & RELIABLE)
+    function printOverallMasterReport() {
+      try {
+        const printDiv = document.getElementById('printableArea');
+        if (!printDiv) return;
+
+        let totM = 0, totR = 0, totE = 0, totAnim = 0;
+        
+        (milkData || []).forEach(d => { totM += (parseFloat(d.qty) || 0); totR += (parseFloat(d.total) || 0); });
+        (expenseData || []).forEach(d => { totE += (parseFloat(d.amount) || 0); });
+        (animalSaleData || []).forEach(d => { totAnim += (parseFloat(d.amount) || 0); });
+
+        const netProfit = (totR + totAnim) - totE;
+        let logoHtml = currentLogoUrl ? `<img src="${currentLogoUrl}" style="width:65px; height:65px; object-fit:contain; border-radius:8px; margin-right:15px; border:1px solid #ccc;" />` : '';
+
+        const content = `
+          <div style="font-family:sans-serif; color:#111; padding:10px;">
+            <div style="display:flex; align-items:center; justify-content:center; border-bottom:3px solid #064e3b; padding-bottom:10px; margin-bottom:15px;">
+              ${logoHtml}
+              <div style="text-align:center;">
+                <h1 style="font-size:24px; font-weight:bold; margin:0; color:#064e3b;">प्रजापति डेयरी फॉर्म</h1>
+                <p style="font-size:12px; margin:2px 0; color:#333;">संपूर्ण मास्टर रिपोर्ट (लाइव क्लाउड खाता) • दिनांक: ${today}</p>
+              </div>
+            </div>
+
+            <!-- 1. वित्तीय सारांश -->
+            <div style="border:2px solid #0f172a; padding:12px; border-radius:8px; margin-bottom:15px; font-size:12px; background:#f8fafc;">
+              <h3 style="font-size:13px; font-weight:bold; margin-top:0; margin-bottom:8px; text-decoration:underline;">१. वित्तीय सारांश (Financial Overview)</h3>
+              <table style="width:100%; border:none;">
+                <tr>
+                  <td><b>कुल दूध बिक्री मात्रा:</b> ${totM.toFixed(1)} L</td>
+                  <td><b>कुल दूध आमदनी:</b> ₹ ${totR.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td><b>पशु बिक्री से आमदनी:</b> ₹ ${totAnim.toFixed(2)}</td>
+                  <td><b>कुल फार्म खर्च:</b> ₹ ${totE.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding-top:6px; font-size:14px;">
+                    <b>शुद्ध बचत (नेट मुनाफा):</b> 
+                    <span style="font-weight:bold; color:${netProfit >= 0 ? '#166534' : '#991b1b'};">
+                      ₹ ${netProfit.toFixed(2)}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- 2. दूध बिक्री रिकॉर्ड -->
+            <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">२. दूध बिक्री रिकॉर्ड्स (${(milkData || []).length} एंट्री)</h3>
+            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
+              <tr style="background:#f1f5f9;">
+                <th>क्र.</th><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक नाम</th><th>मोबाइल</th><th>मात्रा (L)</th><th>रेट (₹)</th><th>कुल (₹)</th><th>भुगतान</th>
+              </tr>
+              ${(milkData || []).length === 0 ? '<tr><td colspan="9" style="text-align:center;">कोई रिकॉर्ड नहीं</td></tr>' : milkData.map((d, i) => `
+                <tr>
+                  <td style="text-align:center;">${i+1}</td>
+                  <td>${d.date || '-'}</td>
+                  <td>${d.shift || 'सुबह'}</td>
+                  <td>${d.customer || '-'}</td>
+                  <td>${d.customerPhone || '-'}</td>
+                  <td style="text-align:right;">${d.qty || 0}</td>
+                  <td style="text-align:right;">₹${d.rate || 0}</td>
+                  <td style="text-align:right;">₹${d.total || 0}</td>
+                  <td style="text-align:center;">${d.paymentStatus || 'नकद'}</td>
+                </tr>
+              `).join('')}
+              <tr style="background:#e2e8f0; font-weight:bold;">
+                <td colspan="5">कुल योग</td>
+                <td style="text-align:right;">${totM.toFixed(1)} L</td>
+                <td>-</td>
+                <td style="text-align:right;">₹ ${totR.toFixed(2)}</td>
+                <td>-</td>
+              </tr>
+            </table>
+
+            <!-- 3. फार्म खर्च रिकॉर्ड -->
+            <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">३. फार्म खर्च रिकॉर्ड्स (${(expenseData || []).length} एंट्री)</h3>
+            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
+              <tr style="background:#f1f5f9;">
+                <th>क्र.</th><th>तारीख</th><th>मद / कैटेगरी</th><th>संबंधित पशु</th><th>विवरण</th><th>माध्यम</th><th>रकम (₹)</th>
+              </tr>
+              ${(expenseData || []).length === 0 ? '<tr><td colspan="7" style="text-align:center;">कोई खर्च रिकॉर्ड नहीं</td></tr>' : expenseData.map((e, i) => `
+                <tr>
+                  <td style="text-align:center;">${i+1}</td>
+                  <td>${e.date || '-'}</td>
+                  <td>${e.category || '-'}</td>
+                  <td>${e.animalTag || '-'}</td>
+                  <td>${e.detail || '-'}</td>
+                  <td>${e.paymentMode || 'UPI'}</td>
+                  <td style="text-align:right;">₹ ${e.amount || 0}</td>
+                </tr>
+              `).join('')}
+              <tr style="background:#e2e8f0; font-weight:bold;">
+                <td colspan="6">कुल खर्च</td>
+                <td style="text-align:right;">₹ ${totE.toFixed(2)}</td>
+              </tr>
+            </table>
+
+            <!-- 4. सक्रिय पशु व बछड़ा रिकॉर्ड -->
+            <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">४. सक्रिय पशु व बछड़ा सूची (${(cattleData || []).length} पशु + ${(calfData || []).length} बच्चे)</h3>
+            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
+              <tr style="background:#f1f5f9;">
+                <th>क्र.</th><th>वर्ग</th><th>टैग संख्या</th><th>नस्ल / लिंग</th><th>दैनिक दूध (L)</th><th>स्थिति</th><th>खरीद मूल्य</th>
+              </tr>
+              ${(cattleData || []).map((c, i) => `
+                <tr>
+                  <td style="text-align:center;">${i+1}</td>
+                  <td>${c.categoryType || '-'}</td>
+                  <td><b>${c.tag || '-'}</b></td>
+                  <td>${c.breed || '-'}</td>
+                  <td style="text-align:right;">${c.milk || 0} L</td>
+                  <td>${c.status || '-'}</td>
+                  <td style="text-align:right;">₹ ${c.buyCost || '0'}</td>
+                </tr>
+              `).join('')}
+              ${(calfData || []).map((cal) => `
+                <tr>
+                  <td style="text-align:center;">-</td>
+                  <td>${cal.categoryType || 'बच्चा'}</td>
+                  <td><b>👶 ${cal.tag || '-'}</b></td>
+                  <td>${cal.gender || '-'}</td>
+                  <td style="text-align:center;">-</td>
+                  <td>माता: ${cal.motherTag || '-'}</td>
+                  <td style="text-align:center;">जन्म: ${cal.birthDate || '-'}</td>
+                </tr>
+              `).join('')}
+            </table>
+
+            <!-- 5. मजदूर प्रोफाइल व वेतन -->
+            <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">५. पंजीकृत मजदूर सूची (${(labourProfiles || []).length} मजदूर)</h3>
+            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px;">
+              <tr style="background:#f1f5f9;">
+                <th>क्र.</th><th>नाम</th><th>मोबाइल नंबर</th><th>मासिक वेतन (₹)</th><th>जॉइनिंग तारीख</th>
+              </tr>
+              ${(labourProfiles || []).length === 0 ? '<tr><td colspan="5" style="text-align:center;">कोई मजदूर पंजीकृत नहीं</td></tr>' : labourProfiles.map((l, i) => `
+                <tr>
+                  <td style="text-align:center;">${i+1}</td>
+                  <td><b>${l.name || '-'}</b></td>
+                  <td>${l.phone || '-'}</td>
+                  <td>₹ ${l.salary || 0} / माह</td>
+                  <td>${l.joinDate || '-'}</td>
+                </tr>
+              `).join('')}
+            </table>
+          </div>
+        `;
+
+        printDiv.innerHTML = content;
+        printDiv.classList.remove('hidden');
+
+        window.focus();
+        window.print();
+        printDiv.classList.add('hidden');
+      } catch (err) {
+        alert("PDF तैयार करने में त्रुटि आई: " + err.message);
+      }
+    }
+
     function renderTotals() {
       let mQty = 0, mRev = 0, exp = 0;
       milkData.forEach(x => { mQty += (parseFloat(x.qty) || 0); mRev += (parseFloat(x.total) || 0); });
@@ -1641,7 +1799,7 @@
       localStorage.setItem('prajapati_active_tab', t);
     }
 
-    // Debounced Realtime Sync from Firebase (With Persistent Listeners)
+    // Debounced Realtime Sync from Firebase
     let renderTimeout = null;
     function scheduleRender() {
       clearTimeout(renderTimeout);
@@ -1676,7 +1834,7 @@
     db.ref('sold_animals_archive').on('value', s => { soldArchiveData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; });
     db.ref('animal_sales').on('value', s => { animalSaleData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     
-    // Setup Cost Listener
+    // Setup Cost Listener (Locked)
     db.ref('farm_setup_costs').on('value', s => {
       setupCostData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : [];
       renderSetupCost();
