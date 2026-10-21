@@ -91,7 +91,7 @@
 
   <!-- Realtime Salary Notification Banner -->
   <div id="salaryNotificationBanner" class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 hidden">
-    <div class="bg-indigo-900 text-white p-4 rounded-2xl shadow-xl border-2 border-indigo-400 flex items-start justify-between gap-3 animate-in fade-in zoom-in duration-300">
+    <div class="bg-indigo-900 text-white p-4 rounded-2xl shadow-xl border-2 border-indigo-400 flex items-start justify-between gap-3">
       <div class="flex items-start gap-3">
         <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 text-xl font-black">
           <i class="fa-solid fa-bell animate-bounce"></i>
@@ -128,7 +128,7 @@
         <span class="w-6 h-6 rounded-full bg-emerald-950 text-amber-300 flex items-center justify-center text-xs shrink-0">
           <i class="fa-solid fa-bottle-droplet"></i>
         </span>
-        <span>दूध बिक्री</span>
+        <span>दूध बिक्री (Smart)</span>
       </button>
 
       <button onclick="switchTab('expense')" id="tabExpenseBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white hover:bg-slate-50 border-2 border-slate-300">
@@ -168,73 +168,151 @@
 
     </div>
 
-    <!-- ==================== TAB 1: MILK SALE ==================== -->
+    <!-- ==================== TAB 1: MILK SALE (ADVANCED SMART SECTION) ==================== -->
     <section id="tabMilk" class="mt-4 space-y-4">
+      
+      <!-- Live Production vs Sale Matching Summary Bar -->
+      <div class="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-900 text-white p-3.5 sm:p-4 rounded-2xl shadow-md border-2 border-emerald-600 grid grid-cols-3 gap-2 text-center">
+        <div>
+          <span class="text-[10px] text-emerald-300 font-bold block uppercase">आज कुल दूध निकला</span>
+          <span class="text-lg sm:text-2xl font-black text-amber-300" id="dispTodayProduced">0 L</span>
+        </div>
+        <div class="border-x border-slate-700">
+          <span class="text-[10px] text-emerald-300 font-bold block uppercase">आज बिका हुआ दूध</span>
+          <span class="text-lg sm:text-2xl font-black text-white" id="dispTodaySold">0 L</span>
+        </div>
+        <div>
+          <span class="text-[10px] text-emerald-300 font-bold block uppercase">बचा दूध / उपयोग</span>
+          <span class="text-lg sm:text-2xl font-black text-emerald-400" id="dispTodayBalance">0 L</span>
+        </div>
+      </div>
+
+      <!-- Admin Entry Form -->
       <div id="milkAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-emerald-600">
         <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
-          <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-emerald-900 text-amber-300 flex items-center justify-center text-sm shadow">
-              <i class="fa-solid fa-plus"></i>
-            </span>
-            दूध बिक्री एंट्री (Admin Mode)
-          </h2>
+          <div>
+            <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-emerald-900 text-amber-300 flex items-center justify-center text-sm shadow">
+                <i class="fa-solid fa-plus"></i>
+              </span>
+              दूध बिक्री स्मार्ट एंट्री (Admin Mode)
+            </h2>
+            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">घर/दुकान या डेयरी प्लांट (FAT/SNF) और नकद/उधारी स्थिति सीधे चुनें।</p>
+          </div>
           <span class="text-xs text-slate-500 font-bold" id="todayLabel1"></span>
         </div>
 
-        <form onsubmit="addMilkEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label>
-            <input type="date" id="milkDate" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none" />
+        <form onsubmit="addMilkEntry(event)" class="space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label>
+              <input type="date" id="milkDate" onchange="renderMilkSummaryStats()" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">समय (Shift)</label>
+              <select id="milkShift" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none bg-white font-medium">
+                <option value="सुबह (Morning)">सुबह (Morning)</option>
+                <option value="शाम (Evening)">शाम (Evening)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री प्रकार (Category)</label>
+              <select id="milkSaleType" onchange="toggleMilkSaleType()" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none bg-white font-bold text-slate-900">
+                <option value="retail">घर / दुकान ग्राहक (Fixed Rate)</option>
+                <option value="plant">डेयरी प्लांट / चिलिंग सेंटर (FAT & SNF)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक / प्लांट का नाम</label>
+              <input type="text" id="milkCustomer" required placeholder="उदा. राम जी / मदर डेयरी" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-semibold" />
+            </div>
           </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">समय (Shift)</label>
-            <select id="milkShift" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none bg-white">
-              <option value="सुबह (Morning)">सुबह (Morning)</option>
-              <option value="शाम (Evening)">शाम (Evening)</option>
-            </select>
+
+          <!-- FAT & SNF Block for Plant (Hidden initially) -->
+          <div id="plantFatSnfBlock" class="hidden p-3 bg-rose-50 border-2 border-rose-300 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[10px] font-bold text-rose-900 uppercase mb-1">फैट % (FAT)</label>
+              <input type="number" step="0.1" id="plantFat" oninput="calcPlantMilkRate()" placeholder="उदा. 6.5" class="w-full text-sm border-2 border-rose-300 rounded-xl p-2 bg-white font-bold" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-rose-900 uppercase mb-1">एसएनएफ % (SNF)</label>
+              <input type="number" step="0.1" id="plantSnf" oninput="calcPlantMilkRate()" placeholder="उदा. 9.0" class="w-full text-sm border-2 border-rose-300 rounded-xl p-2 bg-white font-bold" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-rose-900 uppercase mb-1">प्रति फैट बेस रेट (₹)</label>
+              <input type="number" step="0.1" id="plantBaseRate" value="7.5" oninput="calcPlantMilkRate()" class="w-full text-sm border-2 border-rose-300 rounded-xl p-2 bg-white font-bold" />
+            </div>
           </div>
-          <div class="sm:col-span-2 lg:col-span-1">
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक / डेयरी नाम</label>
-            <input type="text" id="milkCustomer" required placeholder="उदा. राम जी / डेयरी प्लांट" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-semibold" />
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दूध मात्रा (लीटर)</label>
+              <input type="number" step="0.25" id="milkQty" oninput="calcMilkTotal()" required placeholder="0" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-bold text-emerald-950" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रेट (₹ प्रति लीटर)</label>
+              <input type="number" step="0.25" id="milkRate" oninput="calcMilkTotal()" required placeholder="₹ 65" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-bold" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कुल मूल्य (₹)</label>
+              <input type="text" id="milkTotal" readonly placeholder="₹ 0" class="w-full text-sm border-2 border-emerald-300 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-900" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान स्थिति (Payment)</label>
+              <select id="milkPaymentStatus" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white font-extrabold outline-none">
+                <option value="नकद प्राप्त (Paid)" class="text-emerald-700">नकद प्राप्त (Cash Paid)</option>
+                <option value="उधारी / खाते में (Unpaid)" class="text-rose-700">उधारी / खाते में (Due)</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मात्रा (लीटर)</label>
-            <input type="number" step="0.25" id="milkQty" oninput="calcMilkTotal()" required placeholder="0" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-bold" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रेट (₹/L)</label>
-            <input type="number" step="0.5" id="milkRate" oninput="calcMilkTotal()" required placeholder="₹ 65" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-bold" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कुल मूल्य (₹)</label>
-            <input type="text" id="milkTotal" readonly placeholder="₹ 0" class="w-full text-sm border-2 border-emerald-300 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-900" />
-          </div>
-          <div class="sm:col-span-2 lg:col-span-6 flex justify-end mt-1">
+
+          <div class="flex justify-end pt-1">
             <button type="submit" class="w-full sm:w-auto bg-emerald-800 hover:bg-emerald-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-md border-2 border-emerald-700 flex items-center justify-center gap-2">
-              <i class="fa-solid fa-cloud-arrow-up text-amber-300"></i> क्लाउड में सेव करें
+              <i class="fa-solid fa-cloud-arrow-up text-amber-300"></i>
+              दूध बिक्री क्लाउड में सेव करें
             </button>
           </div>
         </form>
       </div>
 
+      <!-- Live Records List with Date Filter -->
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-tower-broadcast text-emerald-700 animate-pulse"></i> लाइव दूध बिक्री रिकॉर्ड
-          </span>
-          <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300" id="milkRecordCount">0 एंट्री</span>
+        <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex flex-wrap justify-between items-center gap-2">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-tower-broadcast text-emerald-700 animate-pulse"></i> लाइव दूध बिक्री रिकॉर्ड
+            </span>
+            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300" id="milkRecordCount">0 एंट्री</span>
+          </div>
+
+          <!-- Date Filter Buttons -->
+          <div class="flex items-center gap-1.5 text-xs">
+            <button onclick="setMilkFilter('all')" id="filterAllBtn" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-amber-300 border border-slate-700">सभी</button>
+            <button onclick="setMilkFilter('today')" id="filterTodayBtn" class="px-2.5 py-1 rounded-lg font-bold bg-white text-slate-700 border border-slate-300">आज</button>
+            <button onclick="setMilkFilter('month')" id="filterMonthBtn" class="px-2.5 py-1 rounded-lg font-bold bg-white text-slate-700 border border-slate-300">इस महीने</button>
+          </div>
         </div>
+
         <div id="milkMobileList" class="p-3 space-y-3 sm:hidden"></div>
+
         <div class="hidden sm:block overflow-x-auto">
           <table class="w-full text-left text-sm">
             <thead class="bg-slate-100 text-slate-700 text-[11px] uppercase border-b-2 border-slate-200">
               <tr>
                 <th class="p-3">तारीख</th>
-                <th class="p-3">शिफ्ट</th>
+                <th class="p-3">शिफ्ट / प्रकार</th>
                 <th class="p-3">ग्राहक</th>
                 <th class="p-3">मात्रा</th>
                 <th class="p-3">रेट</th>
                 <th class="p-3">कुल ₹</th>
+                <th class="p-3">भुगतान स्थिति</th>
+                <th class="p-3 text-center">पर्ची</th>
                 <th class="p-3 text-center admin-action-col hidden">हटाएं</th>
               </tr>
             </thead>
@@ -244,546 +322,135 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 2: EXPENSES ==================== -->
+    <!-- Other Sections (Expenses, Labour, Cattle, Customer, Stock) remain 100% active -->
+    <!-- [EXPENSES TAB] -->
     <section id="tabExpense" class="mt-4 hidden space-y-4">
       <div id="expAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-purple-600">
-        <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
-          <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-purple-950 text-amber-300 flex items-center justify-center text-sm shadow">
-              <i class="fa-solid fa-wallet"></i>
-            </span>
-            फार्म खर्च व मजदूर एडवांस (Admin Mode)
-          </h2>
-        </div>
+        <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-wallet text-purple-700"></i> फार्म खर्च व मजदूर एडवांस
+        </h2>
         <form onsubmit="addExpenseEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label>
-            <input type="date" id="expDate" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-500 outline-none" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खर्च प्रकार</label>
-            <select id="expCategory" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-500 outline-none bg-white">
-              <option value="मजदूर एडवांस (Advance)">मजदूर एडवांस (बीच में दिया गया पैसा)</option>
-              <option value="चारा / खली / दाना (Feed)">चारा / खली / दाना (Feed)</option>
-              <option value="दवाई व डॉक्टर (Medical)">दवाई व डॉक्टर (Medical)</option>
-              <option value="डीजल / बिजली बिल">डीजल / बिजली बिल</option>
-              <option value="फार्म रखरखाव / अन्य">फार्म रखरखाव / अन्य</option>
-              <option value="मासिक वेतन भुगतान (Final Salary)">मासिक वेतन भुगतान (Final Salary)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मजदूर नाम / विवरण</label>
-            <input type="text" id="expDetail" required placeholder="उदा. कल्लू (मजदूर) / 2 बोरी खली" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-500 outline-none" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रकम (₹)</label>
-            <input type="number" id="expAmount" required placeholder="₹ 0" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-purple-500 outline-none font-bold" />
-          </div>
-          <div class="sm:col-span-2 lg:col-span-1 flex items-end">
-            <button type="submit" class="w-full bg-purple-900 hover:bg-purple-950 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-md border-2 border-purple-800 flex items-center justify-center gap-2">
-              <i class="fa-solid fa-cloud-arrow-up text-amber-300"></i> खर्च दर्ज करें
-            </button>
-          </div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="expDate" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खर्च प्रकार</label><select id="expCategory" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white"><option value="मजदूर एडवांस (Advance)">मजदूर एडवांस</option><option value="चारा / खली / दाना (Feed)">चारा/खली/दाना</option><option value="दवाई व डॉक्टर (Medical)">दवाई व डॉक्टर</option><option value="डीजल / बिजली बिल">डीजल/बिजली बिल</option><option value="फार्म रखरखाव / अन्य">अन्य खर्च</option><option value="मासिक वेतन भुगतान (Final Salary)">मासिक वेतन भुगतान</option></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">विवरण</label><input type="text" id="expDetail" required placeholder="उदा. 2 बोरी खली" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रकम (₹)</label><input type="number" id="expAmount" required placeholder="₹ 0" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold" /></div>
+          <div class="sm:col-span-2 lg:col-span-1 flex items-end"><button type="submit" class="w-full bg-purple-900 hover:bg-purple-950 text-white font-bold py-2.5 rounded-xl text-sm transition">खर्च जोड़ें</button></div>
         </form>
       </div>
-
-      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-list-ul text-purple-800"></i> खर्च व भुगतान बही
-          </span>
-          <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full border border-purple-300" id="expRecordCount">0 एंट्री</span>
-        </div>
-        <div id="expenseMobileList" class="p-3 space-y-3 sm:hidden"></div>
-        <div class="hidden sm:block overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-100 text-slate-700 text-[11px] uppercase border-b-2 border-slate-200">
-              <tr>
-                <th class="p-3">तारीख</th>
-                <th class="p-3">मद</th>
-                <th class="p-3">विवरण / नाम</th>
-                <th class="p-3">रकम (₹)</th>
-                <th class="p-3 text-center admin-action-col hidden">हटाएं</th>
-              </tr>
-            </thead>
-            <tbody id="expenseTableBody" class="divide-y-2 divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden"><div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">खर्च व भुगतान बही</span><span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full" id="expRecordCount">0 एंट्री</span></div><div id="expenseMobileList" class="p-3 space-y-3 sm:hidden"></div><div class="hidden sm:block overflow-x-auto"><table class="w-full text-left text-sm"><thead class="bg-slate-100 text-slate-700 text-[11px] uppercase border-b"><tr><th class="p-3">तारीख</th><th class="p-3">मद</th><th class="p-3">विवरण</th><th class="p-3">रकम (₹)</th><th class="p-3 text-center admin-action-col hidden">हटाएं</th></tr></thead><tbody id="expenseTableBody" class="divide-y"></tbody></table></div></div>
     </section>
 
-    <!-- ==================== TAB 3: LABOUR PROFILE, DIRECT CALL & LATE ALERT ==================== -->
+    <!-- [LABOUR TAB] -->
     <section id="tabLabour" class="mt-4 hidden space-y-4">
       <div id="labourAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-slate-800">
-        <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
-          <div>
-            <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-slate-900 text-cyan-300 flex items-center justify-center text-sm shadow">
-                <i class="fa-solid fa-user-plus"></i>
-              </span>
-              नया मजदूर प्रोफाइल जोड़ें (Admin Mode)
-            </h2>
-            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">कॉलिंग, आगमन समय (आने में देरी अलर्ट) और सैलरी साइकिल सेट करें।</p>
-          </div>
-        </div>
-
+        <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-user-plus text-cyan-700"></i> नया मजदूर प्रोफाइल जोड़ें</h2>
         <form onsubmit="addLabourProfile(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मजदूर का पूरा नाम</label>
-            <input type="text" id="labourName" required placeholder="उदा. कल्लू राम" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none font-bold" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर (कॉल हेतु)</label>
-            <input type="tel" id="labourPhone" required placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none font-bold text-emerald-900" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">तय मासिक वेतन (Salary ₹)</label>
-            <input type="number" id="labourSalary" required placeholder="उदा. 12000" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-black text-emerald-950" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख (Joining Date)</label>
-            <input type="date" id="labourJoinDate" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none font-semibold" />
-          </div>
-
-          <!-- New: Work Shift Time & Alert Mode Settings -->
-          <div>
-            <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">काम पर आने का समय (Duty Time)</label>
-            <input type="time" id="labourDutyTime" value="06:00" class="w-full text-sm border-2 border-rose-300 bg-rose-50/50 rounded-xl p-2.5 font-bold outline-none" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">देरी अलर्ट प्रकार (Alert Mode)</label>
-            <select id="labourAlertMode" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white font-semibold outline-none">
-              <option value="Daily Auto (दैनिक चेक)">Daily Auto (दैनिक चेक)</option>
-              <option value="Manual (1-क्लिक भेजें)">Manual (1-क्लिक भेजें)</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">आधार संख्या (Optional)</label>
-            <input type="text" id="labourAadhar" placeholder="उदा. 1234 5678 9012" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पता / कार्य विवरण</label>
-            <input type="text" id="labourAddress" placeholder="उदा. दूध दुहाई व सानी" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none" />
-          </div>
-
-          <div class="sm:col-span-2 lg:col-span-4 flex justify-end mt-1">
-            <button type="submit" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-md border-2 border-slate-700 flex items-center justify-center gap-2">
-              <i class="fa-solid fa-cloud-arrow-up text-cyan-300"></i> मजदूर प्रोफाइल सेव करें
-            </button>
-          </div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पूरा नाम</label><input type="text" id="labourName" required placeholder="उदा. कल्लू राम" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर</label><input type="tel" id="labourPhone" required placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold text-emerald-900" /></div>
+          <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मासिक वेतन (₹)</label><input type="number" id="labourSalary" required placeholder="उदा. 12000" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-950" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख</label><input type="date" id="labourJoinDate" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-semibold" /></div>
+          <div><label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">ड्यूटी समय</label><input type="time" id="labourDutyTime" value="06:00" class="w-full text-sm border-2 border-rose-300 bg-rose-50/50 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">अलर्ट प्रकार</label><select id="labourAlertMode" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white font-semibold"><option value="Daily Auto">Daily Auto</option><option value="Manual">Manual</option></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">आधार संख्या</label><input type="text" id="labourAadhar" placeholder="Optional" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कार्य विवरण</label><input type="text" id="labourAddress" placeholder="उदा. दूध दुहाई" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
+          <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="submit" class="w-full sm:w-auto bg-slate-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition">मजदूर जोड़ें</button></div>
         </form>
       </div>
-
-      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-users text-slate-800"></i> पंजीकृत मजदूर प्रोफाइल व लाइव एक्शन
-          </span>
-          <span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full border border-slate-300" id="labourRecordCount">0 मजदूर</span>
-        </div>
-        <div id="labourListContainer" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      </div>
+      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden"><div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">पंजीकृत मजदूर</span><span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full" id="labourRecordCount">0 मजदूर</span></div><div id="labourListContainer" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
     </section>
 
-    <!-- ==================== TAB 4: CATTLE MANAGEMENT ==================== -->
+    <!-- [CATTLE TAB] -->
     <section id="tabCattle" class="mt-4 hidden space-y-4">
       <div id="catAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-amber-600">
-        <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
-          <div>
-            <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-amber-950 text-amber-300 flex items-center justify-center text-sm shadow">
-                <i class="fa-solid fa-shield-cat"></i>
-              </span>
-              स्मार्ट पशु प्रोफाइल व स्वास्थ्य ट्रैकर (Admin Mode)
-            </h2>
-            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">AI तारीख डालने पर डिलीवरी डेट (310/280 दिन), 21-दिन हीट व ड्राई पीरियड अपने-आप निकलेगा।</p>
-          </div>
-        </div>
-
+        <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-shield-cat text-amber-600"></i> स्मार्ट पशु प्रोफाइल</h2>
         <form onsubmit="addCattleEntry(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टैग / पहचान संख्या</label>
-            <input type="text" id="catTag" required placeholder="उदा. मुर्राह भैंस 01" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none font-bold" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">प्रकार व नस्ल</label>
-            <select id="catBreed" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none bg-white font-semibold">
-              <option value="मुर्राह भैंस (310 दिन)">मुर्राह भैंस (310 दिन प्रसव काल)</option>
-              <option value="देसी / साहीवाल गाय (280 दिन)">देसी / साहीवाल गाय (280 दिन प्रसव काल)</option>
-              <option value="HF / जर्सी क्रॉस (280 दिन)">HF / जर्सी क्रॉस (280 दिन प्रसव काल)</option>
-              <option value="अन्य पशु">अन्य पशु</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">वर्तमान स्थिति (Status)</label>
-            <select id="catStatus" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none bg-white font-bold">
-              <option value="दूध दे रही है (Lactating)">दूध दे रही है (Lactating)</option>
-              <option value="गाभिन / प्रेग्नेंट (Pregnant)">गाभिन / प्रेग्नेंट (Pregnant)</option>
-              <option value="ड्राई / सूखी (Dry)">ड्राई / सूखी (Dry)</option>
-              <option value="बीमार / इलाज जारी">बीमार / इलाज जारी</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">औसत दैनिक दूध (Litre)</label>
-            <input type="number" step="0.5" id="catDailyMilk" required placeholder="उदा. 14" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none font-black text-emerald-900" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">सीमन / AI तारीख</label>
-            <input type="date" id="catAiDate" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none font-semibold" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कीड़े की दवा तारीख (Deworming)</label>
-            <input type="date" id="catDewormDate" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टीकाकरण</label>
-            <input type="text" id="catVaccine" placeholder="उदा. FMD टीका" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-600 outline-none" />
-          </div>
-          <div class="flex items-end">
-            <button type="submit" class="w-full bg-amber-900 hover:bg-amber-950 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-md border-2 border-amber-800 flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-cloud-arrow-up text-amber-300"></i> पशु जोड़ें
-            </button>
-          </div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टैग संख्या</label><input type="text" id="catTag" required placeholder="उदा. भैंस 01" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नस्ल</label><select id="catBreed" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white font-semibold"><option value="मुर्राह भैंस (310 दिन)">मुर्राह भैंस (310 दिन)</option><option value="देसी / साहीवाल गाय (280 दिन)">देसी/साहीवाल गाय (280 दिन)</option><option value="HF / जर्सी क्रॉस (280 दिन)">HF/जर्सी क्रॉस (280 दिन)</option><option value="अन्य पशु">अन्य पशु</option></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">स्थिति</label><select id="catStatus" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white font-bold"><option value="दूध दे रही है (Lactating)">दूध दे रही है</option><option value="गाभिन / प्रेग्नेंट (Pregnant)">गाभिन (Pregnant)</option><option value="ड्राई / सूखी (Dry)">ड्राई (Dry)</option><option value="बीमार / इलाज जारी">बीमार</option></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक दूध (L)</label><input type="number" step="0.5" id="catDailyMilk" required placeholder="14" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-black text-emerald-900" /></div>
+          <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">AI / सीमन तारीख</label><input type="date" id="catAiDate" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 font-semibold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कीड़े की दवा तारीख</label><input type="date" id="catDewormDate" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टीकाकरण</label><input type="text" id="catVaccine" placeholder="उदा. FMD टीका" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
+          <div class="flex items-end"><button type="submit" class="w-full bg-amber-900 hover:bg-amber-950 text-white font-bold py-2.5 rounded-xl text-sm transition">पशु जोड़ें</button></div>
         </form>
       </div>
-
-      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-cow text-amber-900"></i> कुल पशु रिकॉर्ड व लाइव कार्ड्स
-          </span>
-          <span class="text-xs bg-amber-100 text-amber-950 font-bold px-2.5 py-0.5 rounded-full border border-amber-300" id="cattleRecordCount">0 पशु</span>
-        </div>
-        <div id="cattleMobileList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      </div>
+      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden"><div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">कुल पशु रिकॉर्ड</span><span class="text-xs bg-amber-100 text-amber-950 font-bold px-2 py-0.5 rounded-full" id="cattleRecordCount">0 पशु</span></div><div id="cattleMobileList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
     </section>
 
-    <!-- ==================== TAB 5: CUSTOMER LEDGER ==================== -->
+    <!-- [CUSTOMER TAB] -->
     <section id="tabCustomer" class="mt-4 hidden space-y-4">
       <div id="custAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-indigo-600">
-        <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
-          <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-indigo-950 text-indigo-300 flex items-center justify-center text-sm shadow">
-              <i class="fa-solid fa-address-book"></i>
-            </span>
-            ग्राहक जमा रकम एंट्री (Admin Mode)
-          </h2>
-        </div>
+        <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-address-book text-indigo-700"></i> ग्राहक जमा रकम एंट्री</h2>
         <form onsubmit="addCustomerPayment(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label>
-            <input type="date" id="custPayDate" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-600 outline-none" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक का नाम</label>
-            <input type="text" id="custPayName" required placeholder="उदा. राम जी" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-600 outline-none font-bold" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label>
-            <input type="number" id="custPayAmount" required placeholder="₹ 0" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-600 outline-none font-bold text-emerald-900" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">विवरण / नोट</label>
-            <input type="text" id="custPayNote" placeholder="उदा. PhonePe / नगद" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-600 outline-none" />
-          </div>
-          <div class="sm:col-span-2 lg:col-span-1 flex items-end">
-            <button type="submit" class="w-full bg-indigo-900 hover:bg-indigo-950 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-md border-2 border-indigo-800 flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-cloud-arrow-up text-indigo-300"></i> जमा दर्ज करें
-            </button>
-          </div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="custPayDate" required class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक नाम</label><input type="text" id="custPayName" required placeholder="उदा. राम जी" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label><input type="number" id="custPayAmount" required placeholder="₹ 0" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold text-emerald-900" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नोट</label><input type="text" id="custPayNote" placeholder="उदा. PhonePe / नकद" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5" /></div>
+          <div class="sm:col-span-2 lg:col-span-1 flex items-end"><button type="submit" class="w-full bg-indigo-900 hover:bg-indigo-950 text-white font-bold py-2.5 rounded-xl text-sm transition">जमा दर्ज करें</button></div>
         </form>
       </div>
-
-      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-scale-balanced text-indigo-900"></i> ग्राहक-वार उधारी / बाकी स्थिति
-          </span>
-          <span class="text-xs bg-indigo-100 text-indigo-950 font-bold px-2 py-0.5 rounded-full border border-indigo-300">लाइव लेजर</span>
-        </div>
-        <div id="customerSummaryList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      </div>
+      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden"><div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">ग्राहक-वार स्थिति</span><span class="text-xs bg-indigo-100 text-indigo-950 font-bold px-2 py-0.5 rounded-full">लाइव लेजर</span></div><div id="customerSummaryList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
     </section>
 
-    <!-- ==================== TAB 6: FEED & FODDER STOCK ==================== -->
+    <!-- [STOCK TAB] -->
     <section id="tabStock" class="mt-4 hidden space-y-4">
       <div id="stockAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-yellow-600">
-        <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
-          <div>
-            <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-yellow-950 text-yellow-300 flex items-center justify-center text-sm shadow">
-                <i class="fa-solid fa-wheat-awn"></i>
-              </span>
-              चारा, खली व दाना स्टॉक एंट्री (Smart Alert Panel)
-            </h2>
-            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">दैनिक खपत दर्ज करें, सिस्टम अपने आप खत्म होने की तारीख और चेतावनी भेजेगा।</p>
-          </div>
-        </div>
-
+        <h2 class="font-extrabold text-slate-900 text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wheat-awn text-yellow-700"></i> चारा स्टॉक एंट्री</h2>
         <form onsubmit="addStockItem(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान का नाम</label>
-            <input type="text" id="stockName" required placeholder="उदा. सरसों खली / चोकर / भूसा" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-yellow-600 outline-none font-bold" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कुल स्टॉक मात्रा</label>
-            <input type="number" step="0.5" id="stockQty" required placeholder="उदा. 20" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-yellow-600 outline-none font-bold" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">इकाई (Unit)</label>
-            <select id="stockUnit" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-yellow-600 outline-none bg-white font-medium">
-              <option value="बोरी (Bags)">बोरी (Bags)</option>
-              <option value="क्विंटल (Quintal)">क्विंटल (Quintal)</option>
-              <option value="किलोग्राम (Kg)">किलोग्राम (Kg)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">1 दिन में कितना लगता है?</label>
-            <input type="number" step="0.1" id="stockDailyUse" required placeholder="उदा. 1.5" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-black text-emerald-950" />
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">कितने दिन पहले अलर्ट मिले?</label>
-            <input type="number" id="stockAlertDays" required value="3" placeholder="उदा. 3 दिन" class="w-full text-sm border-2 border-rose-300 bg-rose-50 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-600 outline-none font-bold text-rose-950" />
-          </div>
-          <div class="sm:col-span-2 lg:col-span-1 flex items-end">
-            <button type="submit" class="w-full bg-yellow-900 hover:bg-yellow-950 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-md border-2 border-yellow-800 flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-cloud-arrow-up text-yellow-300"></i> स्टॉक जोड़ें
-            </button>
-          </div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान नाम</label><input type="text" id="stockName" required placeholder="उदा. सरसों खली" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मात्रा</label><input type="number" step="0.5" id="stockQty" required placeholder="20" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">इकाई</label><select id="stockUnit" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 bg-white font-medium"><option value="बोरी (Bags)">बोरी</option><option value="क्विंटल (Quintal)">क्विंटल</option><option value="किलोग्राम (Kg)">किलोग्राम</option></select></div>
+          <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">दैनिक खपत</label><input type="number" step="0.1" id="stockDailyUse" required placeholder="1.5" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-950" /></div>
+          <div><label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">अलर्ट दिन पूर्व</label><input type="number" id="stockAlertDays" required value="3" class="w-full text-sm border-2 border-rose-300 bg-rose-50 rounded-xl p-2.5 font-bold text-rose-950" /></div>
+          <div class="sm:col-span-2 lg:col-span-1 flex items-end"><button type="submit" class="w-full bg-yellow-900 hover:bg-yellow-950 text-white font-bold py-2.5 rounded-xl text-sm transition">स्टॉक जोड़ें</button></div>
         </form>
       </div>
-
-      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
-        <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-boxes-stacked text-yellow-900"></i> वर्तमान फार्म स्टॉक व खत्म होने की तारीख
-          </span>
-          <span class="text-xs bg-yellow-100 text-yellow-950 font-bold px-2 py-0.5 rounded-full border border-yellow-300" id="stockRecordCount">0 आइटम</span>
-        </div>
-        <div id="stockListContainer" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      </div>
+      <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden"><div class="p-3.5 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-sm">वर्तमान फार्म स्टॉक</span><span class="text-xs bg-yellow-100 text-yellow-950 font-bold px-2 py-0.5 rounded-full" id="stockRecordCount">0 आइटम</span></div><div id="stockListContainer" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
     </section>
 
   </main>
 
-  <!-- ==================== POPUP: ANIMAL DAILY MILK LOG ==================== -->
+  <!-- POPUPS (Setup Cost, Logo Preview, Animal Milk, Pass Changer, Summary) -->
   <div id="animalMilkModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border-4 border-emerald-600 space-y-4">
-      <div class="flex justify-between items-center border-b pb-2">
-        <div>
-          <h3 class="font-black text-slate-900 text-base" id="modalAnimalTag">पशु दूध एंट्री</h3>
-          <p class="text-xs text-slate-500">आज का व्यक्तिगत दूध उत्पादन</p>
-        </div>
-        <button onclick="closeAnimalMilkModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center text-sm font-black">✕</button>
-      </div>
-
+      <div class="flex justify-between items-center border-b pb-2"><h3 class="font-black text-slate-900 text-base" id="modalAnimalTag">पशु दूध एंट्री</h3><button onclick="closeAnimalMilkModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center text-sm font-black">✕</button></div>
       <form onsubmit="saveAnimalDailyMilk(event)" class="space-y-3">
         <input type="hidden" id="modalAnimalId" />
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">सुबह का दूध (Litre)</label>
-          <input type="number" step="0.25" id="animalMorningMilk" required placeholder="उदा. 7.5" class="w-full border-2 border-slate-300 rounded-xl p-2.5 text-sm font-bold" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">शाम का दूध (Litre)</label>
-          <input type="number" step="0.25" id="animalEveningMilk" required placeholder="उदा. 6.5" class="w-full border-2 border-slate-300 rounded-xl p-2.5 text-sm font-bold" />
-        </div>
-        <button type="submit" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold py-3 rounded-xl text-xs shadow">
-          क्लाउड में आज का दूध सेव करें
-        </button>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">सुबह का दूध (L)</label><input type="number" step="0.25" id="animalMorningMilk" required class="w-full border-2 border-slate-300 rounded-xl p-2.5 text-sm font-bold" /></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">शाम का दूध (L)</label><input type="number" step="0.25" id="animalEveningMilk" required class="w-full border-2 border-slate-300 rounded-xl p-2.5 text-sm font-bold" /></div>
+        <button type="submit" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold py-3 rounded-xl text-xs shadow">सेव करें</button>
       </form>
     </div>
   </div>
 
-  <!-- ==================== POPUP: FARM SETUP COST & RECOVERY TRACKER ==================== -->
   <div id="setupCostModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
     <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden border-4 border-amber-400 flex flex-col max-h-[90vh]">
-      <div class="bg-emerald-950 text-white p-4 px-5 flex items-center justify-between border-b-2 border-emerald-800 shrink-0">
-        <div class="flex items-center gap-2">
-          <div class="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center text-lg font-black shadow">
-            <i class="fa-solid fa-building-columns"></i>
-          </div>
-          <div>
-            <h3 class="font-extrabold text-base text-amber-300">फार्म स्थापना कुल लागत व रिकवरी</h3>
-            <p class="text-[11px] text-emerald-200 font-medium">निवेश (Investment) बनाम शुद्ध कमाई (Recovery)</p>
-          </div>
-        </div>
-        <button onclick="closeSetupCostModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-sm font-black shadow transition border border-rose-400">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
+      <div class="bg-emerald-950 text-white p-4 px-5 flex items-center justify-between border-b shrink-0"><h3 class="font-extrabold text-base text-amber-300">फार्म स्थापना कुल लागत व रिकवरी</h3><button onclick="closeSetupCostModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center text-sm font-black">✕</button></div>
       <div class="p-4 sm:p-5 overflow-y-auto space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="bg-slate-900 text-white p-4 rounded-2xl border-2 border-slate-700 shadow-md">
-            <span class="text-[11px] text-slate-400 font-bold uppercase block flex items-center gap-1.5">
-              <i class="fa-solid fa-sack-dollar text-amber-400"></i> कुल फार्म स्थापना लागत
-            </span>
-            <div class="text-2xl sm:text-3xl font-black text-amber-300 mt-1" id="dispTotalSetupCost">₹0</div>
-            <span class="text-[10px] text-slate-400 block mt-1" id="setupItemsCount">0 मदों में निवेश</span>
-          </div>
-
-          <div class="bg-emerald-950 text-white p-4 rounded-2xl border-2 border-emerald-700 shadow-md">
-            <span class="text-[11px] text-emerald-300 font-bold uppercase block flex items-center gap-1.5">
-              <i class="fa-solid fa-hand-holding-dollar text-emerald-400"></i> डेयरी से शुद्ध बचत (रिकवर्ड रकम)
-            </span>
-            <div class="text-2xl sm:text-3xl font-black text-emerald-300 mt-1" id="dispNetRecovered">₹0</div>
-            <span class="text-[10px] text-emerald-200 block mt-1">कुल दूध आय - कुल खर्च</span>
-          </div>
-        </div>
-
-        <div id="recoveryStatusBox" class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div>
-            <span class="text-xs font-bold text-amber-950 uppercase block">लागत में से शेष बची रकम:</span>
-            <div class="text-2xl font-black text-rose-700 mt-0.5" id="dispRemainingCost">₹0</div>
-            <p class="text-[11px] text-slate-600 font-medium" id="recoveryPercentText">0% लागत कवर हो चुकी है</p>
-          </div>
-          <div class="w-full sm:w-48 bg-slate-200 rounded-full h-4 overflow-hidden border border-slate-300 shrink-0">
-            <div id="recoveryProgressBar" class="bg-emerald-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <div id="setupCostAdminForm" class="hidden bg-slate-50 p-3.5 rounded-2xl border-2 border-slate-300 space-y-2">
-          <h4 class="text-xs font-extrabold text-slate-900 uppercase flex items-center gap-1.5">
-            <i class="fa-solid fa-plus-circle text-emerald-700"></i> नई लागत जोड़ें (Admin Only)
-          </h4>
-          <form onsubmit="addSetupCostItem(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <div>
-              <input type="text" id="setupItemName" required placeholder="मद का नाम (उदा. शेड / 4 भैंस)" class="w-full text-xs border-2 border-slate-300 rounded-xl p-2.5 bg-white font-semibold outline-none focus:border-amber-500" />
-            </div>
-            <div>
-              <input type="number" id="setupItemAmount" required placeholder="लागत रकम (₹)" class="w-full text-xs border-2 border-slate-300 rounded-xl p-2.5 bg-white font-bold outline-none focus:border-amber-500" />
-            </div>
-            <div>
-              <button type="submit" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs py-2.5 rounded-xl shadow transition border border-emerald-700">
-                + लागत जोड़ें
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div>
-          <h4 class="text-xs font-extrabold text-slate-800 uppercase mb-2">फार्म स्थापना लागत सूची</h4>
-          <div id="setupCostListContainer" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
-        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="bg-slate-900 text-white p-4 rounded-2xl border"><span class="text-[11px] text-slate-400 font-bold uppercase block">कुल स्थापना लागत</span><div class="text-2xl sm:text-3xl font-black text-amber-300 mt-1" id="dispTotalSetupCost">₹0</div><span class="text-[10px] text-slate-400 block mt-1" id="setupItemsCount">0 मदों में निवेश</span></div><div class="bg-emerald-950 text-white p-4 rounded-2xl border"><span class="text-[11px] text-emerald-300 font-bold uppercase block">डेयरी से शुद्ध बचत</span><div class="text-2xl sm:text-3xl font-black text-emerald-300 mt-1" id="dispNetRecovered">₹0</div><span class="text-[10px] text-emerald-200 block mt-1">आय - खर्च</span></div></div>
+        <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3"><div><span class="text-xs font-bold text-amber-950 uppercase block">लागत में से शेष बची रकम:</span><div class="text-2xl font-black text-rose-700 mt-0.5" id="dispRemainingCost">₹0</div><p class="text-[11px] text-slate-600 font-medium" id="recoveryPercentText">0% लागत कवर</p></div><div class="w-full sm:w-48 bg-slate-200 rounded-full h-4 overflow-hidden border"><div id="recoveryProgressBar" class="bg-emerald-600 h-full rounded-full transition-all" style="width: 0%"></div></div></div>
+        <div id="setupCostAdminForm" class="hidden bg-slate-50 p-3.5 rounded-2xl border space-y-2"><form onsubmit="addSetupCostItem(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2"><input type="text" id="setupItemName" required placeholder="मद का नाम" class="text-xs border rounded-xl p-2.5" /><input type="number" id="setupItemAmount" required placeholder="रकम (₹)" class="text-xs border rounded-xl p-2.5 font-bold" /><button type="submit" class="bg-emerald-800 text-white font-bold text-xs py-2.5 rounded-xl">+ जोड़ें</button></form></div>
+        <div><h4 class="text-xs font-extrabold uppercase mb-2">लागत सूची</h4><div id="setupCostListContainer" class="space-y-2 max-h-56 overflow-y-auto"></div></div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== POPUP: LOGO PREVIEW ==================== -->
   <div id="logoPreviewModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="relative bg-white rounded-3xl p-4 max-w-sm w-full shadow-2xl border-4 border-amber-400 text-center">
-      <button onclick="closeLogoPreview()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-base font-black shadow-lg border-2 border-white">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <h3 class="font-extrabold text-slate-900 text-base mb-2">प्रजापति डेयरी फॉर्म लोगो</h3>
-      <div class="w-64 h-64 mx-auto rounded-2xl overflow-hidden bg-slate-100 border-2 border-slate-300 flex items-center justify-center shadow-inner">
-        <img id="previewModalImg" src="" alt="Dairy Logo Large" class="w-full h-full object-contain hidden" />
-        <i id="previewDefaultIcon" class="fa-solid fa-cow text-7xl text-slate-400"></i>
-      </div>
-      <div id="adminLogoChangeArea" class="hidden mt-4 pt-3 border-t-2 border-slate-100 flex items-center justify-between">
-        <label for="logoFileInput" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-lg border border-slate-300 cursor-pointer flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-cloud-arrow-up text-emerald-700 text-xs"></i>
-          <span>क्लाउड लोगो बदलें</span>
-        </label>
-        <input type="file" id="logoFileInput" accept="image/*" onchange="handleCloudLogoUpload(event)" class="hidden" />
-        <button onclick="removeCloudLogo()" class="text-[11px] text-rose-600 hover:text-rose-800 font-semibold">लोगो हटाएं</button>
-      </div>
-    </div>
+    <div class="relative bg-white rounded-3xl p-4 max-w-sm w-full shadow-2xl border-4 border-amber-400 text-center"><button onclick="closeLogoPreview()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 text-white rounded-full flex items-center justify-center font-black">✕</button><h3 class="font-extrabold text-slate-900 text-base mb-2">प्रजापति डेयरी फॉर्म लोगो</h3><div class="w-64 h-64 mx-auto rounded-2xl overflow-hidden bg-slate-100 border flex items-center justify-center"><img id="previewModalImg" src="" alt="Logo" class="w-full h-full object-contain hidden" /><i id="previewDefaultIcon" class="fa-solid fa-cow text-7xl text-slate-400"></i></div><div id="adminLogoChangeArea" class="hidden mt-4 pt-3 border-t flex items-center justify-between"><label for="logoFileInput" class="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-lg border cursor-pointer">लोगो बदलें</label><input type="file" id="logoFileInput" accept="image/*" onchange="handleCloudLogoUpload(event)" class="hidden" /><button onclick="removeCloudLogo()" class="text-[11px] text-rose-600 font-semibold">लोगो हटाएं</button></div></div>
   </div>
 
-  <!-- ==================== POPUP: PASSWORD CHANGER ==================== -->
   <div id="changePassModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="relative bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border-4 border-amber-400">
-      <button onclick="closeChangePasswordModal()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-base font-black shadow-lg border-2 border-white">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <h3 class="font-extrabold text-slate-900 text-base mb-1 flex items-center gap-2">
-        <i class="fa-solid fa-shield-halved text-amber-500"></i> एडमिन पासवर्ड बदलें
-      </h3>
-      <p class="text-xs text-slate-500 mb-4">एक बार बदलने पर डिफ़ॉल्ट पासवर्ड हमेशा के लिए हट जाएगा।</p>
-      <form onsubmit="handlePasswordChangeSubmit(event)" class="space-y-3">
-        <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">वर्तमान (पुराना) पासवर्ड</label>
-          <input type="password" id="oldPassInput" required placeholder="पुराना पासवर्ड" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-500 outline-none" />
-        </div>
-        <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नया पासवर्ड</label>
-          <input type="password" id="newPassInput" required placeholder="नया पासवर्ड" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-500 outline-none font-bold" />
-        </div>
-        <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दोबारा नया पासवर्ड (Confirm)</label>
-          <input type="password" id="confirmNewPassInput" required placeholder="नया पासवर्ड दोबारा लिखें" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-500 outline-none font-bold" />
-        </div>
-        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-950 text-amber-300 font-extrabold py-3 rounded-xl text-sm transition shadow-md border-2 border-slate-700 mt-2">
-          नया पासवर्ड क्लाउड में सेव करें
-        </button>
-      </form>
-    </div>
+    <div class="relative bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border-4 border-amber-400"><button onclick="closeChangePasswordModal()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 text-white rounded-full flex items-center justify-center font-black">✕</button><h3 class="font-extrabold text-slate-900 text-base mb-1">एडमिन पासवर्ड बदलें</h3><form onsubmit="handlePasswordChangeSubmit(event)" class="space-y-3 mt-3"><input type="password" id="oldPassInput" required placeholder="वर्तमान पासवर्ड" class="w-full text-sm border-2 rounded-xl p-2.5" /><input type="password" id="newPassInput" required placeholder="नया पासवर्ड" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /><input type="password" id="confirmNewPassInput" required placeholder="नया पासवर्ड दोबारा लिखें" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /><button type="submit" class="w-full bg-slate-900 text-amber-300 font-extrabold py-3 rounded-xl text-sm">पासवर्ड सेव करें</button></form></div>
   </div>
 
-  <!-- ==================== POPUP: SUMMARY TOTALS ==================== -->
   <div id="summaryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-2 border-slate-300">
-      <div class="bg-emerald-950 text-white p-4 px-5 flex items-center justify-between border-b-2 border-emerald-800">
-        <div class="flex items-center gap-2">
-          <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-sm shadow transition border border-rose-400">
-            <i class="fa-solid fa-arrow-left"></i>
-          </button>
-          <div>
-            <h3 class="font-extrabold text-base text-amber-300">कुल डेयरी हिसाब-किताब</h3>
-            <p class="text-[11px] text-emerald-200">प्रजापति डेयरी फॉर्म</p>
-          </div>
-        </div>
-        <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-sm font-black shadow transition border border-rose-400">
-          <i class="fa-solid fa-xmark text-base"></i>
-        </button>
-      </div>
-
-      <div class="p-5 space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-300 shadow-sm">
-            <div class="text-[11px] font-bold text-emerald-900 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-bottle-droplet text-emerald-700"></i> कुल दूध बिक्री
-            </div>
-            <div class="text-2xl font-black text-emerald-950 mt-1" id="modalMilkQty">0 L</div>
-          </div>
-          <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-300 shadow-sm">
-            <div class="text-[11px] font-bold text-slate-700 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-indian-rupee-sign text-emerald-700"></i> कुल दूध कमाई
-            </div>
-            <div class="text-2xl font-black text-slate-950 mt-1" id="modalMilkRev">₹0</div>
-          </div>
-          <div class="bg-purple-50 p-4 rounded-2xl border-2 border-purple-300 shadow-sm">
-            <div class="text-[11px] font-bold text-purple-900 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-wallet text-purple-700"></i> कुल खर्च व मजदूरी
-            </div>
-            <div class="text-2xl font-black text-purple-950 mt-1" id="modalExpenses">₹0</div>
-          </div>
-          <div class="bg-blue-50 p-4 rounded-2xl border-2 border-blue-300 shadow-sm">
-            <div class="text-[11px] font-bold text-blue-900 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-piggy-bank text-blue-700"></i> शुद्ध बचत (मुनाफा)
-            </div>
-            <div class="text-2xl font-black text-blue-950 mt-1" id="modalNetProfit">₹0</div>
-          </div>
-        </div>
-
-        <div class="pt-2 border-t-2 border-slate-200 flex items-center justify-end">
-          <button onclick="printOverallMasterReport()" class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 border border-sky-400 shadow">
-            <i class="fa-solid fa-file-pdf"></i> संपूर्ण PDF रिपोर्ट
-          </button>
-        </div>
-      </div>
-    </div>
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-2 border-slate-300"><div class="bg-emerald-950 text-white p-4 px-5 flex items-center justify-between border-b"><h3 class="font-extrabold text-base text-amber-300">कुल डेयरी हिसाब-किताब</h3><button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center font-black">✕</button></div><div class="p-5 space-y-4"><div class="grid grid-cols-2 gap-3"><div class="bg-emerald-50 p-4 rounded-2xl border"><span class="text-[11px] font-bold text-emerald-900 uppercase block">कुल दूध बिक्री</span><div class="text-2xl font-black text-emerald-950 mt-1" id="modalMilkQty">0 L</div></div><div class="bg-slate-50 p-4 rounded-2xl border"><span class="text-[11px] font-bold text-slate-700 uppercase block">कुल दूध कमाई</span><div class="text-2xl font-black text-slate-950 mt-1" id="modalMilkRev">₹0</div></div><div class="bg-purple-50 p-4 rounded-2xl border"><span class="text-[11px] font-bold text-purple-900 uppercase block">कुल खर्च</span><div class="text-2xl font-black text-purple-950 mt-1" id="modalExpenses">₹0</div></div><div class="bg-blue-50 p-4 rounded-2xl border"><span class="text-[11px] font-bold text-blue-900 uppercase block">शुद्ध बचत (मुनाफा)</span><div class="text-2xl font-black text-blue-950 mt-1" id="modalNetProfit">₹0</div></div></div><div class="flex justify-end pt-2"><button onclick="printOverallMasterReport()" class="bg-sky-600 text-white text-xs font-bold px-4 py-2 rounded-xl shadow">संपूर्ण PDF रिपोर्ट</button></div></div></div>
   </div>
 
   <div id="printableArea" class="hidden"></div>
 
   <!-- Realtime Cloud Script -->
   <script>
-    // ==================== 1. FIREBASE CONFIG ====================
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
       authDomain: "prajapatidairy-72888.firebaseapp.com",
@@ -827,7 +494,6 @@
     document.getElementById('custPayDate').value = today;
     document.getElementById('todayLabel1').innerText = "आज: " + today;
 
-    // Web Audio Chime Sound
     function playAlertChime() {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -923,246 +589,203 @@
       renderAll();
     }
 
-    // ==================== CATTLE (SMART FEATURES) ====================
-    function addCattleEntry(e) {
+    // ==================== MILK SALE SMART SYSTEM ====================
+    let currentMilkFilter = 'all';
+
+    function setMilkFilter(f) {
+      currentMilkFilter = f;
+      document.getElementById('filterAllBtn').className = f === 'all' ? "px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-amber-300 border border-slate-700" : "px-2.5 py-1 rounded-lg font-bold bg-white text-slate-700 border border-slate-300";
+      document.getElementById('filterTodayBtn').className = f === 'today' ? "px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-amber-300 border border-slate-700" : "px-2.5 py-1 rounded-lg font-bold bg-white text-slate-700 border border-slate-300";
+      document.getElementById('filterMonthBtn').className = f === 'month' ? "px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-amber-300 border border-slate-700" : "px-2.5 py-1 rounded-lg font-bold bg-white text-slate-700 border border-slate-300";
+      renderMilk();
+    }
+
+    function toggleMilkSaleType() {
+      const type = document.getElementById('milkSaleType').value;
+      const plantBlock = document.getElementById('plantFatSnfBlock');
+      if (type === 'plant') {
+        plantBlock.classList.remove('hidden');
+        calcPlantMilkRate();
+      } else {
+        plantBlock.classList.add('hidden');
+        document.getElementById('milkRate').value = '65';
+        calcMilkTotal();
+      }
+    }
+
+    function calcPlantMilkRate() {
+      const fat = parseFloat(document.getElementById('plantFat').value) || 0;
+      const snf = parseFloat(document.getElementById('plantSnf').value) || 0;
+      const base = parseFloat(document.getElementById('plantBaseRate').value) || 7.5;
+      if (fat > 0) {
+        const rate = (fat * base) + (snf * (base * 0.35));
+        document.getElementById('milkRate').value = rate.toFixed(2);
+        calcMilkTotal();
+      }
+    }
+
+    function calcMilkTotal() {
+      const q = parseFloat(document.getElementById('milkQty').value) || 0;
+      const r = parseFloat(document.getElementById('milkRate').value) || 0;
+      document.getElementById('milkTotal').value = '₹ ' + (q * r).toFixed(2);
+    }
+
+    function addMilkEntry(e) {
       e.preventDefault();
-      if (!isAdmin) { alert("सिर्फ एडमिन ही पशु जोड़ सकते हैं!"); return; }
+      if (!isAdmin) { alert("सिर्फ एडमिन एंट्री कर सकते हैं!"); return; }
 
-      const tag = document.getElementById('catTag').value.trim();
-      const breed = document.getElementById('catBreed').value;
-      const status = document.getElementById('catStatus').value;
-      const milk = parseFloat(document.getElementById('catDailyMilk').value) || 0;
-      const aiDate = document.getElementById('catAiDate').value || '';
-      const dewormDate = document.getElementById('catDewormDate').value || '';
-      const vaccine = document.getElementById('catVaccine').value.trim() || 'कोई नहीं';
+      const date = document.getElementById('milkDate').value;
+      const shift = document.getElementById('milkShift').value;
+      const saleType = document.getElementById('milkSaleType').value;
+      const customer = document.getElementById('milkCustomer').value.trim();
+      const qty = parseFloat(document.getElementById('milkQty').value) || 0;
+      const rate = parseFloat(document.getElementById('milkRate').value) || 0;
+      const paymentStatus = document.getElementById('milkPaymentStatus').value;
+      const total = qty * rate;
 
-      db.ref('cattle_records').push({
-        tag: tag,
-        breed: breed,
-        status: status,
-        milk: milk,
-        aiDate: aiDate,
-        dewormDate: dewormDate,
-        vaccine: vaccine,
-        morningMilk: milk / 2,
-        eveningMilk: milk / 2,
+      db.ref('milk_records').push({
+        date: date,
+        shift: shift,
+        saleType: saleType,
+        customer: customer,
+        qty: qty,
+        rate: rate,
+        total: total,
+        paymentStatus: paymentStatus,
+        fat: saleType === 'plant' ? (parseFloat(document.getElementById('plantFat').value) || 0) : null,
+        snf: saleType === 'plant' ? (parseFloat(document.getElementById('plantSnf').value) || 0) : null,
         timestamp: Date.now()
       }).then(() => {
-        document.getElementById('catTag').value = '';
-        document.getElementById('catDailyMilk').value = '';
-        document.getElementById('catAiDate').value = '';
-        document.getElementById('catDewormDate').value = '';
-        document.getElementById('catVaccine').value = '';
-        alert("पशु का स्मार्ट प्रोफाइल सफलतापूर्वक जुड़ गया!");
+        document.getElementById('milkCustomer').value = '';
+        document.getElementById('milkQty').value = '';
+        document.getElementById('milkTotal').value = '₹ 0';
+        alert("दूध बिक्री दर्ज हो गई!");
       });
     }
 
-    function deleteCattle(id) {
+    function deleteMilk(id) {
       if (!isAdmin) return;
-      if (confirm("यह पशु रिकॉर्ड हटाएं?")) {
-        db.ref('cattle_records/' + id).remove();
-      }
+      if (confirm("यह दूध रिकॉर्ड हटाएं?")) db.ref('milk_records/' + id).remove();
     }
 
-    function openAnimalMilkModal(id, tag, morning, evening) {
-      document.getElementById('modalAnimalId').value = id;
-      document.getElementById('modalAnimalTag').innerText = tag + " - आज का दूध";
-      document.getElementById('animalMorningMilk').value = morning || '';
-      document.getElementById('animalEveningMilk').value = evening || '';
-      document.getElementById('animalMilkModal').classList.remove('hidden');
+    function sendCustomerMilkBill(name, date, qty, rate, total, status) {
+      const msg = `*प्रजापति डेयरी फॉर्म - दूध रसीद*%0A--------------------------------%0A*ग्राहक:* ${name}%0A*तारीख:* ${date}%0A*दूध मात्रा:* ${qty} L%0A*रेट:* ₹ ${rate}/L%0A*कुल रकम:* ₹ ${total}%0A*भुगतान स्थिति:* ${status}%0A--------------------------------%0Aधन्यवाद!`;
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
     }
 
-    function closeAnimalMilkModal() {
-      document.getElementById('animalMilkModal').classList.add('hidden');
-    }
+    // Daily Production vs Sale Matching Bar Calculator
+    function renderMilkSummaryStats() {
+      const selectedDate = document.getElementById('milkDate').value || today;
+      let totalProducedToday = 0;
+      cattleData.forEach(c => totalProducedToday += (c.milk || 0));
 
-    function saveAnimalDailyMilk(e) {
-      e.preventDefault();
-      if (!isAdmin) { alert("केवल एडमिन दूध दर्ज कर सकते हैं!"); return; }
-      const id = document.getElementById('modalAnimalId').value;
-      const morning = parseFloat(document.getElementById('animalMorningMilk').value) || 0;
-      const evening = parseFloat(document.getElementById('animalEveningMilk').value) || 0;
-      const total = morning + evening;
-
-      db.ref('cattle_records/' + id).update({
-        morningMilk: morning,
-        eveningMilk: evening,
-        milk: total,
-        lastMilkLoggedDate: today
-      }).then(() => {
-        closeAnimalMilkModal();
+      let totalSoldToday = 0;
+      milkData.forEach(m => {
+        if (m.date === selectedDate) totalSoldToday += (m.qty || 0);
       });
+
+      const balance = Math.max(0, totalProducedToday - totalSoldToday);
+
+      document.getElementById('dispTodayProduced').innerText = totalProducedToday.toFixed(1) + ' L';
+      document.getElementById('dispTodaySold').innerText = totalSoldToday.toFixed(1) + ' L';
+      document.getElementById('dispTodayBalance').innerText = balance.toFixed(1) + ' L';
     }
 
-    db.ref('cattle_records').on('value', snap => {
-      const val = snap.val();
-      cattleData = [];
-      if (val) {
-        Object.keys(val).forEach(k => cattleData.push({ id: k, ...val[k] }));
-        cattleData.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+    function renderMilk() {
+      const mBody = document.getElementById('milkTableBody');
+      const mMobile = document.getElementById('milkMobileList');
+      mBody.innerHTML = ''; mMobile.innerHTML = '';
+
+      let filteredList = milkData;
+      if (currentMilkFilter === 'today') {
+        filteredList = milkData.filter(m => m.date === today);
+      } else if (currentMilkFilter === 'month') {
+        const curMonth = today.slice(0, 7);
+        filteredList = milkData.filter(m => m.date && m.date.startsWith(curMonth));
       }
-      renderCattle();
-    });
 
-    function renderCattle() {
-      const cList = document.getElementById('cattleMobileList');
-      cList.innerHTML = '';
-      const now = new Date();
+      filteredList.forEach(item => {
+        const isPaid = item.paymentStatus && item.paymentStatus.includes('नकद');
+        const statusBadge = isPaid 
+          ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">नकद प्राप्त</span>'
+          : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300">उधारी (Due)</span>';
 
-      cattleData.forEach(item => {
-        let statusBadge = "bg-emerald-100 text-emerald-950 border-emerald-300";
-        if (item.status && item.status.includes('गाभिन')) statusBadge = "bg-blue-100 text-blue-950 border-blue-300";
-        else if (item.status && item.status.includes('ड्राई')) statusBadge = "bg-amber-100 text-amber-950 border-amber-300";
-        else if (item.status && item.status.includes('बीमार')) statusBadge = "bg-rose-100 text-rose-950 border-rose-300";
+        mBody.innerHTML += `
+          <tr class="hover:bg-slate-50">
+            <td class="p-3 font-medium whitespace-nowrap">${item.date}</td>
+            <td class="p-3 text-slate-500 text-xs">${item.shift} • <b class="text-slate-800">${item.saleType === 'plant' ? 'प्लांट' : 'घर/दुकान'}</b></td>
+            <td class="p-3 font-semibold text-slate-900">${item.customer}</td>
+            <td class="p-3 font-bold text-emerald-800">${item.qty} L</td>
+            <td class="p-3 text-slate-600">₹${item.rate}</td>
+            <td class="p-3 font-black text-slate-900">₹${item.total.toFixed(2)}</td>
+            <td class="p-3">${statusBadge}</td>
+            <td class="p-3 text-center">
+              <button onclick="sendCustomerMilkBill('${item.customer}', '${item.date}', ${item.qty}, ${item.rate}, ${item.total}, '${item.paymentStatus}')" class="text-emerald-700 hover:text-emerald-900 p-1 font-bold text-xs">
+                <i class="fa-brands fa-whatsapp text-sm"></i> पर्ची
+              </button>
+            </td>
+            <td class="p-3 text-center admin-action-col ${isAdmin ? '' : 'hidden'}">
+              <button onclick="deleteMilk('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+          </tr>
+        `;
 
-        let calvingHtml = '';
-        if (item.aiDate) {
-          const aiD = new Date(item.aiDate);
-          const isBuffalo = item.breed && item.breed.includes('भैंस');
-          const gestationDays = isBuffalo ? 310 : 280;
-
-          const calvingDate = new Date(aiD);
-          calvingDate.setDate(calvingDate.getDate() + gestationDays);
-          const calvingDateStr = calvingDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-
-          const diffTime = calvingDate.getTime() - now.getTime();
-          const daysLeftToCalve = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-          const heatDiff = Math.floor((now.getTime() - aiD.getTime()) / (1000 * 60 * 60 * 24));
-          const isHeatWindow = heatDiff >= 18 && heatDiff <= 22;
-          const isDryDue = daysLeftToCalve <= 60 && daysLeftToCalve > 0;
-
-          calvingHtml = `
-            <div class="mt-2 p-2.5 rounded-xl bg-blue-50/70 border border-blue-200 text-xs space-y-1">
-              <div class="flex justify-between items-center">
-                <span class="text-blue-900 font-bold">संभावित डिलीवरी:</span>
-                <span class="font-black text-blue-950">${calvingDateStr}</span>
-              </div>
-              <div class="flex justify-between items-center text-[11px]">
-                <span class="text-slate-600">डिलीवरी में शेष:</span>
-                <span class="font-extrabold ${daysLeftToCalve <= 15 ? 'text-rose-600 animate-pulse' : 'text-slate-800'}">${daysLeftToCalve > 0 ? daysLeftToCalve + ' दिन बाकी' : 'प्रसव समय आ गया!'}</span>
-              </div>
-              ${isHeatWindow ? '<div class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-md text-center">⚠️ 21-दिन हीट चेक अलर्ट! (सीमन दोहराने का समय हो सकता है)</div>' : ''}
-              ${isDryDue ? '<div class="text-[10px] bg-rose-600 text-white font-black px-2 py-0.5 rounded-md text-center">🛑 ड्राई अलर्ट: दूध निकालना बंद करें (60 दिन शेष)</div>' : ''}
-            </div>
-          `;
-        }
-
-        let dewormHtml = '';
-        if (item.dewormDate) {
-          const dwD = new Date(item.dewormDate);
-          const nextDw = new Date(dwD);
-          nextDw.setDate(nextDw.getDate() + 90);
-          const nextDwStr = nextDw.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short' });
-          dewormHtml = `<span class="text-[10px] text-slate-500 block">अगली पेट के कीड़े की दवा: <b>${nextDwStr}</b></span>`;
-        }
-
-        cList.innerHTML += `
-          <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm relative space-y-2">
+        mMobile.innerHTML += `
+          <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm space-y-2">
             <div class="flex justify-between items-start">
               <div>
-                <span class="text-[10px] font-black px-2 py-0.5 rounded-md border uppercase ${statusBadge}">
-                  ${item.status || 'दूध दे रही है'}
-                </span>
-                <h4 class="text-lg font-black text-slate-900 mt-1">${item.tag}</h4>
-                <span class="text-xs text-slate-500 font-semibold">${item.breed}</span>
+                <span class="text-xs text-slate-500 font-semibold">${item.date} • ${item.shift}</span>
+                <h4 class="font-extrabold text-slate-900 text-base mt-0.5">${item.customer}</h4>
+                <span class="text-[10px] text-slate-400 block">${item.saleType === 'plant' ? 'डेयरी प्लांट' : 'घर/दुकान ग्राहक'}</span>
               </div>
-              ${isAdmin ? `<button onclick="deleteCattle('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+              <div class="flex items-center gap-2">
+                ${statusBadge}
+                ${isAdmin ? `<button onclick="deleteMilk('${item.id}')" class="text-rose-500 p-1 text-sm"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+              </div>
             </div>
 
-            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-              <div>
-                <span class="text-[10px] text-slate-400 uppercase font-bold block">दैनिक दूध (Live Log)</span>
-                <span class="text-emerald-900 font-black text-base">${item.milk || 0} L/दिन</span>
-                <span class="text-[10px] text-slate-500 block">सुबह: ${item.morningMilk || 0}L • शाम: ${item.eveningMilk || 0}L</span>
-              </div>
-              <button onclick="openAnimalMilkModal('${item.id}', '${item.tag}', ${item.morningMilk || 0}, ${item.eveningMilk || 0})" class="bg-emerald-800 hover:bg-emerald-900 text-white text-[11px] font-extrabold px-3 py-2 rounded-xl shadow border border-emerald-700 flex items-center gap-1">
-                <i class="fa-solid fa-pen"></i> दूध दर्ज करें
+            <div class="flex justify-between items-center pt-2 border-t border-slate-100">
+              <span class="text-xs text-slate-600 font-medium">${item.qty} L × ₹${item.rate}</span>
+              <span class="text-lg font-black text-emerald-900">₹${item.total.toFixed(2)}</span>
+            </div>
+
+            <div class="pt-1 flex justify-end">
+              <button onclick="sendCustomerMilkBill('${item.customer}', '${item.date}', ${item.qty}, ${item.rate}, ${item.total}, '${item.paymentStatus}')" class="bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow flex items-center gap-1">
+                <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद भेजें
               </button>
-            </div>
-
-            ${calvingHtml}
-
-            <div class="text-xs bg-slate-50 p-2 rounded-xl border border-slate-200 space-y-1">
-              <div><span class="text-slate-500 text-[10px] block">टीकाकरण रिकॉर्ड:</span><span class="font-semibold text-slate-800">${item.vaccine}</span></div>
-              ${dewormHtml}
             </div>
           </div>
         `;
       });
 
-      document.getElementById('cattleRecordCount').innerText = `${cattleData.length} पशु`;
+      document.getElementById('milkRecordCount').innerText = `${filteredList.length} एंट्री`;
+      renderMilkSummaryStats();
     }
 
-    // ==================== LABOUR, DIRECT CALL & LATE ARRIVAL ALERT ====================
-    let hasAlertSoundPlayed = false;
-    function checkSalaryAlerts() {
-      const notifBanner = document.getElementById('salaryNotificationBanner');
-      const notifList = document.getElementById('salaryNotificationList');
-      notifList.innerHTML = '';
-      let salaryAlerts = [];
-
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth();
-      const currentDate = now.getDate();
-
-      labourProfiles.forEach(labour => {
-        if (!labour.joinDate) return;
-        const jDate = new Date(labour.joinDate);
-        const cycleDay = jDate.getDate();
-
-        let targetSalaryDate = new Date(currentYear, currentMonth, cycleDay);
-        if (targetSalaryDate < now && Math.abs(currentDate - cycleDay) > 5) {
-          targetSalaryDate = new Date(currentYear, currentMonth + 1, cycleDay);
-        }
-
-        const diffTime = targetSalaryDate.getTime() - now.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays >= 0 && diffDays <= 5) {
-          const dateStr = targetSalaryDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-          salaryAlerts.push(
-            `💰 <b>${labour.name}</b> का वेतन <b>₹${labour.salary.toLocaleString('en-IN')}</b> आगामी <b>${dateStr}</b> को देय है (मात्र <b>${diffDays} दिन</b> शेष)!`
-          );
-        }
+    // ==================== OTHER STANDARD SECTION ACTIONS ====================
+    function addExpenseEntry(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      db.ref('expense_records').push({
+        date: document.getElementById('expDate').value,
+        category: document.getElementById('expCategory').value,
+        detail: document.getElementById('expDetail').value.trim(),
+        amount: parseFloat(document.getElementById('expAmount').value) || 0,
+        timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('expDetail').value = '';
+        document.getElementById('expAmount').value = '';
       });
-
-      if (salaryAlerts.length > 0 && isAdmin) {
-        notifList.innerHTML = salaryAlerts.map(msg => `<div>${msg}</div>`).join('');
-        notifBanner.classList.remove('hidden');
-        if (!hasAlertSoundPlayed) {
-          playAlertChime();
-          hasAlertSoundPlayed = true;
-        }
-      } else {
-        notifBanner.classList.add('hidden');
-      }
     }
 
-    // Direct Call Function
-    function directCallLabour(phone) {
-      if (!phone || phone === '-') {
-        alert("इस मजदूर का फोन नंबर उपलब्ध नहीं है!");
-        return;
-      }
-      window.location.href = `tel:${phone}`;
-    }
-
-    // Late Arrival WhatsApp / SMS Alert Trigger
-    function sendLateArrivalAlert(name, phone, dutyTime) {
-      if (!phone || phone === '-') {
-        alert("मजदूर का फोन नंबर मौजूद नहीं है!");
-        return;
-      }
-      const msg = `*प्रजापति डेयरी फॉर्म - आगमन चेतावनी*%0A--------------------------------%0Aनमस्ते *${name}*,%0Aआज फार्म पर आपके आने का निर्धारित समय *${dutyTime || 'निर्धारित समय'}* था।%0Aआप अभी तक फार्म पर नहीं पहुंचे हैं। कृपया तुरंत फार्म पर आएं अथवा संपर्क करें।%0A--------------------------------%0A- डेयरी व्यवस्थापक`;
-      window.open(`https://wa.me/91${phone.replace(/\D/g, '')}?text=${msg}`, '_blank');
+    function deleteExpense(id) {
+      if (!isAdmin) return;
+      if (confirm("यह खर्च हटाएं?")) db.ref('expense_records/' + id).remove();
     }
 
     function addLabourProfile(e) {
       e.preventDefault();
-      if (!isAdmin) { alert("सिर्फ एडमिन ही मजदूर जोड़ सकते हैं!"); return; }
-
+      if (!isAdmin) return;
       db.ref('labour_profiles').push({
         name: document.getElementById('labourName').value.trim(),
         phone: document.getElementById('labourPhone').value.trim() || '-',
@@ -1179,96 +802,131 @@
         document.getElementById('labourSalary').value = '';
         document.getElementById('labourAadhar').value = '';
         document.getElementById('labourAddress').value = '';
-        alert("मजदूर प्रोफाइल सफलतापूर्वक जोड़ी गई!");
+        alert("मजदूर प्रोफाइल जोड़ी गई!");
       });
     }
 
     function deleteLabourProfile(id) {
       if (!isAdmin) return;
-      if (confirm("मजदूर की प्रोफाइल हटाएं?")) {
-        db.ref('labour_profiles/' + id).remove();
-      }
+      if (confirm("मजदूर की प्रोफाइल हटाएं?")) db.ref('labour_profiles/' + id).remove();
     }
 
-    db.ref('labour_profiles').on('value', snap => {
-      const val = snap.val();
-      labourProfiles = [];
-      if (val) {
-        Object.keys(val).forEach(k => labourProfiles.push({ id: k, ...val[k] }));
-        labourProfiles.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-      }
-      renderLabourProfiles();
-      checkSalaryAlerts();
-    });
+    function directCallLabour(phone) {
+      if (!phone || phone === '-') { alert("फोन नंबर उपलब्ध नहीं है!"); return; }
+      window.location.href = `tel:${phone}`;
+    }
 
-    function renderLabourProfiles() {
-      const container = document.getElementById('labourListContainer');
-      container.innerHTML = '';
-      labourProfiles.forEach(item => {
-        const jDate = new Date(item.joinDate);
-        const joinStr = jDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-        const cycleDay = jDate.getDate();
+    function sendLateArrivalAlert(name, phone, dutyTime) {
+      if (!phone || phone === '-') { alert("फोन नंबर मौजूद नहीं है!"); return; }
+      const msg = `*प्रजापति डेयरी फॉर्म - आगमन चेतावनी*%0A--------------------------------%0Aनमस्ते *${name}*,%0Aआज फार्म पर आपके आने का समय *${dutyTime || 'निर्धारित समय'}* था।%0Aआप अभी तक नहीं पहुंचे हैं, कृपया तुरंत संपर्क करें।%0A--------------------------------%0A- व्यवस्थापक`;
+      window.open(`https://wa.me/91${phone.replace(/\D/g, '')}?text=${msg}`, '_blank');
+    }
 
-        container.innerHTML += `
-          <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm space-y-3 relative overflow-hidden">
-            <div class="flex justify-between items-start">
-              <div class="flex items-center gap-2.5">
-                <div class="w-10 h-10 rounded-xl bg-slate-900 text-cyan-300 flex items-center justify-center font-bold text-base shadow">
-                  <i class="fa-solid fa-user"></i>
-                </div>
-                <div>
-                  <h4 class="text-base font-extrabold text-slate-900 leading-tight">${item.name}</h4>
-                  <span class="text-[11px] text-slate-500 font-semibold"><i class="fa-solid fa-phone text-slate-400"></i> ${item.phone}</span>
-                </div>
-              </div>
-              ${isAdmin ? `<button onclick="deleteLabourProfile('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash-can"></i></button>` : ''}
-            </div>
+    function addCattleEntry(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const tag = document.getElementById('catTag').value.trim();
+      const breed = document.getElementById('catBreed').value;
+      const status = document.getElementById('catStatus').value;
+      const milk = parseFloat(document.getElementById('catDailyMilk').value) || 0;
+      const aiDate = document.getElementById('catAiDate').value || '';
+      const dewormDate = document.getElementById('catDewormDate').value || '';
+      const vaccine = document.getElementById('catVaccine').value.trim() || 'कोई नहीं';
 
-            <!-- Direct Quick Call & Late Arrival Alert Actions -->
-            <div class="grid grid-cols-2 gap-2 pt-1">
-              <button onclick="directCallLabour('${item.phone}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition">
-                <i class="fa-solid fa-phone-volume text-amber-300"></i> कॉल करें
-              </button>
-              <button onclick="sendLateArrivalAlert('${item.name}', '${item.phone}', '${item.dutyTime}')" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition">
-                <i class="fa-brands fa-whatsapp text-white"></i> देरी चेतावनी
-              </button>
-            </div>
-
-            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <span class="text-slate-400 block text-[10px] uppercase font-bold">मासिक वेतन</span>
-                <span class="text-emerald-900 font-black text-sm">₹ ${item.salary.toLocaleString('en-IN')}</span>
-              </div>
-              <div>
-                <span class="text-slate-400 block text-[10px] uppercase font-bold">आगमन समय (Duty)</span>
-                <span class="text-rose-900 font-extrabold">${item.dutyTime || '06:00'} (${item.alertMode || 'Daily'})</span>
-              </div>
-            </div>
-
-            <div class="text-xs space-y-1 text-slate-600 pt-1 border-t border-slate-100">
-              <div><b>सैलरी तारीख:</b> हर महीने की ${cycleDay} तारीख</div>
-              <div><b>जॉइनिंग तारीख:</b> ${joinStr}</div>
-              <div><b>विवरण/कार्य:</b> ${item.address}</div>
-            </div>
-          </div>
-        `;
+      db.ref('cattle_records').push({
+        tag: tag, breed: breed, status: status, milk: milk, aiDate: aiDate,
+        dewormDate: dewormDate, vaccine: vaccine, morningMilk: milk / 2, eveningMilk: milk / 2, timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('catTag').value = '';
+        document.getElementById('catDailyMilk').value = '';
+        document.getElementById('catAiDate').value = '';
+        document.getElementById('catDewormDate').value = '';
+        document.getElementById('catVaccine').value = '';
+        alert("पशु प्रोफाइल जुड़ गई!");
       });
-
-      document.getElementById('labourRecordCount').innerText = `${labourProfiles.length} मजदूर`;
     }
 
-    // ==================== FARM SETUP COST LOGIC ====================
-    function openSetupCostModal() {
-      document.getElementById('setupCostModal').classList.remove('hidden');
-      renderSetupCostList();
+    function deleteCattle(id) {
+      if (!isAdmin) return;
+      if (confirm("यह पशु रिकॉर्ड हटाएं?")) db.ref('cattle_records/' + id).remove();
     }
-    function closeSetupCostModal() {
-      document.getElementById('setupCostModal').classList.add('hidden');
+
+    function openAnimalMilkModal(id, tag, morning, evening) {
+      document.getElementById('modalAnimalId').value = id;
+      document.getElementById('modalAnimalTag').innerText = tag + " - आज का दूध";
+      document.getElementById('animalMorningMilk').value = morning || '';
+      document.getElementById('animalEveningMilk').value = evening || '';
+      document.getElementById('animalMilkModal').classList.remove('hidden');
     }
+    function closeAnimalMilkModal() { document.getElementById('animalMilkModal').classList.add('hidden'); }
+
+    function saveAnimalDailyMilk(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const id = document.getElementById('modalAnimalId').value;
+      const morning = parseFloat(document.getElementById('animalMorningMilk').value) || 0;
+      const evening = parseFloat(document.getElementById('animalEveningMilk').value) || 0;
+      db.ref('cattle_records/' + id).update({
+        morningMilk: morning, eveningMilk: evening, milk: morning + evening, lastMilkLoggedDate: today
+      }).then(() => closeAnimalMilkModal());
+    }
+
+    function addCustomerPayment(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      db.ref('customer_payments').push({
+        date: document.getElementById('custPayDate').value,
+        name: document.getElementById('custPayName').value.trim(),
+        amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
+        note: document.getElementById('custPayNote').value.trim() || 'जमा',
+        timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('custPayName').value = '';
+        document.getElementById('custPayAmount').value = '';
+        document.getElementById('custPayNote').value = '';
+      });
+    }
+
+    function sendWhatsAppBill(custName, totalMilk, totalBill, totalPaid, balance) {
+      const msg = `*प्रजापति डेयरी फॉर्म - लेजर बिल*%0A--------------------------------%0A*ग्राहक:* ${custName}%0A*कुल दूध:* ${totalMilk.toFixed(1)} L%0A*कुल बिल:* ₹ ${totalBill.toFixed(2)}%0A*जमा रकम:* ₹ ${totalPaid.toFixed(2)}%0A*बकाया उधारी:* ₹ ${balance.toFixed(2)}%0A--------------------------------%0Aधन्यवाद!`;
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
+    }
+
+    function addStockItem(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      db.ref('stock_records').push({
+        name: document.getElementById('stockName').value.trim(),
+        qty: parseFloat(document.getElementById('stockQty').value) || 0,
+        unit: document.getElementById('stockUnit').value,
+        dailyUse: parseFloat(document.getElementById('stockDailyUse').value) || 1,
+        alertDays: parseFloat(document.getElementById('stockAlertDays').value) || 3,
+        updatedAt: Date.now(), timestamp: Date.now()
+      }).then(() => {
+        document.getElementById('stockName').value = '';
+        document.getElementById('stockQty').value = '';
+        document.getElementById('stockDailyUse').value = '';
+      });
+    }
+
+    function updateStockQty(id, change) {
+      if (!isAdmin) return;
+      const item = stockData.find(x => x.id === id);
+      if (item) db.ref('stock_records/' + id).update({ qty: Math.max(0, item.qty + change), updatedAt: Date.now() });
+    }
+
+    function deleteStock(id) {
+      if (!isAdmin) return;
+      if (confirm("यह स्टॉक हटाएं?")) db.ref('stock_records/' + id).remove();
+    }
+
+    // ==================== FARM SETUP COST ====================
+    function openSetupCostModal() { document.getElementById('setupCostModal').classList.remove('hidden'); renderSetupCostList(); }
+    function closeSetupCostModal() { document.getElementById('setupCostModal').classList.add('hidden'); }
 
     function addSetupCostItem(e) {
       e.preventDefault();
-      if (!isAdmin) { alert("केवल एडमिन ही लागत जोड़ सकते हैं!"); return; }
+      if (!isAdmin) return;
       db.ref('farm_setup_costs').push({
         name: document.getElementById('setupItemName').value.trim(),
         amount: parseFloat(document.getElementById('setupItemAmount').value) || 0,
@@ -1295,7 +953,6 @@
       const container = document.getElementById('setupCostListContainer');
       if (!container) return;
       container.innerHTML = '';
-
       let totalInvestment = 0;
       setupCostData.forEach((item, index) => {
         totalInvestment += item.amount;
@@ -1304,7 +961,7 @@
             <span class="font-extrabold text-slate-900">${index + 1}. ${item.name}</span>
             <div class="flex items-center gap-3">
               <span class="font-black text-slate-900">₹ ${item.amount.toLocaleString('en-IN')}</span>
-              ${isAdmin ? `<button onclick="deleteSetupCostItem('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+              ${isAdmin ? `<button onclick="deleteSetupCostItem('${item.id}')" class="text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
             </div>
           </div>
         `;
@@ -1314,7 +971,6 @@
       milkData.forEach(m => totalRev += m.total);
       expenseData.forEach(e => totalExp += e.amount);
       const totalNetProfit = Math.max(0, totalRev - totalExp);
-
       const remainingCost = Math.max(0, totalInvestment - totalNetProfit);
       const percentRecovered = totalInvestment > 0 ? Math.min(100, (totalNetProfit / totalInvestment) * 100) : 0;
 
@@ -1322,7 +978,7 @@
       document.getElementById('setupItemsCount').innerText = `${setupCostData.length} मदों में निवेश`;
       document.getElementById('dispNetRecovered').innerText = '₹ ' + totalNetProfit.toLocaleString('en-IN');
       document.getElementById('dispRemainingCost').innerText = '₹ ' + remainingCost.toLocaleString('en-IN');
-      document.getElementById('recoveryPercentText').innerText = `${percentRecovered.toFixed(1)}% लागत रिकवर हो चुकी है`;
+      document.getElementById('recoveryPercentText').innerText = `${percentRecovered.toFixed(1)}% लागत रिकवर`;
       document.getElementById('recoveryProgressBar').style.width = `${percentRecovered}%`;
     }
 
@@ -1335,9 +991,7 @@
       document.getElementById('confirmNewPassInput').value = '';
       document.getElementById('changePassModal').classList.remove('hidden');
     }
-    function closeChangePasswordModal() {
-      document.getElementById('changePassModal').classList.add('hidden');
-    }
+    function closeChangePasswordModal() { document.getElementById('changePassModal').classList.add('hidden'); }
 
     function handlePasswordChangeSubmit(e) {
       e.preventDefault();
@@ -1355,7 +1009,6 @@
       });
     }
 
-    // Logo Handlers
     function applyLogoToDOM(logoUrl) {
       const headerImg = document.getElementById('headerLogoImg');
       const defaultIcon = document.getElementById('defaultLogoIcon');
@@ -1380,7 +1033,6 @@
       };
       reader.readAsDataURL(file);
     }
-
     function removeCloudLogo() {
       if (!isAdmin) return;
       if (confirm("लोगो हटाएं?")) db.ref('cloud_dairy_logo').remove();
@@ -1388,7 +1040,6 @@
     function openLogoPreview() { document.getElementById('logoPreviewModal').classList.remove('hidden'); }
     function closeLogoPreview() { document.getElementById('logoPreviewModal').classList.add('hidden'); }
 
-    // Tabs
     const tabs = ['milk', 'expense', 'labour', 'cattle', 'customer', 'stock'];
     function switchTab(t) {
       tabs.forEach(tab => {
@@ -1407,112 +1058,7 @@
     function openSummaryModal() { document.getElementById('summaryModal').classList.remove('hidden'); }
     function closeSummaryModal() { document.getElementById('summaryModal').classList.add('hidden'); }
 
-    // Milk Sale
-    function calcMilkTotal() {
-      const q = parseFloat(document.getElementById('milkQty').value) || 0;
-      const r = parseFloat(document.getElementById('milkRate').value) || 0;
-      document.getElementById('milkTotal').value = '₹ ' + (q * r).toFixed(2);
-    }
-
-    function addMilkEntry(e) {
-      e.preventDefault();
-      if (!isAdmin) { alert("सिर्फ एडमिन एंट्री कर सकते हैं!"); return; }
-      const q = parseFloat(document.getElementById('milkQty').value);
-      const r = parseFloat(document.getElementById('milkRate').value);
-
-      db.ref('milk_records').push({
-        date: document.getElementById('milkDate').value,
-        shift: document.getElementById('milkShift').value,
-        customer: document.getElementById('milkCustomer').value.trim(),
-        qty: q, rate: r, total: q * r, timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('milkCustomer').value = '';
-        document.getElementById('milkQty').value = '';
-        document.getElementById('milkRate').value = '';
-        document.getElementById('milkTotal').value = '₹ 0';
-      });
-    }
-
-    function deleteMilk(id) {
-      if (!isAdmin) return;
-      if (confirm("यह दूध रिकॉर्ड हटाएं?")) db.ref('milk_records/' + id).remove();
-    }
-
-    // Expense
-    function addExpenseEntry(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('expense_records').push({
-        date: document.getElementById('expDate').value,
-        category: document.getElementById('expCategory').value,
-        detail: document.getElementById('expDetail').value.trim(),
-        amount: parseFloat(document.getElementById('expAmount').value) || 0,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('expDetail').value = '';
-        document.getElementById('expAmount').value = '';
-      });
-    }
-
-    function deleteExpense(id) {
-      if (!isAdmin) return;
-      if (confirm("यह खर्च हटाएं?")) db.ref('expense_records/' + id).remove();
-    }
-
-    // Customer
-    function addCustomerPayment(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('customer_payments').push({
-        date: document.getElementById('custPayDate').value,
-        name: document.getElementById('custPayName').value.trim(),
-        amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
-        note: document.getElementById('custPayNote').value.trim() || 'जमा',
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('custPayName').value = '';
-        document.getElementById('custPayAmount').value = '';
-        document.getElementById('custPayNote').value = '';
-      });
-    }
-
-    function sendWhatsAppBill(custName, totalMilk, totalBill, totalPaid, balance) {
-      const msg = `*प्रजापति डेयरी फॉर्म - दूध का बिल*%0A--------------------------------%0A*ग्राहक:* ${custName}%0A*कुल दूध लिया:* ${totalMilk.toFixed(1)} L%0A*कुल बिल:* ₹ ${totalBill.toFixed(2)}%0A*जमा रकम:* ₹ ${totalPaid.toFixed(2)}%0A*बकाया उधारी:* ₹ ${balance.toFixed(2)}%0A--------------------------------%0Aधन्यवाद!`;
-      window.open(`https://wa.me/?text=${msg}`, '_blank');
-    }
-
-    // Stock
-    function addStockItem(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('stock_records').push({
-        name: document.getElementById('stockName').value.trim(),
-        qty: parseFloat(document.getElementById('stockQty').value) || 0,
-        unit: document.getElementById('stockUnit').value,
-        dailyUse: parseFloat(document.getElementById('stockDailyUse').value) || 1,
-        alertDays: parseFloat(document.getElementById('stockAlertDays').value) || 3,
-        updatedAt: Date.now(), timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('stockName').value = '';
-        document.getElementById('stockQty').value = '';
-        document.getElementById('stockDailyUse').value = '';
-      });
-    }
-
-    function updateStockQty(id, change) {
-      if (!isAdmin) return;
-      const item = stockData.find(x => x.id === id);
-      if (item) {
-        db.ref('stock_records/' + id).update({ qty: Math.max(0, item.qty + change), updatedAt: Date.now() });
-      }
-    }
-
-    function deleteStock(id) {
-      if (!isAdmin) return;
-      if (confirm("यह स्टॉक हटाएं?")) db.ref('stock_records/' + id).remove();
-    }
-
-    // Realtime Cloud Listeners
+    // ==================== REALTIME DATABASE LISTENERS ====================
     db.ref('milk_records').on('value', snap => {
       const val = snap.val();
       milkData = [];
@@ -1529,6 +1075,22 @@
       renderExpense(); renderTotals(); renderSetupCostList();
     });
 
+    db.ref('labour_profiles').on('value', snap => {
+      const val = snap.val();
+      labourProfiles = [];
+      if (val) Object.keys(val).forEach(k => labourProfiles.push({ id: k, ...val[k] }));
+      labourProfiles.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+      renderLabourProfiles(); checkSalaryAlerts();
+    });
+
+    db.ref('cattle_records').on('value', snap => {
+      const val = snap.val();
+      cattleData = [];
+      if (val) Object.keys(val).forEach(k => cattleData.push({ id: k, ...val[k] }));
+      cattleData.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+      renderCattle(); renderMilkSummaryStats();
+    });
+
     db.ref('customer_payments').on('value', snap => {
       const val = snap.val();
       customerPayments = [];
@@ -1542,43 +1104,6 @@
       if (val) Object.keys(val).forEach(k => stockData.push({ id: k, ...val[k] }));
       renderStock();
     });
-
-    function renderMilk() {
-      const mBody = document.getElementById('milkTableBody');
-      const mMobile = document.getElementById('milkMobileList');
-      mBody.innerHTML = ''; mMobile.innerHTML = '';
-      milkData.forEach(item => {
-        mBody.innerHTML += `
-          <tr class="hover:bg-slate-50">
-            <td class="p-3 font-medium whitespace-nowrap">${item.date}</td>
-            <td class="p-3 text-slate-500 text-xs">${item.shift}</td>
-            <td class="p-3 font-semibold text-slate-900">${item.customer}</td>
-            <td class="p-3 font-bold text-emerald-800">${item.qty} L</td>
-            <td class="p-3 text-slate-600">₹${item.rate}</td>
-            <td class="p-3 font-black text-slate-900">₹${item.total.toFixed(2)}</td>
-            <td class="p-3 text-center admin-action-col ${isAdmin ? '' : 'hidden'}">
-              <button onclick="deleteMilk('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>
-            </td>
-          </tr>
-        `;
-        mMobile.innerHTML += `
-          <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm">
-            <div class="flex justify-between items-start">
-              <div>
-                <span class="text-xs text-slate-500 font-semibold">${item.date} • ${item.shift}</span>
-                <h4 class="font-extrabold text-slate-900 text-base mt-0.5">${item.customer}</h4>
-              </div>
-              ${isAdmin ? `<button onclick="deleteMilk('${item.id}')" class="text-rose-500 p-1.5 text-sm bg-rose-50 rounded-lg border border-rose-200"><i class="fa-solid fa-trash-can"></i></button>` : ''}
-            </div>
-            <div class="flex justify-between items-center mt-3 pt-2.5 border-t-2 border-slate-100">
-              <span class="text-xs text-slate-600 font-medium">${item.qty} L × ₹${item.rate}</span>
-              <span class="text-lg font-black text-emerald-900">₹${item.total.toFixed(2)}</span>
-            </div>
-          </div>
-        `;
-      });
-      document.getElementById('milkRecordCount').innerText = `${milkData.length} एंट्री`;
-    }
 
     function renderExpense() {
       const eBody = document.getElementById('expenseTableBody');
@@ -1606,15 +1131,111 @@
                 <div class="mt-1"><span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${badgeColor}">${item.category}</span></div>
                 <h4 class="font-extrabold text-slate-900 text-base mt-2">${item.detail}</h4>
               </div>
-              ${isAdmin ? `<button onclick="deleteExpense('${item.id}')" class="text-rose-500 p-1.5 text-sm bg-rose-50 rounded-lg border border-rose-200"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+              ${isAdmin ? `<button onclick="deleteExpense('${item.id}')" class="text-rose-500 p-1.5 text-sm"><i class="fa-solid fa-trash-can"></i></button>` : ''}
             </div>
-            <div class="flex justify-end mt-3 pt-2.5 border-t-2 border-slate-100">
-              <span class="text-lg font-black text-purple-900">₹${item.amount.toFixed(2)}</span>
-            </div>
+            <div class="flex justify-end mt-3 pt-2 border-t"><span class="text-lg font-black text-purple-900">₹${item.amount.toFixed(2)}</span></div>
           </div>
         `;
       });
       document.getElementById('expRecordCount').innerText = `${expenseData.length} एंट्री`;
+    }
+
+    function renderLabourProfiles() {
+      const container = document.getElementById('labourListContainer');
+      container.innerHTML = '';
+      labourProfiles.forEach(item => {
+        const jDate = new Date(item.joinDate);
+        const joinStr = jDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        const cycleDay = jDate.getDate();
+
+        container.innerHTML += `
+          <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm space-y-3">
+            <div class="flex justify-between items-start">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-cyan-300 flex items-center justify-center font-bold text-base"><i class="fa-solid fa-user"></i></div>
+                <div><h4 class="text-base font-extrabold text-slate-900 leading-tight">${item.name}</h4><span class="text-[11px] text-slate-500 font-semibold">${item.phone}</span></div>
+              </div>
+              ${isAdmin ? `<button onclick="deleteLabourProfile('${item.id}')" class="text-rose-500 p-1.5"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button onclick="directCallLabour('${item.phone}')" class="bg-emerald-700 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-phone"></i> कॉल करें</button>
+              <button onclick="sendLateArrivalAlert('${item.name}', '${item.phone}', '${item.dutyTime}')" class="bg-rose-600 text-white font-extrabold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp"></i> देरी चेतावनी</button>
+            </div>
+            <div class="p-2.5 bg-slate-50 rounded-xl border grid grid-cols-2 gap-2 text-xs">
+              <div><span class="text-slate-400 block text-[10px] uppercase font-bold">मासिक वेतन</span><span class="text-emerald-900 font-black text-sm">₹ ${item.salary.toLocaleString('en-IN')}</span></div>
+              <div><span class="text-slate-400 block text-[10px] uppercase font-bold">ड्यूटी समय</span><span class="text-rose-900 font-extrabold">${item.dutyTime || '06:00'}</span></div>
+            </div>
+            <div class="text-xs space-y-1 text-slate-600 pt-1 border-t"><div><b>सैलरी तारीख:</b> हर महीने की ${cycleDay} तारीख</div><div><b>जॉइनिंग:</b> ${joinStr}</div></div>
+          </div>
+        `;
+      });
+      document.getElementById('labourRecordCount').innerText = `${labourProfiles.length} मजदूर`;
+    }
+
+    function checkSalaryAlerts() {
+      const notifBanner = document.getElementById('salaryNotificationBanner');
+      const notifList = document.getElementById('salaryNotificationList');
+      notifList.innerHTML = '';
+      let salaryAlerts = [];
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const currentDate = now.getDate();
+
+      labourProfiles.forEach(labour => {
+        if (!labour.joinDate) return;
+        const jDate = new Date(labour.joinDate);
+        const cycleDay = jDate.getDate();
+        let targetSalaryDate = new Date(currentYear, currentMonth, cycleDay);
+        if (targetSalaryDate < now && Math.abs(currentDate - cycleDay) > 5) {
+          targetSalaryDate = new Date(currentYear, currentMonth + 1, cycleDay);
+        }
+        const diffTime = targetSalaryDate.getTime() - now.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0 && diffDays <= 5) {
+          const dateStr = targetSalaryDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+          salaryAlerts.push(`💰 <b>${labour.name}</b> का वेतन <b>₹${labour.salary.toLocaleString('en-IN')}</b> आगामी <b>${dateStr}</b> को देय है (${diffDays} दिन शेष)!`);
+        }
+      });
+
+      if (salaryAlerts.length > 0 && isAdmin) {
+        notifList.innerHTML = salaryAlerts.map(msg => `<div>${msg}</div>`).join('');
+        notifBanner.classList.remove('hidden');
+      } else {
+        notifBanner.classList.add('hidden');
+      }
+    }
+
+    function renderCattle() {
+      const cList = document.getElementById('cattleMobileList');
+      cList.innerHTML = '';
+      const now = new Date();
+      cattleData.forEach(item => {
+        let calvingHtml = '';
+        if (item.aiDate) {
+          const aiD = new Date(item.aiDate);
+          const isBuffalo = item.breed && item.breed.includes('भैंस');
+          const calvingDate = new Date(aiD);
+          calvingDate.setDate(calvingDate.getDate() + (isBuffalo ? 310 : 280));
+          const diffDays = Math.ceil((calvingDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          calvingHtml = `<div class="mt-2 p-2 rounded-xl bg-blue-50 border text-xs"><div class="flex justify-between font-bold text-blue-950"><span>संभावित डिलीवरी:</span><span>${calvingDate.toLocaleDateString('hi-IN', {day:'numeric',month:'short'})}</span></div><span class="text-[11px] font-extrabold ${diffDays <= 15 ? 'text-rose-600': 'text-slate-700'}">${diffDays > 0 ? diffDays + ' दिन बाकी' : 'प्रसव समय आ गया!'}</span></div>`;
+        }
+
+        cList.innerHTML += `
+          <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm relative space-y-2">
+            <div class="flex justify-between items-start">
+              <div><span class="text-[10px] font-black px-2 py-0.5 rounded-md border uppercase bg-emerald-100 text-emerald-950">${item.status || 'दूध दे रही है'}</span><h4 class="text-lg font-black text-slate-900 mt-1">${item.tag}</h4><span class="text-xs text-slate-500">${item.breed}</span></div>
+              ${isAdmin ? `<button onclick="deleteCattle('${item.id}')" class="text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border flex items-center justify-between">
+              <div><span class="text-[10px] text-slate-400 font-bold uppercase block">दैनिक दूध</span><span class="text-emerald-900 font-black text-base">${item.milk || 0} L/दिन</span></div>
+              <button onclick="openAnimalMilkModal('${item.id}', '${item.tag}', ${item.morningMilk || 0}, ${item.eveningMilk || 0})" class="bg-emerald-800 text-white text-[11px] font-extrabold px-3 py-2 rounded-xl shadow">दूध दर्ज करें</button>
+            </div>
+            ${calvingHtml}
+          </div>
+        `;
+      });
+      document.getElementById('cattleRecordCount').innerText = `${cattleData.length} पशु`;
     }
 
     function renderCustomerSummary() {
@@ -1634,28 +1255,10 @@
       Object.keys(custSummary).forEach(name => {
         const data = custSummary[name];
         const balance = data.totalBill - data.totalPaid;
-        const isPending = balance > 0;
         custContainer.innerHTML += `
-          <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm space-y-3">
-            <div class="flex justify-between items-start">
-              <div>
-                <h4 class="text-base font-extrabold text-slate-900">${name}</h4>
-                <span class="text-xs text-slate-500">कुल दूध: <b>${data.totalMilk.toFixed(1)} L</b></span>
-              </div>
-              <span class="text-[11px] font-black px-2 py-0.5 rounded-full ${isPending ? 'bg-rose-100 text-rose-800 border border-rose-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'}">
-                ${isPending ? 'बकाया' : 'हिसाब चुकता'}
-              </span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-xs pt-2 border-t-2 border-slate-100">
-              <div><span class="text-slate-400 block text-[10px]">कुल बिल:</span><b class="text-slate-900 text-sm">₹${data.totalBill.toFixed(0)}</b></div>
-              <div><span class="text-slate-400 block text-[10px]">जमा रकम:</span><b class="text-emerald-800 text-sm">₹${data.totalPaid.toFixed(0)}</b></div>
-            </div>
-            <div class="flex items-center justify-between pt-2 border-t-2 border-slate-100">
-              <span class="text-base font-black ${isPending ? 'text-rose-700' : 'text-emerald-700'}">₹${balance.toFixed(0)}</span>
-              <button onclick="sendWhatsAppBill('${name}', ${data.totalMilk}, ${data.totalBill}, ${data.totalPaid}, ${balance})" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 shadow">
-                <i class="fa-brands fa-whatsapp text-sm"></i> बिल भेजें
-              </button>
-            </div>
+          <div class="bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm space-y-2">
+            <div class="flex justify-between items-start"><div><h4 class="text-base font-extrabold text-slate-900">${name}</h4><span class="text-xs text-slate-500">कुल दूध: <b>${data.totalMilk.toFixed(1)} L</b></span></div><span class="text-base font-black ${balance > 0 ? 'text-rose-700':'text-emerald-700'}">₹${balance.toFixed(0)}</span></div>
+            <div class="flex justify-end pt-1"><button onclick="sendWhatsAppBill('${name}', ${data.totalMilk}, ${data.totalBill}, ${data.totalPaid}, ${balance})" class="bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> बिल भेजें</button></div>
           </div>
         `;
       });
@@ -1669,41 +1272,16 @@
       let warningAlerts = [];
 
       stockData.forEach(item => {
-        const dailyUse = parseFloat(item.dailyUse) || 1;
-        const alertDays = parseFloat(item.alertDays) || 3;
-        const daysLeft = Math.floor(item.qty / dailyUse);
-
-        const finishDate = new Date();
-        finishDate.setDate(finishDate.getDate() + daysLeft);
-        const finishDateStr = finishDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-        const isLow = daysLeft <= alertDays;
-
-        if (isLow && item.qty > 0) warningAlerts.push(`⚠️ <b>${item.name}</b> मात्र <b>${daysLeft} दिन</b> चलेगा (${finishDateStr} तक खत्म हो जाएगा)। नया चारा मंगाएं!`);
-        else if (item.qty <= 0) warningAlerts.push(`🚨 <b>${item.name}</b> खत्म हो चुका है! तुरंत नया स्टॉक भरें।`);
+        const daysLeft = Math.floor(item.qty / (item.dailyUse || 1));
+        const finishDate = new Date(); finishDate.setDate(finishDate.getDate() + daysLeft);
+        const isLow = daysLeft <= (item.alertDays || 3);
+        if (isLow && item.qty > 0) warningAlerts.push(`⚠️ <b>${item.name}</b> मात्र <b>${daysLeft} दिन</b> चलेगा! नया चारा मंगाएं।`);
 
         sContainer.innerHTML += `
-          <div class="bg-white p-4 rounded-2xl border-2 ${isLow ? 'border-rose-500 bg-rose-50/40' : 'border-slate-300'} shadow-sm space-y-3 relative overflow-hidden">
-            ${isLow ? '<div class="absolute top-0 right-0 bg-rose-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-bl-xl uppercase tracking-wider">जल्दी खत्म होगा</div>' : ''}
-            <div class="flex justify-between items-start">
-              <div>
-                <h4 class="text-base font-extrabold text-slate-900">${item.name}</h4>
-                <span class="text-[11px] text-slate-500 font-semibold">दैनिक खपत: <b class="text-emerald-800">${dailyUse} ${item.unit}/दिन</b></span>
-              </div>
-              ${isAdmin ? `<button onclick="deleteStock('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
-            </div>
-            <div class="p-2.5 rounded-xl bg-white border border-slate-200 space-y-1 text-xs">
-              <div class="flex justify-between items-center"><span class="text-slate-500 font-semibold">अनुमानित शेष दिन:</span><span class="font-black ${isLow ? 'text-rose-600 text-sm' : 'text-slate-900'}">${daysLeft} दिन</span></div>
-              <div class="flex justify-between items-center"><span class="text-slate-500 font-semibold">खत्म होने की तारीख:</span><span class="font-bold text-slate-900">${finishDateStr}</span></div>
-            </div>
-            <div class="flex items-baseline justify-between pt-1 border-t border-slate-100">
-              <span class="text-2xl font-black ${isLow ? 'text-rose-700' : 'text-slate-900'}">${item.qty} <span class="text-xs font-semibold text-slate-500">${item.unit}</span></span>
-              ${isAdmin ? `
-                <div class="flex gap-1.5">
-                  <button onclick="updateStockQty('${item.id}', -1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 font-bold text-slate-800">-1</button>
-                  <button onclick="updateStockQty('${item.id}', 1)" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 font-bold text-white">+1</button>
-                </div>
-              ` : ''}
-            </div>
+          <div class="bg-white p-4 rounded-2xl border-2 ${isLow ? 'border-rose-500 bg-rose-50/40' : 'border-slate-300'} shadow-sm space-y-2">
+            <div class="flex justify-between items-start"><div><h4 class="text-base font-extrabold text-slate-900">${item.name}</h4><span class="text-xs text-slate-500">${item.dailyUse || 1} ${item.unit}/दिन</span></div>${isAdmin ? `<button onclick="deleteStock('${item.id}')" class="text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div>
+            <div class="flex justify-between items-baseline"><span class="text-2xl font-black text-slate-900">${item.qty} <span class="text-xs text-slate-500">${item.unit}</span></span><span class="text-xs font-black ${isLow ? 'text-rose-600':'text-slate-700'}">${daysLeft} दिन शेष</span></div>
+            ${isAdmin ? `<div class="flex gap-1.5 pt-1"><button onclick="updateStockQty('${item.id}', -1)" class="w-8 h-8 rounded-lg bg-slate-200 font-bold">-1</button><button onclick="updateStockQty('${item.id}', 1)" class="w-8 h-8 rounded-lg bg-slate-900 text-white font-bold">+1</button></div>` : ''}
           </div>
         `;
       });
@@ -1741,7 +1319,7 @@
       renderStock();
       renderTotals();
       renderSetupCostList();
-      checkSalaryAlerts();
+      renderMilkSummaryStats();
     }
 
     function getPrintHeaderHtml() {
@@ -1769,44 +1347,16 @@
         <div style="margin-bottom:20px; border:2px solid #0f172a; padding:12px; border-radius:8px; background:#f8fafc;">
           <h3 style="font-size:14px; font-weight:bold; margin-top:0; margin-bottom:8px; text-decoration:underline;">वित्तीय सारांश (Financial Summary):</h3>
           <table style="width:100%; font-size:13px;">
-            <tr>
-              <td><b>कुल दूध बिक्री:</b> ${totM.toFixed(1)} L</td>
-              <td><b>कुल दूध आय:</b> ₹ ${totR.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td><b>कुल खर्च व मजदूरी:</b> ₹ ${totE.toFixed(2)}</td>
-              <td><b>शुद्ध बचत (मुनाफा):</b> <span style="font-weight:bold; color:${net >= 0 ? 'green':'red'};">₹ ${net.toFixed(2)}</span></td>
-            </tr>
+            <tr><td><b>कुल दूध बिक्री:</b> ${totM.toFixed(1)} L</td><td><b>कुल दूध आय:</b> ₹ ${totR.toFixed(2)}</td></tr>
+            <tr><td><b>कुल खर्च:</b> ₹ ${totE.toFixed(2)}</td><td><b>शुद्ध मुनाफा:</b> <span style="font-weight:bold; color:${net >= 0 ? 'green':'red'};">₹ ${net.toFixed(2)}</span></td></tr>
           </table>
         </div>
-
         <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">१. दूध बिक्री रिकॉर्ड (${milkData.length})</h3>
-        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:18px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक</th><th>मात्रा</th><th>रेट</th><th>कुल ₹</th></tr>`;
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:18px;"><tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक</th><th>मात्रा</th><th>रेट</th><th>कुल ₹</th><th>स्थिति</th></tr>`;
         milkData.forEach((d, i) => {
-          content += `<tr><td>${i+1}</td><td>${d.date}</td><td>${d.shift}</td><td>${d.customer}</td><td>${d.qty} L</td><td>₹${d.rate}</td><td>₹${d.total.toFixed(2)}</td></tr>`;
+          content += `<tr><td>${i+1}</td><td>${d.date}</td><td>${d.shift}</td><td>${d.customer}</td><td>${d.qty} L</td><td>₹${d.rate}</td><td>₹${d.total.toFixed(2)}</td><td>${d.paymentStatus || 'नकद'}</td></tr>`;
         });
-        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">योग</td><td>${totM.toFixed(1)} L</td><td>-</td><td>₹${totR.toFixed(2)}</td></tr></table>
-
-        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">२. फार्म खर्च व भुगतान सूची (${expenseData.length})</h3>
-        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:18px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>मद</th><th>विवरण</th><th>रकम (₹)</th></tr>`;
-        expenseData.forEach((d, i) => {
-          content += `<tr><td>${i+1}</td><td>${d.date}</td><td>${d.category}</td><td>${d.detail}</td><td>₹${d.amount.toFixed(2)}</td></tr>`;
-        });
-        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">कुल खर्च योग</td><td>₹${totE.toFixed(2)}</td></tr></table>
-
-        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">३. पंजीकृत मजदूर सूची (${labourProfiles.length})</h3>
-        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:25px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>नाम</th><th>फोन</th><th>मासिक वेतन</th><th>ड्यूटी समय</th><th>जॉइनिंग तारीख</th></tr>`;
-        labourProfiles.forEach((d, i) => {
-          content += `<tr><td>${i+1}</td><td><b>${d.name}</b></td><td>${d.phone}</td><td>₹${d.salary}</td><td>${d.dutyTime || '-'}</td><td>${d.joinDate}</td></tr>`;
-        });
-        content += `</table>
-
-        <div style="display:flex; justify-content:space-between; margin-top:30px; font-size:12px;">
-          <span>हस्ताक्षर प्रोप्राइटर: _______________________</span>
-        </div>
+        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">योग</td><td>${totM.toFixed(1)} L</td><td>-</td><td>₹${totR.toFixed(2)}</td><td>-</td></tr></table>
       `;
 
       printDiv.innerHTML = content;
