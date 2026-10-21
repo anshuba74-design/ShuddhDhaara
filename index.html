@@ -12,7 +12,7 @@
     @media print {
       body * { visibility: hidden; }
       #printableArea, #printableArea * { visibility: visible; }
-      #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+      #printableArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 20px; }
       .no-print { display: none !important; }
     }
   </style>
@@ -20,44 +20,62 @@
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-20">
 
   <!-- Header -->
-  <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-40 border-b-2 border-emerald-700 no-print">
+  <header class="bg-emerald-950 text-white shadow-lg sticky top-0 z-40 border-b-2 border-emerald-700 no-print">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 bg-amber-500 text-emerald-950 rounded-2xl flex items-center justify-center text-2xl shadow-inner font-black">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 bg-amber-400 text-slate-950 rounded-2xl flex items-center justify-center text-xl shadow font-black shrink-0">
           <i class="fa-solid fa-cow"></i>
         </div>
         <div>
-          <h1 class="text-xl sm:text-2xl font-black tracking-tight text-amber-300">प्रजापति डेयरी फॉर्म</h1>
-          <p class="text-[11px] text-emerald-200 font-medium">दैनिक दूध हिसाब • खर्च प्रबंधन • मजदूर हाजिरी</p>
+          <h1 class="text-lg sm:text-xl font-black tracking-tight text-amber-300">प्रजापति डेयरी फॉर्म</h1>
+          <p class="text-[10px] text-emerald-200 font-medium">दूध • खर्च • हाजिरी खाता</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="openSummaryModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs sm:text-sm font-bold px-3 py-2 rounded-xl shadow flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-chart-pie text-emerald-950"></i>
-          <span>कुल हिसाब देखें</span>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="printOverallMasterReport()" title="तीनों सेक्शन का एक साथ PDF" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-2.5 py-2 rounded-xl shadow flex items-center gap-1 transition">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span class="hidden sm:inline">संपूर्ण PDF रिपोर्ट</span>
+          <span class="sm:hidden">PDF</span>
         </button>
-        <button onclick="promptResetData()" title="डेटा रीसेट" class="text-xs bg-red-600/90 hover:bg-red-700 text-white p-2.5 rounded-xl border border-red-400 transition">
+        <button onclick="openSummaryModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold px-2.5 py-2 rounded-xl shadow flex items-center gap-1 transition">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span class="hidden sm:inline">कुल हिसाब</span>
+        </button>
+        <button onclick="promptResetData()" title="डेटा रीसेट" class="text-xs bg-rose-600 hover:bg-rose-700 text-white p-2.5 rounded-xl border border-rose-400 transition">
           <i class="fa-solid fa-trash-can"></i>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Navigation Tabs -->
+  <!-- Main Navigation Tabs with High Contrast Distinct Icons -->
   <main class="max-w-5xl mx-auto px-3 sm:px-4 mt-4 no-print">
     <div class="grid grid-cols-3 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
-      <button onclick="switchTab('milk')" id="tabMilkBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-emerald-700 text-white shadow">
-        <i class="fa-solid fa-bottle-droplet text-base text-emerald-200"></i>
+      
+      <!-- Tab 1: Milk -->
+      <button onclick="switchTab('milk')" id="tabMilkBtn" class="py-2.5 px-1.5 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-2 bg-emerald-800 text-white shadow">
+        <span class="w-7 h-7 rounded-full bg-emerald-950 text-white flex items-center justify-center text-xs shadow-inner shrink-0">
+          <i class="fa-solid fa-bottle-droplet text-amber-300"></i>
+        </span>
         <span>दूध बिक्री</span>
       </button>
-      <button onclick="switchTab('expense')" id="tabExpenseBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
-        <i class="fa-solid fa-wallet text-base text-purple-600"></i>
+
+      <!-- Tab 2: Expense -->
+      <button onclick="switchTab('expense')" id="tabExpenseBtn" class="py-2.5 px-1.5 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-2 text-slate-700 hover:bg-slate-100">
+        <span class="w-7 h-7 rounded-full bg-purple-950 text-white flex items-center justify-center text-xs shadow-inner shrink-0">
+          <i class="fa-solid fa-wallet text-amber-300"></i>
+        </span>
         <span>खर्च / मजदूरी</span>
       </button>
-      <button onclick="switchTab('attendance')" id="tabAttBtn" class="py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
-        <i class="fa-solid fa-user-clock text-base text-teal-600"></i>
+
+      <!-- Tab 3: Attendance -->
+      <button onclick="switchTab('attendance')" id="tabAttBtn" class="py-2.5 px-1.5 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-2 text-slate-700 hover:bg-slate-100">
+        <span class="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs shadow-inner shrink-0">
+          <i class="fa-solid fa-user-clock text-cyan-300"></i>
+        </span>
         <span>मजदूर हाजिरी</span>
       </button>
+
     </div>
 
     <!-- ==================== TAB 1: MILK SALE ==================== -->
@@ -65,7 +83,7 @@
       <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
         <div class="flex items-center justify-between mb-4">
           <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm">
+            <span class="w-8 h-8 rounded-lg bg-emerald-900 text-amber-300 flex items-center justify-center text-sm shadow-sm">
               <i class="fa-solid fa-plus"></i>
             </span>
             दूध बिक्री एंट्री
@@ -108,8 +126,8 @@
           </div>
 
           <div class="sm:col-span-2 lg:col-span-6 flex justify-end mt-1">
-            <button type="submit" class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-floppy-disk"></i>
+            <button type="submit" class="w-full sm:w-auto bg-emerald-800 hover:bg-emerald-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-floppy-disk text-amber-300"></i>
               दूध एंट्री सेव करें
             </button>
           </div>
@@ -121,13 +139,13 @@
         <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-              <i class="fa-solid fa-list-check text-emerald-700"></i> दूध बिक्री रिकॉर्ड
+              <i class="fa-solid fa-list-check text-emerald-800"></i> दूध बिक्री रिकॉर्ड
             </span>
             <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full" id="milkRecordCount">0 एंट्री</span>
           </div>
-          <button onclick="printSection('milk')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-300 flex items-center gap-1 transition">
-            <i class="fa-solid fa-print"></i>
-            <span>PDF / प्रिंट</span>
+          <button onclick="printSection('milk')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1 transition">
+            <i class="fa-solid fa-print text-emerald-800"></i>
+            <span>प्रिंट / PDF</span>
           </button>
         </div>
 
@@ -159,8 +177,8 @@
       <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
         <div class="flex items-center justify-between mb-4">
           <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center text-sm">
-              <i class="fa-solid fa-wallet text-purple-600"></i>
+            <span class="w-8 h-8 rounded-lg bg-purple-950 text-amber-300 flex items-center justify-center text-sm shadow-sm">
+              <i class="fa-solid fa-wallet"></i>
             </span>
             फार्म खर्च व मजदूर एडवांस
           </h2>
@@ -195,8 +213,8 @@
           </div>
 
           <div class="sm:col-span-2 lg:col-span-1 flex items-end">
-            <button type="submit" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-receipt text-purple-200"></i>
+            <button type="submit" class="w-full bg-purple-900 hover:bg-purple-950 text-white font-bold py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-receipt text-amber-300"></i>
               खर्च दर्ज करें
             </button>
           </div>
@@ -206,7 +224,7 @@
       <!-- Month End Salary Settlement Calculator -->
       <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 sm:p-5 rounded-2xl border border-purple-200 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
-          <span class="w-7 h-7 rounded-lg bg-purple-700 text-white flex items-center justify-center text-xs">
+          <span class="w-7 h-7 rounded-lg bg-purple-900 text-amber-300 flex items-center justify-center text-xs shadow-sm">
             <i class="fa-solid fa-calculator"></i>
           </span>
           <h3 class="font-extrabold text-sm text-purple-950">महीने के अंत का वेतन हिसाब (Advance Minis करें)</h3>
@@ -236,8 +254,8 @@
         </div>
 
         <div class="mt-3 flex justify-end">
-          <button onclick="saveSalarySettlement()" class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow flex items-center gap-1.5">
-            <i class="fa-solid fa-check-double"></i>
+          <button onclick="saveSalarySettlement()" class="bg-indigo-800 hover:bg-indigo-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-check-double text-amber-300"></i>
             यह फाइनल वेतन खर्च में जोड़ें
           </button>
         </div>
@@ -248,13 +266,13 @@
         <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-              <i class="fa-solid fa-list-ul text-purple-700"></i> खर्च व भुगतान बही
+              <i class="fa-solid fa-list-ul text-purple-800"></i> खर्च व भुगतान बही
             </span>
             <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full" id="expRecordCount">0 एंट्री</span>
           </div>
-          <button onclick="printSection('expense')" class="bg-purple-100 hover:bg-purple-200 text-purple-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-purple-300 flex items-center gap-1 transition">
-            <i class="fa-solid fa-print"></i>
-            <span>PDF / प्रिंट</span>
+          <button onclick="printSection('expense')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1 transition">
+            <i class="fa-solid fa-print text-purple-800"></i>
+            <span>प्रिंट / PDF</span>
           </button>
         </div>
 
@@ -284,7 +302,7 @@
       <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
         <div class="flex items-center justify-between mb-4">
           <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center text-sm">
+            <span class="w-8 h-8 rounded-lg bg-slate-900 text-cyan-300 flex items-center justify-center text-sm shadow-sm">
               <i class="fa-solid fa-user-check"></i>
             </span>
             मजदूर हाजिरी (एकल व समूह कार्य)
@@ -295,21 +313,21 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">तारीख</label>
-              <input type="date" id="attDate" required class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-teal-600 outline-none" />
+              <input type="date" id="attDate" required class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none" />
             </div>
 
             <div class="sm:col-span-2">
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">
                 मजदूर का नाम / नाम समूह (उदा. कल्लू, मल्लू, दत्ती)
               </label>
-              <input type="text" id="attLabourName" required placeholder="उदा. कल्लू, मल्लू" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-teal-600 outline-none font-bold" />
+              <input type="text" id="attLabourName" required placeholder="उदा. कल्लू, मल्लू" class="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-slate-800 outline-none font-bold" />
             </div>
           </div>
 
           <!-- Shifts In-Out Timings -->
-          <div class="bg-teal-50/50 p-3.5 rounded-xl border border-teal-100">
-            <div class="text-xs font-bold text-teal-900 uppercase mb-2 flex items-center gap-1.5">
-              <i class="fa-regular fa-clock text-teal-600"></i> आने-जाने का समय (Shifts)
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div class="text-xs font-bold text-slate-800 uppercase mb-2 flex items-center gap-1.5">
+              <i class="fa-regular fa-clock text-slate-900"></i> आने-जाने का समय (Shifts)
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               <div>
@@ -338,19 +356,19 @@
             </label>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
               <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="दूध दुहाई" checked class="rounded text-teal-600" />
+                <input type="checkbox" name="workTask" value="दूध दुहाई" checked class="rounded text-slate-900" />
                 <span>दूध दुहाई</span>
               </label>
               <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="चारा काटना व सानी" checked class="rounded text-teal-600" />
+                <input type="checkbox" name="workTask" value="चारा काटना व सानी" checked class="rounded text-slate-900" />
                 <span>चारा काटना व सानी</span>
               </label>
               <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="भैंस / गाय धुलाई" checked class="rounded text-teal-600" />
+                <input type="checkbox" name="workTask" value="भैंस / गाय धुलाई" checked class="rounded text-slate-900" />
                 <span>भैंस/गाय धुलाई</span>
               </label>
               <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer hover:bg-slate-100">
-                <input type="checkbox" name="workTask" value="फार्म सफाई व गोबर उठाना" class="rounded text-teal-600" />
+                <input type="checkbox" name="workTask" value="फार्म सफाई व गोबर उठाना" class="rounded text-slate-900" />
                 <span>फार्म सफाई</span>
               </label>
             </div>
@@ -358,8 +376,8 @@
           </div>
 
           <div class="flex justify-end">
-            <button type="submit" class="w-full sm:w-auto bg-teal-700 hover:bg-teal-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-clipboard-user"></i>
+            <button type="submit" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-clipboard-user text-cyan-300"></i>
               हाजिरी दर्ज करें
             </button>
           </div>
@@ -371,17 +389,17 @@
         <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-              <i class="fa-solid fa-user-clock text-teal-700"></i> दैनिक मजदूर रजिस्टर
+              <i class="fa-solid fa-user-clock text-slate-800"></i> दैनिक मजदूर रजिस्टर
             </span>
-            <span class="text-xs bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded-full" id="attRecordCount">0 हाजिरी</span>
+            <span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full" id="attRecordCount">0 हाजिरी</span>
           </div>
-          <button onclick="printSection('attendance')" class="bg-teal-100 hover:bg-teal-200 text-teal-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-teal-300 flex items-center gap-1 transition">
-            <i class="fa-solid fa-print"></i>
-            <span>PDF / प्रिंट</span>
+          <button onclick="printSection('attendance')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1 transition">
+            <i class="fa-solid fa-print text-slate-800"></i>
+            <span>प्रिंट / PDF</span>
           </button>
         </div>
 
-        <!-- Mobile Clean Card View (Clean & Spacious) -->
+        <!-- Mobile Clean Card View -->
         <div id="attMobileList" class="p-3 space-y-3 sm:hidden"></div>
 
         <!-- Desktop Table View -->
@@ -409,9 +427,9 @@
     <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200">
       
       <!-- Modal Header -->
-      <div class="bg-emerald-900 text-white p-4 px-5 flex items-center justify-between border-b border-emerald-800">
+      <div class="bg-emerald-950 text-white p-4 px-5 flex items-center justify-between border-b border-emerald-800">
         <div class="flex items-center gap-2">
-          <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center text-sm shadow transition" title="पीछे जाएं">
+          <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-sm shadow transition" title="पीछे जाएं">
             <i class="fa-solid fa-arrow-left"></i>
           </button>
           <div>
@@ -420,7 +438,7 @@
           </div>
         </div>
 
-        <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center text-sm font-black shadow transition" title="बंद करें">
+        <button onclick="closeSummaryModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center text-sm font-black shadow transition" title="बंद करें">
           <i class="fa-solid fa-xmark text-base"></i>
         </button>
       </div>
@@ -429,44 +447,44 @@
       <div class="p-5 space-y-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
-            <div class="text-[11px] font-bold text-emerald-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-bottle-droplet text-emerald-600"></i> कुल दूध बिक्री
+            <div class="text-[11px] font-bold text-emerald-900 uppercase flex items-center gap-1.5">
+              <i class="fa-solid fa-bottle-droplet text-emerald-700"></i> कुल दूध बिक्री
             </div>
-            <div class="text-2xl font-black text-emerald-900 mt-1" id="modalMilkQty">0 L</div>
+            <div class="text-2xl font-black text-emerald-950 mt-1" id="modalMilkQty">0 L</div>
             <div class="text-[11px] text-emerald-700 mt-0.5">कुल मात्रा</div>
           </div>
 
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
             <div class="text-[11px] font-bold text-slate-700 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-indian-rupee-sign text-emerald-600"></i> कुल दूध कमाई
+              <i class="fa-solid fa-indian-rupee-sign text-emerald-700"></i> कुल दूध कमाई
             </div>
-            <div class="text-2xl font-black text-slate-900 mt-1" id="modalMilkRev">₹0</div>
+            <div class="text-2xl font-black text-slate-950 mt-1" id="modalMilkRev">₹0</div>
             <div class="text-[11px] text-slate-500 mt-0.5">सकल आय</div>
           </div>
 
           <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200">
-            <div class="text-[11px] font-bold text-purple-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-wallet text-purple-600"></i> कुल खर्च व मजदूरी
+            <div class="text-[11px] font-bold text-purple-900 uppercase flex items-center gap-1.5">
+              <i class="fa-solid fa-wallet text-purple-700"></i> कुल खर्च व मजदूरी
             </div>
-            <div class="text-2xl font-black text-purple-700 mt-1" id="modalExpenses">₹0</div>
-            <div class="text-[11px] text-purple-600 mt-0.5">चारा, दवाई, मजदूरी</div>
+            <div class="text-2xl font-black text-purple-950 mt-1" id="modalExpenses">₹0</div>
+            <div class="text-[11px] text-purple-700 mt-0.5">चारा, दवाई, मजदूरी</div>
           </div>
 
           <div class="bg-blue-50 p-4 rounded-2xl border border-blue-200">
-            <div class="text-[11px] font-bold text-blue-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-piggy-bank text-blue-600"></i> शुद्ध बचत (मुनाफा)
+            <div class="text-[11px] font-bold text-blue-900 uppercase flex items-center gap-1.5">
+              <i class="fa-solid fa-piggy-bank text-blue-700"></i> शुद्ध बचत (मुनाफा)
             </div>
-            <div class="text-2xl font-black text-blue-700 mt-1" id="modalNetProfit">₹0</div>
-            <div class="text-[11px] text-blue-600 mt-0.5">हाथ में बची रकम</div>
+            <div class="text-2xl font-black text-blue-950 mt-1" id="modalNetProfit">₹0</div>
+            <div class="text-[11px] text-blue-700 mt-0.5">हाथ में बची रकम</div>
           </div>
         </div>
 
         <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
-          <button onclick="changePasswordPrompt()" class="text-xs text-slate-600 hover:text-emerald-800 font-semibold flex items-center gap-1">
+          <button onclick="changePasswordPrompt()" class="text-xs text-slate-600 hover:text-emerald-900 font-semibold flex items-center gap-1">
             <i class="fa-solid fa-key text-amber-500"></i> एडमिन पासवर्ड बदलें
           </button>
-          <button onclick="printSummaryReport()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1">
-            <i class="fa-solid fa-file-pdf"></i> पूरा रिपोर्ट प्रिंट करें
+          <button onclick="printOverallMasterReport()" class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+            <i class="fa-solid fa-file-pdf"></i> संपूर्ण PDF रिपोर्ट
           </button>
         </div>
       </div>
@@ -475,7 +493,7 @@
   </div>
 
   <!-- Print Container -->
-  <div id="printableArea" class="p-6 bg-white hidden"></div>
+  <div id="printableArea" class="hidden"></div>
 
   <!-- JavaScript Application Logic -->
   <script>
@@ -501,20 +519,20 @@
       document.getElementById('tabExpense').classList.add('hidden');
       document.getElementById('tabAttendance').classList.add('hidden');
 
-      const inactive = "py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100";
+      const inactive = "py-2.5 px-1.5 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-2 text-slate-700 hover:bg-slate-100";
       document.getElementById('tabMilkBtn').className = inactive;
       document.getElementById('tabExpenseBtn').className = inactive;
       document.getElementById('tabAttBtn').className = inactive;
 
       if (t === 'milk') {
         document.getElementById('tabMilk').classList.remove('hidden');
-        document.getElementById('tabMilkBtn').className = "py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-emerald-700 text-white shadow";
+        document.getElementById('tabMilkBtn').className = "py-2.5 px-1.5 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-2 bg-emerald-800 text-white shadow";
       } else if (t === 'expense') {
         document.getElementById('tabExpense').classList.remove('hidden');
-        document.getElementById('tabExpenseBtn').className = "py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-purple-700 text-white shadow";
+        document.getElementById('tabExpenseBtn').className = "py-2.5 px-1.5 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-2 bg-purple-900 text-white shadow";
       } else if (t === 'attendance') {
         document.getElementById('tabAttendance').classList.remove('hidden');
-        document.getElementById('tabAttBtn').className = "py-2.5 px-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-1.5 bg-teal-700 text-white shadow";
+        document.getElementById('tabAttBtn').className = "py-2.5 px-1.5 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col sm:flex-row items-center justify-center gap-2 bg-slate-900 text-white shadow";
       }
     }
 
@@ -585,7 +603,7 @@
       renderAll();
     }
 
-    // Salary Advance Minis Calculation
+    // Settlement Minis
     function calculateSettlement() {
       const labourName = document.getElementById('settleLabourName').value.trim().toLowerCase();
       const baseSalary = parseFloat(document.getElementById('settleBaseSalary').value) || 0;
@@ -668,7 +686,7 @@
       renderAll();
     }
 
-    // Password Protected Reset
+    // Reset with Password
     function promptResetData() {
       const enteredPass = prompt("डेटा रीसेट करने के लिए एडमिन पासवर्ड डालें:");
       if (!enteredPass) return;
@@ -705,40 +723,42 @@
       alert("नया पासवर्ड सेट हो गया है!");
     }
 
-    // PDF / PRINT SYSTEM
+    // ==================== PDF PRINT SYSTEMS ====================
+
+    // Individual Section Print
     function printSection(section) {
       const printDiv = document.getElementById('printableArea');
-      let content = `<div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #333; padding-bottom:10px;">
-        <h1 style="font-size:24px; font-weight:bold; margin:0;">प्रजापति डेयरी फॉर्म</h1>
-        <p style="font-size:12px; margin:4px 0;">दैनिक फार्म खाता व रजिस्टर रिपोर्ट • दिनांक: ${today}</p>
+      let content = `<div style="text-align:center; margin-bottom:16px; border-bottom:2px solid #000; padding-bottom:8px;">
+        <h1 style="font-size:22px; font-weight:bold; margin:0;">प्रजापति डेयरी फॉर्म</h1>
+        <p style="font-size:12px; margin:3px 0;">रिपोर्ट दिनांक: ${today}</p>
       </div>`;
 
       if (section === 'milk') {
-        content += `<h3 style="font-size:16px; font-weight:bold; margin-bottom:10px;">दूध बिक्री रिपोर्ट</h3>
-        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:12px;">
-          <tr style="background:#f0fdf4;"><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक</th><th>मात्रा</th><th>रेट</th><th>कुल ₹</th></tr>`;
+        content += `<h3 style="font-size:15px; font-weight:bold; margin-bottom:8px;">1. दूध बिक्री रिकॉर्ड सूची</h3>
+        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:12px;">
+          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक का नाम</th><th>मात्रा</th><th>रेट</th><th>कुल रकम (₹)</th></tr>`;
         let totM = 0, totR = 0;
-        milkData.forEach(d => {
+        milkData.forEach((d, idx) => {
           totM += d.qty; totR += d.total;
-          content += `<tr><td>${d.date}</td><td>${d.shift}</td><td>${d.customer}</td><td>${d.qty} L</td><td>₹${d.rate}</td><td>₹${d.total}</td></tr>`;
+          content += `<tr><td>${idx+1}</td><td>${d.date}</td><td>${d.shift}</td><td>${d.customer}</td><td>${d.qty} L</td><td>₹${d.rate}</td><td>₹${d.total.toFixed(2)}</td></tr>`;
         });
-        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="3">कुल योग</td><td>${totM.toFixed(1)} L</td><td>-</td><td>₹${totR.toFixed(0)}</td></tr></table>`;
+        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">कुल योग</td><td>${totM.toFixed(1)} L</td><td>-</td><td>₹${totR.toFixed(2)}</td></tr></table>`;
       } else if (section === 'expense') {
-        content += `<h3 style="font-size:16px; font-weight:bold; margin-bottom:10px;">खर्च व मजदूरी भुगतान रिपोर्ट</h3>
-        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:12px;">
-          <tr style="background:#faf5ff;"><th>तारीख</th><th>मद</th><th>विवरण / नाम</th><th>रकम (₹)</th></tr>`;
+        content += `<h3 style="font-size:15px; font-weight:bold; margin-bottom:8px;">2. खर्च व मजदूरी भुगतान सूची</h3>
+        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:12px;">
+          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>मद / प्रकार</th><th>विवरण / नाम</th><th>रकम (₹)</th></tr>`;
         let totE = 0;
-        expenseData.forEach(d => {
+        expenseData.forEach((d, idx) => {
           totE += d.amount;
-          content += `<tr><td>${d.date}</td><td>${d.category}</td><td>${d.detail}</td><td>₹${d.amount}</td></tr>`;
+          content += `<tr><td>${idx+1}</td><td>${d.date}</td><td>${d.category}</td><td>${d.detail}</td><td>₹${d.amount.toFixed(2)}</td></tr>`;
         });
-        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="3">कुल खर्च योग</td><td>₹${totE.toFixed(0)}</td></tr></table>`;
+        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">कुल खर्च योग</td><td>₹${totE.toFixed(2)}</td></tr></table>`;
       } else if (section === 'attendance') {
-        content += `<h3 style="font-size:16px; font-weight:bold; margin-bottom:10px;">मजदूर हाजिरी रजिस्टर</h3>
-        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:12px;">
-          <tr style="background:#f0fdfa;"><th>तारीख</th><th>मजदूर / समूह</th><th>सुबह समय</th><th>शाम समय</th><th>किए गए कार्य</th></tr>`;
-        attendanceData.forEach(d => {
-          content += `<tr><td>${d.date}</td><td><b>${d.labour}</b></td><td>${fmtTime(d.mornIn)} - ${fmtTime(d.mornOut)}</td><td>${fmtTime(d.eveIn)} - ${fmtTime(d.eveOut)}</td><td>${d.tasks}</td></tr>`;
+        content += `<h3 style="font-size:15px; font-weight:bold; margin-bottom:8px;">3. मजदूर दैनिक हाजिरी रजिस्टर</h3>
+        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:12px;">
+          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>मजदूर / समूह</th><th>सुबह समय</th><th>शाम समय</th><th>किए गए कार्य</th></tr>`;
+        attendanceData.forEach((d, idx) => {
+          content += `<tr><td>${idx+1}</td><td>${d.date}</td><td><b>${d.labour}</b></td><td>${fmtTime(d.mornIn)} से ${fmtTime(d.mornOut)}</td><td>${fmtTime(d.eveIn)} से ${fmtTime(d.eveOut)}</td><td>${d.tasks}</td></tr>`;
         });
         content += `</table>`;
       }
@@ -749,24 +769,72 @@
       printDiv.classList.add('hidden');
     }
 
-    function printSummaryReport() {
+    // OVERALL ALL-IN-ONE MASTER PDF / PRINT
+    function printOverallMasterReport() {
       const printDiv = document.getElementById('printableArea');
       let totM = 0, totR = 0, totE = 0;
       milkData.forEach(d => { totM += d.qty; totR += d.total; });
       expenseData.forEach(d => { totE += d.amount; });
       const net = totR - totE;
 
-      let content = `<div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #333; padding-bottom:10px;">
-        <h1 style="font-size:24px; font-weight:bold; margin:0;">प्रजापति डेयरी फॉर्म</h1>
-        <p style="font-size:12px; margin:4px 0;">संपूर्ण वित्तीय सारांश रिपोर्ट • दिनांक: ${today}</p>
-      </div>
-      <table border="1" cellpadding="10" cellspacing="0" style="width:100%; text-align:left; border-collapse:collapse; font-size:14px; margin-bottom:20px;">
-        <tr><td><b>कुल दूध बिक्री</b></td><td>${totM.toFixed(1)} Litres</td></tr>
-        <tr><td><b>दूध से कुल सकल आय</b></td><td>₹ ${totR.toFixed(0)}</td></tr>
-        <tr><td><b>कुल खर्च व मजदूरी</b></td><td>₹ ${totE.toFixed(0)}</td></tr>
-        <tr style="font-size:16px; background:#f1f5f9;"><td><b>शुद्ध बचत / मुनाफा</b></td><td><b>₹ ${net.toFixed(0)}</b></td></tr>
-      </table>
-      <p style="text-align:right; font-size:11px; margin-top:30px;">हस्ताक्षर: _______________________</p>`;
+      let content = `
+        <div style="text-align:center; margin-bottom:15px; border-bottom:2px solid #000; padding-bottom:8px;">
+          <h1 style="font-size:24px; font-weight:bold; margin:0;">प्रजापति डेयरी फॉर्म</h1>
+          <p style="font-size:12px; margin:4px 0;">संपूर्ण वित्तीय व दैनिक फार्म खाता रिपोर्ट • दिनांक: ${today}</p>
+        </div>
+
+        <!-- 1. Master Financial Summary Box -->
+        <div style="margin-bottom:20px; border:1px solid #cbd5e1; padding:12px; border-radius:8px; background:#f8fafc;">
+          <h3 style="font-size:14px; font-weight:bold; margin-top:0; margin-bottom:8px; text-decoration:underline;">वित्तीय सारांश (Financial Summary):</h3>
+          <table style="width:100%; font-size:13px;">
+            <tr>
+              <td><b>कुल दूध बिक्री:</b> ${totM.toFixed(1)} Litres</td>
+              <td><b>कुल दूध कमाई:</b> ₹ ${totR.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td><b>कुल खर्च व मजदूरी:</b> ₹ ${totE.toFixed(2)}</td>
+              <td><b>शुद्ध बचत (मुनाफा):</b> <span style="font-weight:bold; color:${net >= 0 ? 'green':'red'};">₹ ${net.toFixed(2)}</span></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- 2. Milk Table -->
+        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">१. दूध बिक्री रजिस्टर सूची (${milkData.length} रिकॉर्ड)</h3>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:18px;">
+          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक</th><th>मात्रा</th><th>रेट</th><th>कुल ₹</th></tr>`;
+        
+      milkData.forEach((d, idx) => {
+        content += `<tr><td>${idx+1}</td><td>${d.date}</td><td>${d.shift}</td><td>${d.customer}</td><td>${d.qty} L</td><td>₹${d.rate}</td><td>₹${d.total.toFixed(2)}</td></tr>`;
+      });
+      content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">योग</td><td>${totM.toFixed(1)} L</td><td>-</td><td>₹${totR.toFixed(2)}</td></tr>
+        </table>
+
+        <!-- 3. Expense Table -->
+        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">२. फार्म खर्च व मजदूरी भुगतान सूची (${expenseData.length} रिकॉर्ड)</h3>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:18px;">
+          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>मद / श्रेणी</th><th>विवरण / नाम</th><th>रकम (₹)</th></tr>`;
+        
+      expenseData.forEach((d, idx) => {
+        content += `<tr><td>${idx+1}</td><td>${d.date}</td><td>${d.category}</td><td>${d.detail}</td><td>₹${d.amount.toFixed(2)}</td></tr>`;
+      });
+      content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">कुल खर्च योग</td><td>₹${totE.toFixed(2)}</td></tr>
+        </table>
+
+        <!-- 4. Attendance Table -->
+        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">३. मजदूर दैनिक हाजिरी रजिस्टर (${attendanceData.length} रिकॉर्ड)</h3>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:25px;">
+          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>मजदूर / समूह</th><th>सुबह समय</th><th>शाम समय</th><th>किए गए कार्य</th></tr>`;
+        
+      attendanceData.forEach((d, idx) => {
+        content += `<tr><td>${idx+1}</td><td>${d.date}</td><td><b>${d.labour}</b></td><td>${fmtTime(d.mornIn)} - ${fmtTime(d.mornOut)}</td><td>${fmtTime(d.eveIn)} - ${fmtTime(d.eveOut)}</td><td>${d.tasks}</td></tr>`;
+      });
+      content += `</table>
+
+        <div style="display:flex; justify-content:space-between; margin-top:30px; font-size:12px;">
+          <span>रिपोर्ट तैयारकर्ता: प्रजापति डेयरी सिस्टम</span>
+          <span>हस्ताक्षर प्रोप्राइटर: _______________________</span>
+        </div>
+      `;
 
       printDiv.innerHTML = content;
       printDiv.classList.remove('hidden');
@@ -787,13 +855,12 @@
         totQty += item.qty;
         totRev += item.total;
         
-        // Desktop Row
         mBody.innerHTML += `
           <tr class="hover:bg-slate-50">
             <td class="p-3 font-medium whitespace-nowrap">${item.date}</td>
             <td class="p-3 text-slate-500 text-xs">${item.shift}</td>
             <td class="p-3 font-semibold text-slate-900">${item.customer}</td>
-            <td class="p-3 font-bold text-emerald-700">${item.qty} L</td>
+            <td class="p-3 font-bold text-emerald-800">${item.qty} L</td>
             <td class="p-3 text-slate-600">₹${item.rate}</td>
             <td class="p-3 font-black text-slate-900">₹${item.total.toFixed(2)}</td>
             <td class="p-3 text-center">
@@ -802,7 +869,6 @@
           </tr>
         `;
 
-        // Mobile Spacious Card
         mMobile.innerHTML += `
           <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
             <div class="flex justify-between items-start">
@@ -814,7 +880,7 @@
             </div>
             <div class="flex justify-between items-center mt-3 pt-2.5 border-t border-slate-200/80">
               <span class="text-xs text-slate-600">${item.qty} L × ₹${item.rate}</span>
-              <span class="text-base font-black text-emerald-800">₹${item.total.toFixed(2)}</span>
+              <span class="text-base font-black text-emerald-900">₹${item.total.toFixed(2)}</span>
             </div>
           </div>
         `;
@@ -833,20 +899,18 @@
         const isAdv = item.category.includes('एडवांस');
         const badgeColor = isAdv ? 'bg-amber-100 text-amber-900' : 'bg-purple-100 text-purple-900';
 
-        // Desktop Row
         eBody.innerHTML += `
           <tr class="hover:bg-slate-50">
             <td class="p-3 font-medium whitespace-nowrap">${item.date}</td>
             <td class="p-3 text-xs font-bold"><span class="px-2 py-0.5 rounded-full ${badgeColor}">${item.category}</span></td>
             <td class="p-3 font-semibold text-slate-900">${item.detail}</td>
-            <td class="p-3 font-black text-purple-700">₹${item.amount.toFixed(2)}</td>
+            <td class="p-3 font-black text-purple-900">₹${item.amount.toFixed(2)}</td>
             <td class="p-3 text-center">
               <button onclick="deleteExpense(${item.id})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>
             </td>
           </tr>
         `;
 
-        // Mobile Card
         eMobile.innerHTML += `
           <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
             <div class="flex justify-between items-start">
@@ -858,30 +922,29 @@
               <button onclick="deleteExpense(${item.id})" class="text-rose-500 p-1 text-sm"><i class="fa-solid fa-trash-can"></i></button>
             </div>
             <div class="flex justify-end mt-2 pt-2 border-t border-slate-200/80">
-              <span class="text-base font-black text-purple-800">₹${item.amount.toFixed(2)}</span>
+              <span class="text-base font-black text-purple-900">₹${item.amount.toFixed(2)}</span>
             </div>
           </div>
         `;
       });
       document.getElementById('expRecordCount').innerText = `${expenseData.length} एंट्री`;
 
-      // 3. Attendance Render (Clean Mobile Layout)
+      // 3. Attendance Render
       const aBody = document.getElementById('attTableBody');
       const aMobile = document.getElementById('attMobileList');
       aBody.innerHTML = '';
       aMobile.innerHTML = '';
 
       attendanceData.forEach(item => {
-        // Desktop Row
         aBody.innerHTML += `
           <tr class="hover:bg-slate-50">
             <td class="p-3 font-medium whitespace-nowrap">${item.date}</td>
             <td class="p-3 font-extrabold text-slate-900">${item.labour}</td>
             <td class="p-3 text-xs">
-              <span class="text-teal-700 font-bold">${fmtTime(item.mornIn)}</span> - <span class="text-slate-600">${fmtTime(item.mornOut)}</span>
+              <span class="text-slate-900 font-bold">${fmtTime(item.mornIn)}</span> - <span class="text-slate-600">${fmtTime(item.mornOut)}</span>
             </td>
             <td class="p-3 text-xs">
-              <span class="text-teal-700 font-bold">${fmtTime(item.eveIn)}</span> - <span class="text-slate-600">${fmtTime(item.eveOut)}</span>
+              <span class="text-slate-900 font-bold">${fmtTime(item.eveIn)}</span> - <span class="text-slate-600">${fmtTime(item.eveOut)}</span>
             </td>
             <td class="p-3 text-xs text-slate-700 font-medium">${item.tasks}</td>
             <td class="p-3 text-center">
@@ -890,7 +953,6 @@
           </tr>
         `;
 
-        // Mobile Spacious Card (Clears Overlapping Issue)
         aMobile.innerHTML += `
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5">
             <div class="flex justify-between items-start">
@@ -903,22 +965,20 @@
               </button>
             </div>
 
-            <!-- Shifts Timings Badge Grid -->
             <div class="grid grid-cols-2 gap-2 text-xs">
               <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
                 <span class="text-[10px] uppercase font-bold text-slate-400 block">सुबह शिफ्ट</span>
-                <span class="font-bold text-teal-800">${fmtTime(item.mornIn)}</span> से <span class="font-bold text-slate-700">${fmtTime(item.mornOut)}</span>
+                <span class="font-bold text-slate-900">${fmtTime(item.mornIn)}</span> से <span class="font-bold text-slate-700">${fmtTime(item.mornOut)}</span>
               </div>
               <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
                 <span class="text-[10px] uppercase font-bold text-slate-400 block">शाम शिफ्ट</span>
-                <span class="font-bold text-teal-800">${fmtTime(item.eveIn)}</span> से <span class="font-bold text-slate-700">${fmtTime(item.eveOut)}</span>
+                <span class="font-bold text-slate-900">${fmtTime(item.eveIn)}</span> से <span class="font-bold text-slate-700">${fmtTime(item.eveOut)}</span>
               </div>
             </div>
 
-            <!-- Tasks Tags -->
             <div class="pt-1">
               <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">किए गए काम:</span>
-              <p class="text-xs font-semibold text-slate-700 bg-teal-50/60 p-2 rounded-lg border border-teal-100 leading-relaxed">
+              <p class="text-xs font-semibold text-slate-700 bg-slate-50 p-2 rounded-lg border border-slate-100 leading-relaxed">
                 ${item.tasks}
               </p>
             </div>
@@ -938,7 +998,7 @@
       if (net < 0) {
         netElem.className = "text-2xl font-black text-rose-600 mt-1";
       } else {
-        netElem.className = "text-2xl font-black text-blue-700 mt-1";
+        netElem.className = "text-2xl font-black text-blue-900 mt-1";
       }
     }
 
