@@ -22,12 +22,13 @@
     }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-24">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-32">
 
-  <!-- Header -->
+  <!-- Header (PDF Button on Top) -->
   <header class="bg-emerald-950 text-white shadow-lg sticky top-0 z-40 border-b-4 border-emerald-700 no-print">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
+        <!-- Realtime Synced Logo -->
         <div onclick="openLogoPreview()" class="w-12 h-12 bg-amber-400 text-slate-950 rounded-2xl flex items-center justify-center text-2xl shadow-md font-black shrink-0 cursor-pointer overflow-hidden border-2 border-amber-300">
           <img id="headerLogoImg" src="" alt="Logo" class="w-full h-full object-cover hidden" />
           <i id="defaultLogoIcon" class="fa-solid fa-cow"></i>
@@ -36,18 +37,19 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-lg sm:text-2xl font-black tracking-tight text-amber-300">प्रजापति डेयरी फॉर्म</h1>
-            <span id="roleBadge" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full font-bold border border-slate-600">User (View Only)</span>
+            <span id="roleBadge" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full font-bold border border-slate-600">User Mode</span>
           </div>
-          <p class="text-[10px] sm:text-xs text-emerald-200 font-medium">लाइव क्लाउड डेटाबेस • सभी फोन पर तुरंत अपडेट</p>
+          <p class="text-[10px] sm:text-xs text-emerald-200 font-medium">लाइव क्लाउड सिंक • सभी फोन पर तुरंत अपडेट</p>
         </div>
       </div>
 
+      <!-- Top Buttons: PDF & Overall Summary -->
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button onclick="toggleAdminLogin()" id="adminToggleBtn" class="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold px-3 py-2 rounded-xl shadow border-2 border-amber-200 flex items-center gap-1 transition">
-          <i class="fa-solid fa-user-shield"></i>
-          <span id="adminBtnText">Admin Login</span>
+        <button onclick="printOverallMasterReport()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow-md border-2 border-sky-400 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-file-pdf text-amber-300"></i>
+          <span>संपूर्ण PDF रिपोर्ट</span>
         </button>
-        <button onclick="openSummaryModal()" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold px-2.5 py-2 rounded-xl shadow border-2 border-emerald-600 flex items-center gap-1 transition">
+        <button onclick="openSummaryModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs sm:text-sm font-bold px-3 py-2 rounded-xl shadow border-2 border-amber-200 flex items-center gap-1 transition">
           <i class="fa-solid fa-chart-pie"></i>
           <span class="hidden sm:inline">कुल हिसाब</span>
         </button>
@@ -105,8 +107,6 @@
 
     <!-- ==================== TAB 1: MILK SALE ==================== -->
     <section id="tabMilk" class="mt-4 space-y-4">
-      
-      <!-- Admin Only Entry Form -->
       <div id="milkAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-emerald-600">
         <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
           <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
@@ -161,19 +161,15 @@
         </form>
       </div>
 
-      <!-- Milk Records List (Live for Everyone) -->
+      <!-- Milk Records -->
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-tower-broadcast text-emerald-700 animate-pulse"></i> लाइव दूध बिक्री रिकॉर्ड
             </span>
-            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300" id="milkRecordCount">लोड हो रहा है...</span>
+            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300" id="milkRecordCount">0 एंट्री</span>
           </div>
-          <button onclick="printSection('milk')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border-2 border-slate-300 flex items-center gap-1 transition">
-            <i class="fa-solid fa-print text-emerald-800"></i>
-            <span>प्रिंट / PDF</span>
-          </button>
         </div>
 
         <div id="milkMobileList" class="p-3 space-y-3 sm:hidden"></div>
@@ -255,10 +251,6 @@
             </span>
             <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full border border-purple-300" id="expRecordCount">0 एंट्री</span>
           </div>
-          <button onclick="printSection('expense')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border-2 border-slate-300 flex items-center gap-1 transition">
-            <i class="fa-solid fa-print text-purple-800"></i>
-            <span>प्रिंट / PDF</span>
-          </button>
         </div>
 
         <div id="expenseMobileList" class="p-3 space-y-3 sm:hidden"></div>
@@ -374,10 +366,6 @@
             </span>
             <span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full border border-slate-300" id="attRecordCount">0 हाजिरी</span>
           </div>
-          <button onclick="printSection('attendance')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg border-2 border-slate-300 flex items-center gap-1 transition">
-            <i class="fa-solid fa-print text-slate-800"></i>
-            <span>प्रिंट / PDF</span>
-          </button>
         </div>
 
         <div id="attMobileList" class="p-3 space-y-3 sm:hidden"></div>
@@ -575,7 +563,28 @@
 
   </main>
 
-  <!-- ==================== POPUP 1: LOGO FULLSCREEN PREVIEW ==================== -->
+  <!-- ==================== FIXED BOTTOM FOOTER: ADMIN LOGIN & SETTINGS ==================== -->
+  <footer class="fixed bottom-0 left-0 right-0 bg-slate-900 text-white py-3 px-4 border-t-2 border-amber-400 z-40 no-print">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div id="adminIndicatorDot" class="w-3 h-3 rounded-full bg-slate-500"></div>
+        <span id="footerAdminStatus" class="text-xs font-semibold text-slate-300">User Mode (केवल देखने के लिए)</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="toggleAdminLogin()" id="adminToggleBtn" class="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-extrabold px-4 py-2 rounded-xl shadow border-2 border-amber-200 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-user-shield"></i>
+          <span id="adminBtnText">Admin Mode On</span>
+        </button>
+
+        <button onclick="openChangePasswordModal()" id="changePassBtn" class="hidden bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold px-3 py-2 rounded-xl border border-slate-600 transition flex items-center gap-1">
+          <i class="fa-solid fa-key"></i> पासवर्ड बदलें
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== POPUP: LOGO PREVIEW (Admin can change logo for everyone) ==================== -->
   <div id="logoPreviewModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="relative bg-white rounded-3xl p-4 max-w-sm w-full shadow-2xl border-4 border-amber-400 text-center">
       <button onclick="closeLogoPreview()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-base font-black shadow-lg border-2 border-white">
@@ -589,21 +598,58 @@
         <i id="previewDefaultIcon" class="fa-solid fa-cow text-7xl text-slate-400"></i>
       </div>
 
-      <div class="mt-4 pt-3 border-t-2 border-slate-100 flex items-center justify-between">
+      <!-- Realtime Logo Upload for Admin -->
+      <div id="adminLogoChangeArea" class="hidden mt-4 pt-3 border-t-2 border-slate-100 flex items-center justify-between">
         <label for="logoFileInput" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-lg border border-slate-300 cursor-pointer flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-camera text-slate-500 text-xs"></i>
-          <span>लोगो बदलें / अपलोड करें</span>
+          <i class="fa-solid fa-cloud-arrow-up text-emerald-700 text-xs"></i>
+          <span>क्लाउड लोगो बदलें</span>
         </label>
-        <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(event)" class="hidden" />
+        <input type="file" id="logoFileInput" accept="image/*" onchange="handleCloudLogoUpload(event)" class="hidden" />
 
-        <button onclick="removeLogo()" class="text-[11px] text-rose-600 hover:text-rose-800 font-semibold">
+        <button onclick="removeCloudLogo()" class="text-[11px] text-rose-600 hover:text-rose-800 font-semibold">
           लोगो हटाएं
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== POPUP 2: SUMMARY TOTALS ==================== -->
+  <!-- ==================== POPUP: PASSWORD CHANGER MODAL ==================== -->
+  <div id="changePassModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="relative bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border-4 border-amber-400">
+      <button onclick="closeChangePasswordModal()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-base font-black shadow-lg border-2 border-white">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h3 class="font-extrabold text-slate-900 text-base mb-1 flex items-center gap-2">
+        <i class="fa-solid fa-shield-halved text-amber-500"></i>
+        एडमिन पासवर्ड बदलें
+      </h3>
+      <p class="text-xs text-slate-500 mb-4">एक बार बदलने पर डिफ़ॉल्ट पासवर्ड हमेशा के लिए हट जाएगा।</p>
+
+      <form onsubmit="handlePasswordChangeSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">वर्तमान (पुराना) पासवर्ड</label>
+          <input type="password" id="oldPassInput" required placeholder="पुराना पासवर्ड" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-500 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नया पासवर्ड</label>
+          <input type="password" id="newPassInput" required placeholder="नया पासवर्ड (कम से कम 3 अंक)" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-500 outline-none font-bold" />
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दोबारा नया पासवर्ड डालें (Confirm)</label>
+          <input type="password" id="confirmNewPassInput" required placeholder="नया पासवर्ड दोबारा लिखें" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-500 outline-none font-bold" />
+        </div>
+
+        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-950 text-amber-300 font-extrabold py-3 rounded-xl text-sm transition shadow-md border-2 border-slate-700 mt-2">
+          नया पासवर्ड क्लाउड में सेव करें
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== POPUP: SUMMARY TOTALS ==================== -->
   <div id="summaryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-2 border-slate-300">
       
@@ -673,7 +719,7 @@
 
   <!-- Realtime Cloud Script -->
   <script>
-    // ==================== 1. YOUR REALTIME FIREBASE CONFIG ====================
+    // ==================== 1. FIREBASE CONFIG ====================
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
       authDomain: "prajapatidairy-72888.firebaseapp.com",
@@ -688,9 +734,25 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Admin Credentials
+    // Admin State & Cloud Synced Master Password
     let isAdmin = false;
-    const ADMIN_SECRET_PIN = "1234";
+    let currentAdminPass = "1234"; // Default backup
+
+    // Realtime Master Password Listener (Cloud Saved Password)
+    db.ref('cloud_admin_pin').on('value', snap => {
+      const val = snap.val();
+      if (val) {
+        currentAdminPass = val.toString().trim();
+      }
+    });
+
+    // Realtime Cloud Logo Listener (Syncs logo on ALL devices instantly)
+    let currentLogoUrl = "";
+    db.ref('cloud_dairy_logo').on('value', snap => {
+      const val = snap.val();
+      currentLogoUrl = val || "";
+      applyLogoToDOM(currentLogoUrl);
+    });
 
     // In-Memory Cloud Data
     let milkData = [];
@@ -699,7 +761,6 @@
     let cattleData = [];
     let customerPayments = [];
     let stockData = [];
-    let savedLogo = localStorage.getItem('prajapati_dairy_logo') || '';
 
     // Dates
     const today = new Date().toISOString().split('T')[0];
@@ -709,43 +770,57 @@
     document.getElementById('custPayDate').value = today;
     document.getElementById('todayLabel1').innerText = "आज: " + today;
 
-    // Toggle Admin Mode
+    // Toggle Admin Login
     function toggleAdminLogin() {
       if (!isAdmin) {
-        const pin = prompt("एडमिन पिन (Admin PIN) दर्ज करें:");
-        if (pin === ADMIN_SECRET_PIN) {
+        const pin = prompt("एडमिन मोड चालू करने के लिए पिन दर्ज करें:");
+        if (pin === currentAdminPass) {
           isAdmin = true;
           updateAdminUI();
-          alert("स्वागत है! आप एडमिन मोड में आ चुके हैं। अब आप नए रिकॉर्ड जोड़ और हटा सकते हैं।");
+          alert("स्वागत है! आप एडमिन बन चुके हैं। (एक साथ कई लोग भी नया पासवर्ड डालकर एडमिन बन सकते हैं)");
         } else if (pin) {
-          alert("गलत एडमिन पिन!");
+          alert("गलत एडमिन पासवर्ड!");
         }
       } else {
         isAdmin = false;
         updateAdminUI();
-        alert("एडमिन मोड लॉगआउट हो गया। अब आप केवल देख सकते हैं।");
+        alert("एडमिन मोड बंद हो गया।");
       }
     }
 
     function updateAdminUI() {
       const badge = document.getElementById('roleBadge');
       const btnText = document.getElementById('adminBtnText');
-      
+      const dot = document.getElementById('adminIndicatorDot');
+      const statusText = document.getElementById('footerAdminStatus');
+      const changePassBtn = document.getElementById('changePassBtn');
+      const adminLogoArea = document.getElementById('adminLogoChangeArea');
+
       const adminForms = ['milkAdminForm', 'expAdminForm', 'attAdminForm', 'catAdminForm', 'custAdminForm', 'stockAdminForm'];
 
       if (isAdmin) {
-        badge.innerText = "Admin (Edit/Delete On)";
-        badge.className = "text-[10px] bg-emerald-700 text-white px-2 py-0.5 rounded-full font-bold border border-emerald-400";
-        btnText.innerText = "Admin Logout";
+        badge.innerText = "Admin Mode On";
+        badge.className = "text-[10px] bg-emerald-700 text-white px-2.5 py-0.5 rounded-full font-bold border border-emerald-400";
+        btnText.innerText = "Admin Mode Off";
+        dot.className = "w-3 h-3 rounded-full bg-emerald-400 animate-ping";
+        statusText.innerText = "Admin Active (आप एंट्री व डिलीट कर सकते हैं)";
+        changePassBtn.classList.remove('hidden');
+        adminLogoArea.classList.remove('hidden');
+
         adminForms.forEach(id => {
           const el = document.getElementById(id);
           if (el) el.classList.remove('hidden');
         });
         document.querySelectorAll('.admin-action-col').forEach(el => el.classList.remove('hidden'));
       } else {
-        badge.innerText = "User (View Only)";
-        badge.className = "text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full font-bold border border-slate-600";
-        btnText.innerText = "Admin Login";
+        badge.innerText = "User Mode";
+        badge.className = "text-[10px] bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded-full font-bold border border-slate-600";
+        btnText.innerText = "Admin Mode On";
+        dot.className = "w-3 h-3 rounded-full bg-slate-500";
+        statusText.innerText = "User Mode (केवल देखने के लिए)";
+        changePassBtn.classList.add('hidden');
+        adminLogoArea.classList.add('hidden');
+
         adminForms.forEach(id => {
           const el = document.getElementById(id);
           if (el) el.classList.add('hidden');
@@ -755,18 +830,65 @@
       renderAll();
     }
 
-    // Logo Management
-    function loadLogo() {
+    // Password Change Modal System
+    function openChangePasswordModal() {
+      if (!isAdmin) return;
+      document.getElementById('oldPassInput').value = '';
+      document.getElementById('newPassInput').value = '';
+      document.getElementById('confirmNewPassInput').value = '';
+      document.getElementById('changePassModal').classList.remove('hidden');
+    }
+
+    function closeChangePasswordModal() {
+      document.getElementById('changePassModal').classList.add('hidden');
+    }
+
+    function handlePasswordChangeSubmit(e) {
+      e.preventDefault();
+      const oldP = document.getElementById('oldPassInput').value.trim();
+      const newP = document.getElementById('newPassInput').value.trim();
+      const confirmP = document.getElementById('confirmNewPassInput').value.trim();
+
+      // Verify Old Password
+      if (oldP !== currentAdminPass) {
+        alert("पुराना पासवर्ड गलत है! पासवर्ड नहीं बदला जा सका।");
+        return;
+      }
+
+      // Check Length
+      if (newP.length < 3) {
+        alert("नया पासवर्ड कम से कम 3 अक्षरों/अंकों का होना चाहिए!");
+        return;
+      }
+
+      // Check Match
+      if (newP !== confirmP) {
+        alert("नया पासवर्ड और दोबारा डाला गया पासवर्ड आपस में मैच नहीं कर रहे हैं!");
+        return;
+      }
+
+      // Save permanently to Firebase Realtime Database
+      db.ref('cloud_admin_pin').set(newP).then(() => {
+        alert(`पासवर्ड सफलतापूर्वक बदल गया है!\n\nनया पासवर्ड क्लाउड में सेव हो गया है और पुराना डिफॉल्ट पासवर्ड हमेशा के लिए हट चुका है। अब किसी भी फोन में इसी नए पासवर्ड से एडमिन लॉगिन होगा।`);
+        closeChangePasswordModal();
+      }).catch(err => {
+        alert("क्लाउड में पासवर्ड सेव करने में समस्या आई!");
+      });
+    }
+
+    // Realtime Cloud Logo Handlers
+    function applyLogoToDOM(logoUrl) {
       const headerImg = document.getElementById('headerLogoImg');
       const defaultIcon = document.getElementById('defaultLogoIcon');
       const previewImg = document.getElementById('previewModalImg');
       const previewIcon = document.getElementById('previewDefaultIcon');
 
-      if (savedLogo) {
-        headerImg.src = savedLogo;
+      if (logoUrl) {
+        headerImg.src = logoUrl;
         headerImg.classList.remove('hidden');
         defaultIcon.classList.add('hidden');
-        previewImg.src = savedLogo;
+
+        previewImg.src = logoUrl;
         previewImg.classList.remove('hidden');
         previewIcon.classList.add('hidden');
       } else {
@@ -777,29 +899,28 @@
       }
     }
 
-    function handleLogoUpload(event) {
+    function handleCloudLogoUpload(event) {
+      if (!isAdmin) { alert("सिर्फ एडमिन लोगो बदल सकते हैं!"); return; }
       const file = event.target.files[0];
       if (!file) return;
+
       const reader = new FileReader();
       reader.onload = function(e) {
-        savedLogo = e.target.result;
-        try {
-          localStorage.setItem('prajapati_dairy_logo', savedLogo);
-          loadLogo();
-          alert("लोगो सेट हो गया!");
-        } catch (err) {
-          alert("फोटो बहुत बड़ी है!");
-        }
+        const base64Img = e.target.result;
+        // Save to Firebase so ALL phones see the new logo
+        db.ref('cloud_dairy_logo').set(base64Img).then(() => {
+          alert("नया लोगो क्लाउड में सेव हो गया! अब हर फोन में यही लोगो दिखेगा।");
+        }).catch(() => {
+          alert("लोगो साइज बहुत बड़ा है, कृपया छोटी फोटो चुनें।");
+        });
       };
       reader.readAsDataURL(file);
     }
 
-    function removeLogo() {
-      if (confirm("लोगो हटाएं?")) {
-        savedLogo = '';
-        localStorage.removeItem('prajapati_dairy_logo');
-        loadLogo();
-        closeLogoPreview();
+    function removeCloudLogo() {
+      if (!isAdmin) return;
+      if (confirm("क्या आप क्लाउड से लोगो हटाना चाहते हैं?")) {
+        db.ref('cloud_dairy_logo').remove();
       }
     }
 
@@ -834,7 +955,7 @@
       return `${fHour}:${m} ${ampm}`;
     }
 
-    // ==================== REALTIME DATABASE SYNC ACTIONS ====================
+    // ==================== REALTIME DATABASE ACTIONS ====================
 
     // 1. Milk Sale
     function calcMilkTotal() {
@@ -868,7 +989,7 @@
 
     function deleteMilk(id) {
       if (!isAdmin) return;
-      if (confirm("क्या आप सचमुच यह दूध रिकॉर्ड डिलीट करना चाहते हैं?")) {
+      if (confirm("यह दूध रिकॉर्ड हटाएं?")) {
         db.ref('milk_records/' + id).remove();
       }
     }
@@ -1022,8 +1143,6 @@
     }
 
     // ==================== REALTIME CLOUD LISTENERS ====================
-
-    // Milk Listener
     db.ref('milk_records').on('value', snap => {
       const val = snap.val();
       milkData = [];
@@ -1036,7 +1155,6 @@
       renderTotals();
     });
 
-    // Expense Listener
     db.ref('expense_records').on('value', snap => {
       const val = snap.val();
       expenseData = [];
@@ -1048,7 +1166,6 @@
       renderTotals();
     });
 
-    // Attendance Listener
     db.ref('attendance_records').on('value', snap => {
       const val = snap.val();
       attendanceData = [];
@@ -1059,7 +1176,6 @@
       renderAttendance();
     });
 
-    // Cattle Listener
     db.ref('cattle_records').on('value', snap => {
       const val = snap.val();
       cattleData = [];
@@ -1069,7 +1185,6 @@
       renderCattle();
     });
 
-    // Customer Payment Listener
     db.ref('customer_payments').on('value', snap => {
       const val = snap.val();
       customerPayments = [];
@@ -1079,7 +1194,6 @@
       renderCustomerSummary();
     });
 
-    // Stock Listener
     db.ref('stock_records').on('value', snap => {
       const val = snap.val();
       stockData = [];
@@ -1090,7 +1204,6 @@
     });
 
     // ==================== RENDERERS ====================
-
     function renderMilk() {
       const mBody = document.getElementById('milkTableBody');
       const mMobile = document.getElementById('milkMobileList');
@@ -1351,7 +1464,6 @@
     }
 
     function renderAll() {
-      loadLogo();
       renderMilk();
       renderExpense();
       renderAttendance();
@@ -1363,7 +1475,7 @@
 
     // Print Logic
     function getPrintHeaderHtml() {
-      let logoPart = savedLogo ? `<img src="${savedLogo}" style="width:65px; height:65px; object-fit:contain; border-radius:10px; margin-right:15px; border:1px solid #ccc;" />` : '';
+      let logoPart = currentLogoUrl ? `<img src="${currentLogoUrl}" style="width:65px; height:65px; object-fit:contain; border-radius:10px; margin-right:15px; border:1px solid #ccc;" />` : '';
       return `
         <div style="display:flex; align-items:center; justify-content:center; margin-bottom:16px; border-bottom:3px solid #000; padding-bottom:10px;">
           ${logoPart}
@@ -1373,46 +1485,6 @@
           </div>
         </div>
       `;
-    }
-
-    function printSection(sec) {
-      const printDiv = document.getElementById('printableArea');
-      let content = getPrintHeaderHtml();
-
-      if (sec === 'milk') {
-        content += `<h3 style="font-size:15px; font-weight:bold; margin-bottom:8px;">दूध बिक्री रिपोर्ट</h3>
-        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:12px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक</th><th>मात्रा</th><th>रेट</th><th>कुल ₹</th></tr>`;
-        let totM = 0, totR = 0;
-        milkData.forEach((d, i) => {
-          totM += d.qty; totR += d.total;
-          content += `<tr><td>${i+1}</td><td>${d.date}</td><td>${d.shift}</td><td>${d.customer}</td><td>${d.qty} L</td><td>₹${d.rate}</td><td>₹${d.total.toFixed(2)}</td></tr>`;
-        });
-        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">योग</td><td>${totM.toFixed(1)} L</td><td>-</td><td>₹${totR.toFixed(2)}</td></tr></table>`;
-      } else if (sec === 'expense') {
-        content += `<h3 style="font-size:15px; font-weight:bold; margin-bottom:8px;">खर्च व भुगतान सूची</h3>
-        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:12px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>मद</th><th>विवरण</th><th>रकम (₹)</th></tr>`;
-        let totE = 0;
-        expenseData.forEach((d, i) => {
-          totE += d.amount;
-          content += `<tr><td>${i+1}</td><td>${d.date}</td><td>${d.category}</td><td>${d.detail}</td><td>₹${d.amount.toFixed(2)}</td></tr>`;
-        });
-        content += `<tr style="font-weight:bold; background:#e2e8f0;"><td colspan="4">कुल खर्च योग</td><td>₹${totE.toFixed(2)}</td></tr></table>`;
-      } else if (sec === 'attendance') {
-        content += `<h3 style="font-size:15px; font-weight:bold; margin-bottom:8px;">मजदूर हाजिरी रजिस्टर</h3>
-        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:12px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>मजदूर / समूह</th><th>सुबह समय</th><th>शाम समय</th><th>किए गए कार्य</th></tr>`;
-        attendanceData.forEach((d, i) => {
-          content += `<tr><td>${i+1}</td><td>${d.date}</td><td><b>${d.labour}</b></td><td>${fmtTime(d.mornIn)} से ${fmtTime(d.mornOut)}</td><td>${fmtTime(d.eveIn)} से ${fmtTime(d.eveOut)}</td><td>${d.tasks}</td></tr>`;
-        });
-        content += `</table>`;
-      }
-
-      printDiv.innerHTML = content;
-      printDiv.classList.remove('hidden');
-      window.print();
-      printDiv.classList.add('hidden');
     }
 
     function printOverallMasterReport() {
@@ -1472,9 +1544,6 @@
       window.print();
       printDiv.classList.add('hidden');
     }
-
-    // Init
-    loadLogo();
   </script>
 </body>
 </html>
