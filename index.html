@@ -22,13 +22,12 @@
     }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-16">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-20">
 
   <!-- Header -->
   <header class="bg-emerald-950 text-white shadow-lg sticky top-0 z-40 border-b-4 border-emerald-700 no-print">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <!-- Logo -->
         <div onclick="openLogoPreview()" class="w-11 h-11 sm:w-12 sm:h-12 bg-amber-400 text-slate-950 rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-md font-black shrink-0 cursor-pointer overflow-hidden border-2 border-amber-300">
           <img id="headerLogoImg" src="" alt="Logo" class="w-full h-full object-cover hidden" />
           <i id="defaultLogoIcon" class="fa-solid fa-cow"></i>
@@ -43,7 +42,7 @@
         </div>
       </div>
 
-      <!-- Right Header Actions (PDF & 3-Line Menu) -->
+      <!-- Right Header Actions -->
       <div class="flex items-center gap-2 relative">
         <button onclick="printOverallMasterReport()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow-md border-2 border-sky-400 flex items-center gap-1.5 transition">
           <i class="fa-solid fa-file-pdf text-amber-300"></i>
@@ -62,7 +61,7 @@
         </button>
 
         <!-- 3-Lines Dropdown Menu -->
-        <div id="sideMenuDropdown" class="hidden absolute right-0 top-12 mt-2 w-56 bg-slate-900 text-white rounded-2xl shadow-2xl border-2 border-amber-400 overflow-hidden z-50 animate-in fade-in zoom-in duration-150">
+        <div id="sideMenuDropdown" class="hidden absolute right-0 top-12 mt-2 w-56 bg-slate-900 text-white rounded-2xl shadow-2xl border-2 border-amber-400 overflow-hidden z-50">
           <div class="p-3 bg-slate-950 border-b border-slate-800">
             <span class="text-[10px] text-slate-400 font-bold uppercase block">वर्तमान स्थिति</span>
             <div id="dropdownStatusText" class="text-xs font-black text-slate-200 mt-0.5 flex items-center gap-1.5">
@@ -85,6 +84,19 @@
       </div>
     </div>
   </header>
+
+  <!-- Realtime Admin Feed Stock Warning Banner -->
+  <div id="stockNotificationBanner" class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 hidden">
+    <div class="bg-rose-600 text-white p-3.5 rounded-2xl shadow-lg border-2 border-rose-400 flex items-start gap-3">
+      <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 text-xl text-amber-300">
+        <i class="fa-solid fa-bell animate-bounce"></i>
+      </div>
+      <div class="flex-1">
+        <h4 class="font-black text-sm">चारा खत्म होने की चेतावनी (Stock Alert)!</h4>
+        <div id="stockNotificationList" class="text-xs text-rose-100 mt-1 space-y-1 font-semibold"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Navigation Tabs -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 no-print">
@@ -129,7 +141,7 @@
         <span class="w-6 h-6 rounded-full bg-yellow-950 text-yellow-300 flex items-center justify-center text-xs shrink-0">
           <i class="fa-solid fa-wheat-awn"></i>
         </span>
-        <span>चारा स्टॉक</span>
+        <span>चारा व दाना स्टॉक</span>
       </button>
 
     </div>
@@ -533,27 +545,30 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 6: FEED & FODDER STOCK ==================== -->
+    <!-- ==================== TAB 6: FEED & FODDER STOCK (WITH DAILY USAGE & EXPIRY CALC) ==================== -->
     <section id="tabStock" class="mt-4 hidden space-y-4">
       <div id="stockAdminForm" class="hidden bg-white p-4 sm:p-5 rounded-2xl shadow-sm border-2 border-yellow-600">
         <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-slate-200">
-          <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-            <span class="w-8 h-8 rounded-lg bg-yellow-950 text-yellow-300 flex items-center justify-center text-sm shadow">
-              <i class="fa-solid fa-wheat-awn"></i>
-            </span>
-            चारा, खली व दाना स्टॉक (Admin Mode)
-          </h2>
+          <div>
+            <h2 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-yellow-950 text-yellow-300 flex items-center justify-center text-sm shadow">
+                <i class="fa-solid fa-wheat-awn"></i>
+              </span>
+              चारा, खली व दाना स्टॉक एंट्री (Smart Alert Panel)
+            </h2>
+            <p class="text-[11px] text-slate-500 font-semibold mt-0.5">दैनिक खपत दर्ज करें, सिस्टम अपने आप खत्म होने की तारीख और चेतावनी भेजेगा।</p>
+          </div>
         </div>
 
-        <form onsubmit="addStockItem(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <form onsubmit="addStockItem(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान का नाम</label>
-            <input type="text" id="stockName" required placeholder="उदा. सरसों खली / चोकर" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-yellow-600 outline-none font-bold" />
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान / चारा का नाम</label>
+            <input type="text" id="stockName" required placeholder="उदा. सरसों खली / चोकर / भूसा" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-yellow-600 outline-none font-bold" />
           </div>
 
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कुल स्टॉक मात्रा</label>
-            <input type="number" step="1" id="stockQty" required placeholder="उदा. 20" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-yellow-600 outline-none font-bold" />
+            <input type="number" step="0.5" id="stockQty" required placeholder="उदा. 20" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-yellow-600 outline-none font-bold" />
           </div>
 
           <div>
@@ -565,9 +580,16 @@
             </select>
           </div>
 
+          <!-- New: Daily Usage Input -->
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">कम स्टॉक चेतावनी</label>
-            <input type="number" id="stockAlertQty" required value="3" class="w-full text-sm border-2 border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-yellow-600 outline-none font-bold text-rose-700" />
+            <label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">1 दिन में कितना लगता है?</label>
+            <input type="number" step="0.1" id="stockDailyUse" required placeholder="उदा. 1.5" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-600 outline-none font-black text-emerald-950" />
+          </div>
+
+          <!-- New: Alert Before Days -->
+          <div>
+            <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">कितने दिन पहले अलर्ट मिले?</label>
+            <input type="number" id="stockAlertDays" required value="3" placeholder="उदा. 3 दिन" class="w-full text-sm border-2 border-rose-300 bg-rose-50 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-600 outline-none font-bold text-rose-950" />
           </div>
 
           <div class="sm:col-span-2 lg:col-span-1 flex items-end">
@@ -582,7 +604,7 @@
       <div class="bg-white rounded-2xl shadow-sm border-2 border-slate-300 overflow-hidden">
         <div class="p-3.5 bg-slate-50 border-b-2 border-slate-200 flex justify-between items-center">
           <span class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-boxes-stacked text-yellow-900"></i> वर्तमान फार्म स्टॉक
+            <i class="fa-solid fa-boxes-stacked text-yellow-900"></i> वर्तमान फार्म स्टॉक व खत्म होने की तारीख
           </span>
           <span class="text-xs bg-yellow-100 text-yellow-950 font-bold px-2 py-0.5 rounded-full border border-yellow-300" id="stockRecordCount">0 आइटम</span>
         </div>
@@ -606,7 +628,6 @@
         <i id="previewDefaultIcon" class="fa-solid fa-cow text-7xl text-slate-400"></i>
       </div>
 
-      <!-- Realtime Logo Upload for Admin -->
       <div id="adminLogoChangeArea" class="hidden mt-4 pt-3 border-t-2 border-slate-100 flex items-center justify-between">
         <label for="logoFileInput" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-lg border border-slate-300 cursor-pointer flex items-center gap-1.5 transition">
           <i class="fa-solid fa-cloud-arrow-up text-emerald-700 text-xs"></i>
@@ -744,7 +765,7 @@
 
     // Admin State & Cloud Synced Master Password
     let isAdmin = false;
-    let currentAdminPass = "1234"; // Default backup
+    let currentAdminPass = "1234";
 
     // Realtime Master Password Listener
     db.ref('cloud_admin_pin').on('value', snap => {
@@ -784,7 +805,6 @@
       menu.classList.toggle('hidden');
     }
 
-    // Close menu when clicking outside
     document.addEventListener('click', function(e) {
       const menu = document.getElementById('sideMenuDropdown');
       const btn = document.getElementById('menuToggleBtn');
@@ -803,7 +823,7 @@
         if (pin === currentAdminPass) {
           isAdmin = true;
           updateAdminUI();
-          alert("स्वागत है! आप एडमिन बन चुके हैं। (एक साथ दो लोग भी नया पासवर्ड डालकर एडमिन बन सकते हैं)");
+          alert("स्वागत है! आप एडमिन बन चुके हैं।");
         } else if (pin) {
           alert("गलत एडमिन पासवर्ड!");
         }
@@ -889,14 +909,14 @@
       }
 
       db.ref('cloud_admin_pin').set(newP).then(() => {
-        alert(`पासवर्ड सफलतापूर्वक बदल गया है!\n\nनया पासवर्ड क्लाउड में सेव हो गया है और पुराना डिफॉल्ट पासवर्ड हमेशा के लिए हट चुका है। अब किसी भी फोन में इसी नए पासवर्ड से एडमिन लॉगिन होगा।`);
+        alert(`पासवर्ड सफलतापूर्वक बदल गया है!\n\nनया पासवर्ड क्लाउड में सेव हो गया है और पुराना डिफॉल्ट पासवर्ड हमेशा के लिए हट चुका है।`);
         closeChangePasswordModal();
       }).catch(err => {
         alert("क्लाउड में पासवर्ड सेव करने में समस्या आई!");
       });
     }
 
-    // Realtime Cloud Logo Handlers
+    // Logo Handlers
     function applyLogoToDOM(logoUrl) {
       const headerImg = document.getElementById('headerLogoImg');
       const defaultIcon = document.getElementById('defaultLogoIcon');
@@ -1128,20 +1148,26 @@
       window.open(`https://wa.me/?text=${msg}`, '_blank');
     }
 
-    // 6. Stock
+    // 6. Stock with Daily Usage & Alert Days
     function addStockItem(e) {
       e.preventDefault();
       if (!isAdmin) { alert("सिर्फ एडमिन ही एंट्री कर सकते हैं!"); return; }
+
+      const dailyUse = parseFloat(document.getElementById('stockDailyUse').value) || 1;
+      const alertDays = parseFloat(document.getElementById('stockAlertDays').value) || 3;
 
       db.ref('stock_records').push({
         name: document.getElementById('stockName').value.trim(),
         qty: parseFloat(document.getElementById('stockQty').value) || 0,
         unit: document.getElementById('stockUnit').value,
-        alertQty: parseFloat(document.getElementById('stockAlertQty').value) || 0,
+        dailyUse: dailyUse,
+        alertDays: alertDays,
+        updatedAt: Date.now(),
         timestamp: Date.now()
       }).then(() => {
         document.getElementById('stockName').value = '';
         document.getElementById('stockQty').value = '';
+        document.getElementById('stockDailyUse').value = '';
       });
     }
 
@@ -1150,7 +1176,7 @@
       const item = stockData.find(x => x.id === id);
       if (item) {
         const newQty = Math.max(0, item.qty + change);
-        db.ref('stock_records/' + id).update({ qty: newQty });
+        db.ref('stock_records/' + id).update({ qty: newQty, updatedAt: Date.now() });
       }
     }
 
@@ -1434,33 +1460,85 @@
       });
     }
 
+    // Smart Stock Render: Calculates Expiry Date & Warns Admin
     function renderStock() {
       const sContainer = document.getElementById('stockListContainer');
+      const notifBanner = document.getElementById('stockNotificationBanner');
+      const notifList = document.getElementById('stockNotificationList');
+      
       sContainer.innerHTML = '';
+      notifList.innerHTML = '';
+      let warningAlerts = [];
+
       stockData.forEach(item => {
-        const isLow = item.qty <= item.alertQty;
+        const dailyUse = parseFloat(item.dailyUse) || 1;
+        const alertDays = parseFloat(item.alertDays) || 3;
+        
+        // Days Left Calculation
+        const daysLeft = Math.floor(item.qty / dailyUse);
+
+        // Date of finish calculation
+        const finishDate = new Date();
+        finishDate.setDate(finishDate.getDate() + daysLeft);
+        const finishDateStr = finishDate.toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        const isLow = daysLeft <= alertDays;
+
+        if (isLow && item.qty > 0) {
+          warningAlerts.push(`⚠️ <b>${item.name}</b> मात्र <b>${daysLeft} दिन</b> चलेगा (${finishDateStr} तक खत्म हो जाएगा)। कृपया नया चारा मंगाएं!`);
+        } else if (item.qty <= 0) {
+          warningAlerts.push(`🚨 <b>${item.name}</b> पूरी तरह खत्म हो चुका है! तुरंत नया स्टॉक भरें।`);
+        }
+
         sContainer.innerHTML += `
-          <div class="bg-white p-4 rounded-2xl border-2 ${isLow ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300'} shadow-sm space-y-3">
+          <div class="bg-white p-4 rounded-2xl border-2 ${isLow ? 'border-rose-500 bg-rose-50/40' : 'border-slate-300'} shadow-sm space-y-3 relative overflow-hidden">
+            ${isLow ? '<div class="absolute top-0 right-0 bg-rose-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-bl-xl uppercase tracking-wider">जल्दी खत्म होगा</div>' : ''}
+            
             <div class="flex justify-between items-start">
               <div>
-                ${isLow ? '<span class="text-[10px] font-black bg-rose-600 text-white px-2 py-0.5 rounded-full uppercase">कम स्टॉक चेतावनी!</span>' : ''}
-                <h4 class="text-base font-extrabold text-slate-900 mt-1">${item.name}</h4>
+                <h4 class="text-base font-extrabold text-slate-900">${item.name}</h4>
+                <span class="text-[11px] text-slate-500 font-semibold">दैनिक खपत: <b class="text-emerald-800">${dailyUse} ${item.unit}/दिन</b></span>
               </div>
               ${isAdmin ? `<button onclick="deleteStock('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
             </div>
-            <div class="flex items-baseline justify-between pt-1">
-              <span class="text-2xl font-black ${isLow ? 'text-rose-700' : 'text-slate-900'}">${item.qty} <span class="text-xs font-semibold text-slate-500">${item.unit}</span></span>
+
+            <div class="p-2.5 rounded-xl bg-white border border-slate-200 space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-semibold">अनुमानित शेष दिन:</span>
+                <span class="font-black ${isLow ? 'text-rose-600 text-sm' : 'text-slate-900'}">${daysLeft} दिन</span>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-semibold">खत्म होने की तारीख:</span>
+                <span class="font-bold text-slate-900">${finishDateStr}</span>
+              </div>
+            </div>
+
+            <div class="flex items-baseline justify-between pt-1 border-t border-slate-100">
+              <div>
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">वर्तमान स्टॉक</span>
+                <span class="text-2xl font-black ${isLow ? 'text-rose-700' : 'text-slate-900'}">${item.qty} <span class="text-xs font-semibold text-slate-500">${item.unit}</span></span>
+              </div>
+
               ${isAdmin ? `
                 <div class="flex gap-1.5">
-                  <button onclick="updateStockQty('${item.id}', -1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 font-bold text-slate-800">-1</button>
-                  <button onclick="updateStockQty('${item.id}', 1)" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 font-bold text-white">+1</button>
+                  <button onclick="updateStockQty('${item.id}', -1)" title="1 कम करें" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 font-bold text-slate-800">-1</button>
+                  <button onclick="updateStockQty('${item.id}', 1)" title="1 बढ़ाएं" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 font-bold text-white">+1</button>
                 </div>
               ` : ''}
             </div>
           </div>
         `;
       });
+
       document.getElementById('stockRecordCount').innerText = `${stockData.length} आइटम`;
+
+      // Show Alert Banner to Admin
+      if (warningAlerts.length > 0 && isAdmin) {
+        notifList.innerHTML = warningAlerts.map(msg => `<div>${msg}</div>`).join('');
+        notifBanner.classList.remove('hidden');
+      } else {
+        notifBanner.classList.add('hidden');
+      }
     }
 
     function renderTotals() {
@@ -1492,7 +1570,7 @@
       renderTotals();
     }
 
-    // Print Logic
+    // Print Overall Report
     function getPrintHeaderHtml() {
       let logoPart = currentLogoUrl ? `<img src="${currentLogoUrl}" style="width:65px; height:65px; object-fit:contain; border-radius:10px; margin-right:15px; border:1px solid #ccc;" />` : '';
       return `
