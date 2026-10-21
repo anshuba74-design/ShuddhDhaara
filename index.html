@@ -22,37 +22,66 @@
     }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-32">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-16">
 
-  <!-- Header (PDF Button on Top) -->
+  <!-- Header -->
   <header class="bg-emerald-950 text-white shadow-lg sticky top-0 z-40 border-b-4 border-emerald-700 no-print">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <!-- Realtime Synced Logo -->
-        <div onclick="openLogoPreview()" class="w-12 h-12 bg-amber-400 text-slate-950 rounded-2xl flex items-center justify-center text-2xl shadow-md font-black shrink-0 cursor-pointer overflow-hidden border-2 border-amber-300">
+        <!-- Logo -->
+        <div onclick="openLogoPreview()" class="w-11 h-11 sm:w-12 sm:h-12 bg-amber-400 text-slate-950 rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-md font-black shrink-0 cursor-pointer overflow-hidden border-2 border-amber-300">
           <img id="headerLogoImg" src="" alt="Logo" class="w-full h-full object-cover hidden" />
           <i id="defaultLogoIcon" class="fa-solid fa-cow"></i>
         </div>
 
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-lg sm:text-2xl font-black tracking-tight text-amber-300">प्रजापति डेयरी फॉर्म</h1>
-            <span id="roleBadge" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full font-bold border border-slate-600">User Mode</span>
+            <h1 class="text-base sm:text-2xl font-black tracking-tight text-amber-300">प्रजापति डेयरी फॉर्म</h1>
+            <span id="roleBadge" class="text-[9px] sm:text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full font-bold border border-slate-600">User Mode</span>
           </div>
           <p class="text-[10px] sm:text-xs text-emerald-200 font-medium">लाइव क्लाउड सिंक • सभी फोन पर तुरंत अपडेट</p>
         </div>
       </div>
 
-      <!-- Top Buttons: PDF & Overall Summary -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
+      <!-- Right Header Actions (PDF & 3-Line Menu) -->
+      <div class="flex items-center gap-2 relative">
         <button onclick="printOverallMasterReport()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow-md border-2 border-sky-400 flex items-center gap-1.5 transition">
           <i class="fa-solid fa-file-pdf text-amber-300"></i>
-          <span>संपूर्ण PDF रिपोर्ट</span>
+          <span class="hidden sm:inline">संपूर्ण PDF रिपोर्ट</span>
+          <span class="sm:hidden">PDF</span>
         </button>
-        <button onclick="openSummaryModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs sm:text-sm font-bold px-3 py-2 rounded-xl shadow border-2 border-amber-200 flex items-center gap-1 transition">
-          <i class="fa-solid fa-chart-pie"></i>
-          <span class="hidden sm:inline">कुल हिसाब</span>
+
+        <button onclick="openSummaryModal()" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs sm:text-sm font-bold px-2.5 py-2 rounded-xl shadow border border-emerald-600 flex items-center gap-1 transition">
+          <i class="fa-solid fa-chart-pie text-amber-300"></i>
+          <span class="hidden md:inline">कुल हिसाब</span>
         </button>
+
+        <!-- 3-Lines (Hamburger) Button -->
+        <button onclick="toggleSideMenu()" id="menuToggleBtn" class="w-10 h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 flex items-center justify-center text-lg border-2 border-slate-700 shadow transition active:scale-95">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- 3-Lines Dropdown Menu -->
+        <div id="sideMenuDropdown" class="hidden absolute right-0 top-12 mt-2 w-56 bg-slate-900 text-white rounded-2xl shadow-2xl border-2 border-amber-400 overflow-hidden z-50 animate-in fade-in zoom-in duration-150">
+          <div class="p-3 bg-slate-950 border-b border-slate-800">
+            <span class="text-[10px] text-slate-400 font-bold uppercase block">वर्तमान स्थिति</span>
+            <div id="dropdownStatusText" class="text-xs font-black text-slate-200 mt-0.5 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-slate-500"></span> User Mode (View Only)
+            </div>
+          </div>
+
+          <div class="p-2 space-y-1">
+            <button onclick="toggleAdminLogin()" id="menuAdminBtn" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold hover:bg-slate-800 flex items-center gap-2.5 text-amber-300 transition">
+              <i class="fa-solid fa-user-shield text-sm"></i>
+              <span id="menuAdminBtnText">Admin Mode On</span>
+            </button>
+
+            <button onclick="openChangePasswordModal()" id="menuChangePassBtn" class="hidden w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-slate-200 transition border-t border-slate-800">
+              <i class="fa-solid fa-key text-amber-400 text-sm"></i>
+              <span>पासवर्ड बदलें</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -563,28 +592,7 @@
 
   </main>
 
-  <!-- ==================== FIXED BOTTOM FOOTER: ADMIN LOGIN & SETTINGS ==================== -->
-  <footer class="fixed bottom-0 left-0 right-0 bg-slate-900 text-white py-3 px-4 border-t-2 border-amber-400 z-40 no-print">
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div id="adminIndicatorDot" class="w-3 h-3 rounded-full bg-slate-500"></div>
-        <span id="footerAdminStatus" class="text-xs font-semibold text-slate-300">User Mode (केवल देखने के लिए)</span>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <button onclick="toggleAdminLogin()" id="adminToggleBtn" class="bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-extrabold px-4 py-2 rounded-xl shadow border-2 border-amber-200 flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-user-shield"></i>
-          <span id="adminBtnText">Admin Mode On</span>
-        </button>
-
-        <button onclick="openChangePasswordModal()" id="changePassBtn" class="hidden bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold px-3 py-2 rounded-xl border border-slate-600 transition flex items-center gap-1">
-          <i class="fa-solid fa-key"></i> पासवर्ड बदलें
-        </button>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ==================== POPUP: LOGO PREVIEW (Admin can change logo for everyone) ==================== -->
+  <!-- ==================== POPUP 1: LOGO FULLSCREEN PREVIEW ==================== -->
   <div id="logoPreviewModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="relative bg-white rounded-3xl p-4 max-w-sm w-full shadow-2xl border-4 border-amber-400 text-center">
       <button onclick="closeLogoPreview()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-base font-black shadow-lg border-2 border-white">
@@ -613,7 +621,7 @@
     </div>
   </div>
 
-  <!-- ==================== POPUP: PASSWORD CHANGER MODAL ==================== -->
+  <!-- ==================== POPUP 2: PASSWORD CHANGER MODAL ==================== -->
   <div id="changePassModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="relative bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border-4 border-amber-400">
       <button onclick="closeChangePasswordModal()" class="absolute -top-3 -right-3 w-9 h-9 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-base font-black shadow-lg border-2 border-white">
@@ -649,7 +657,7 @@
     </div>
   </div>
 
-  <!-- ==================== POPUP: SUMMARY TOTALS ==================== -->
+  <!-- ==================== POPUP 3: SUMMARY TOTALS ==================== -->
   <div id="summaryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-2 border-slate-300">
       
@@ -738,7 +746,7 @@
     let isAdmin = false;
     let currentAdminPass = "1234"; // Default backup
 
-    // Realtime Master Password Listener (Cloud Saved Password)
+    // Realtime Master Password Listener
     db.ref('cloud_admin_pin').on('value', snap => {
       const val = snap.val();
       if (val) {
@@ -746,7 +754,7 @@
       }
     });
 
-    // Realtime Cloud Logo Listener (Syncs logo on ALL devices instantly)
+    // Realtime Cloud Logo Listener
     let currentLogoUrl = "";
     db.ref('cloud_dairy_logo').on('value', snap => {
       const val = snap.val();
@@ -770,41 +778,57 @@
     document.getElementById('custPayDate').value = today;
     document.getElementById('todayLabel1').innerText = "आज: " + today;
 
+    // 3-Lines Side Menu Toggle
+    function toggleSideMenu() {
+      const menu = document.getElementById('sideMenuDropdown');
+      menu.classList.toggle('hidden');
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('sideMenuDropdown');
+      const btn = document.getElementById('menuToggleBtn');
+      if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
     // Toggle Admin Login
     function toggleAdminLogin() {
+      const menu = document.getElementById('sideMenuDropdown');
+      menu.classList.add('hidden');
+
       if (!isAdmin) {
         const pin = prompt("एडमिन मोड चालू करने के लिए पिन दर्ज करें:");
         if (pin === currentAdminPass) {
           isAdmin = true;
           updateAdminUI();
-          alert("स्वागत है! आप एडमिन बन चुके हैं। (एक साथ कई लोग भी नया पासवर्ड डालकर एडमिन बन सकते हैं)");
+          alert("स्वागत है! आप एडमिन बन चुके हैं। (एक साथ दो लोग भी नया पासवर्ड डालकर एडमिन बन सकते हैं)");
         } else if (pin) {
           alert("गलत एडमिन पासवर्ड!");
         }
       } else {
         isAdmin = false;
         updateAdminUI();
-        alert("एडमिन मोड बंद हो गया।");
+        alert("एडमिन मोड लॉगआउट हो गया।");
       }
     }
 
     function updateAdminUI() {
       const badge = document.getElementById('roleBadge');
-      const btnText = document.getElementById('adminBtnText');
-      const dot = document.getElementById('adminIndicatorDot');
-      const statusText = document.getElementById('footerAdminStatus');
-      const changePassBtn = document.getElementById('changePassBtn');
+      const statusText = document.getElementById('dropdownStatusText');
+      const menuAdminBtnText = document.getElementById('menuAdminBtnText');
+      const menuChangePassBtn = document.getElementById('menuChangePassBtn');
       const adminLogoArea = document.getElementById('adminLogoChangeArea');
 
       const adminForms = ['milkAdminForm', 'expAdminForm', 'attAdminForm', 'catAdminForm', 'custAdminForm', 'stockAdminForm'];
 
       if (isAdmin) {
         badge.innerText = "Admin Mode On";
-        badge.className = "text-[10px] bg-emerald-700 text-white px-2.5 py-0.5 rounded-full font-bold border border-emerald-400";
-        btnText.innerText = "Admin Mode Off";
-        dot.className = "w-3 h-3 rounded-full bg-emerald-400 animate-ping";
-        statusText.innerText = "Admin Active (आप एंट्री व डिलीट कर सकते हैं)";
-        changePassBtn.classList.remove('hidden');
+        badge.className = "text-[9px] sm:text-[10px] bg-emerald-700 text-white px-2.5 py-0.5 rounded-full font-bold border border-emerald-400";
+        statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Admin Mode (Active)`;
+        menuAdminBtnText.innerText = "Admin Logout";
+        menuChangePassBtn.classList.remove('hidden');
         adminLogoArea.classList.remove('hidden');
 
         adminForms.forEach(id => {
@@ -814,11 +838,10 @@
         document.querySelectorAll('.admin-action-col').forEach(el => el.classList.remove('hidden'));
       } else {
         badge.innerText = "User Mode";
-        badge.className = "text-[10px] bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded-full font-bold border border-slate-600";
-        btnText.innerText = "Admin Mode On";
-        dot.className = "w-3 h-3 rounded-full bg-slate-500";
-        statusText.innerText = "User Mode (केवल देखने के लिए)";
-        changePassBtn.classList.add('hidden');
+        badge.className = "text-[9px] sm:text-[10px] bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded-full font-bold border border-slate-600";
+        statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-500"></span> User Mode (View Only)`;
+        menuAdminBtnText.innerText = "Admin Mode On";
+        menuChangePassBtn.classList.add('hidden');
         adminLogoArea.classList.add('hidden');
 
         adminForms.forEach(id => {
@@ -832,6 +855,7 @@
 
     // Password Change Modal System
     function openChangePasswordModal() {
+      document.getElementById('sideMenuDropdown').classList.add('hidden');
       if (!isAdmin) return;
       document.getElementById('oldPassInput').value = '';
       document.getElementById('newPassInput').value = '';
@@ -849,25 +873,21 @@
       const newP = document.getElementById('newPassInput').value.trim();
       const confirmP = document.getElementById('confirmNewPassInput').value.trim();
 
-      // Verify Old Password
       if (oldP !== currentAdminPass) {
         alert("पुराना पासवर्ड गलत है! पासवर्ड नहीं बदला जा सका।");
         return;
       }
 
-      // Check Length
       if (newP.length < 3) {
         alert("नया पासवर्ड कम से कम 3 अक्षरों/अंकों का होना चाहिए!");
         return;
       }
 
-      // Check Match
       if (newP !== confirmP) {
         alert("नया पासवर्ड और दोबारा डाला गया पासवर्ड आपस में मैच नहीं कर रहे हैं!");
         return;
       }
 
-      // Save permanently to Firebase Realtime Database
       db.ref('cloud_admin_pin').set(newP).then(() => {
         alert(`पासवर्ड सफलतापूर्वक बदल गया है!\n\nनया पासवर्ड क्लाउड में सेव हो गया है और पुराना डिफॉल्ट पासवर्ड हमेशा के लिए हट चुका है। अब किसी भी फोन में इसी नए पासवर्ड से एडमिन लॉगिन होगा।`);
         closeChangePasswordModal();
@@ -907,7 +927,6 @@
       const reader = new FileReader();
       reader.onload = function(e) {
         const base64Img = e.target.result;
-        // Save to Firebase so ALL phones see the new logo
         db.ref('cloud_dairy_logo').set(base64Img).then(() => {
           alert("नया लोगो क्लाउड में सेव हो गया! अब हर फोन में यही लोगो दिखेगा।");
         }).catch(() => {
