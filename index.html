@@ -197,12 +197,11 @@
           <i class="fa-solid fa-plus text-emerald-700"></i> दूध बिक्री दर्ज करें
         </h2>
         <form onsubmit="addMilkEntry(event)" class="space-y-3">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="milkDate" required class="w-full text-sm border-2 rounded-xl p-2.5 outline-none" /></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">समय</label><select id="milkShift" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white"><option value="सुबह (Morning)">सुबह (Morning)</option><option value="शाम (Evening)">शाम (Evening)</option></select></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री प्रकार</label><select id="milkSaleType" onchange="toggleMilkSaleType()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="retail">ग्राहक (Fixed Rate)</option><option value="plant">डेयरी प्लांट (FAT/SNF)</option></select></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक/प्लांट नाम</label><input type="text" id="milkCustomer" required placeholder="उदा. राम जी" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-            <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मोबाइल नंबर (WhatsApp)</label><input type="tel" id="milkCustomerPhone" placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-emerald-300 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
           </div>
 
           <div id="plantFatSnfBlock" class="hidden p-3 bg-rose-50 border-2 border-rose-300 rounded-xl grid grid-cols-3 gap-2">
@@ -301,7 +300,7 @@
         </button>
       </div>
 
-      <!-- Add Cattle Form -->
+      <!-- Add Cattle Form (DIRECT ONCLICK FIX) -->
       <div id="catAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-amber-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-cow text-amber-600"></i> <span id="catFormTitle">नया पशु प्रोफाइल</span></h2>
         <input type="hidden" id="editCatRecordId" value="" />
@@ -497,7 +496,7 @@
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-amber-400 flex flex-col max-h-[90vh]">
       <div class="bg-emerald-950 text-white p-4 flex items-center justify-between border-b shrink-0"><h3 class="font-extrabold text-amber-300">फार्म स्थापना लागत व रिकवरी</h3><button onclick="closeSetupCostModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white font-black">✕</button></div>
       <div class="p-4 overflow-y-auto space-y-3">
-        <div class="grid grid-cols-2 gap-2"><div class="bg-slate-900 text-white p-3 rounded-xl border"><span class="text-[10px] text-slate-400 font-bold uppercase block">कुल लागत</span><div class="text-xl font-black text-amber-300 mt-0.5" id="dispTotalSetupCost">₹0</div></div><div class="bg-emerald-950 text-white p-3 rounded-xl border"><span class="text-[11px] text-emerald-300 font-bold uppercase block">कुल शुद्ध बचत</span><div class="text-xl font-black text-emerald-300 mt-0.5" id="dispNetRecovered">₹0</div></div></div>
+        <div class="grid grid-cols-2 gap-2"><div class="bg-slate-900 text-white p-3 rounded-xl border"><span class="text-[10px] text-slate-400 font-bold uppercase block">कुल लागत</span><div class="text-xl font-black text-amber-300 mt-0.5" id="dispTotalSetupCost">₹0</div></div><div class="bg-emerald-950 text-white p-4 rounded-2xl border"><span class="text-[11px] text-emerald-300 font-bold uppercase block">कुल शुद्ध बचत</span><div class="text-xl font-black text-emerald-300 mt-0.5" id="dispNetRecovered">₹0</div></div></div>
         <div id="setupCostAdminForm" class="hidden bg-slate-50 p-3 rounded-xl border"><form onsubmit="addSetupCostItem(event)" class="grid grid-cols-3 gap-2"><input type="text" id="setupItemName" required placeholder="मद" class="text-xs border rounded-lg p-2" /><input type="number" id="setupItemAmount" required placeholder="₹" class="text-xs border rounded-lg p-2 font-bold" /><button type="submit" class="bg-emerald-800 text-white font-bold text-xs py-2 rounded-lg">+ जोड़ें</button></form></div>
         <div id="setupCostListContainer" class="space-y-1.5 max-h-48 overflow-y-auto"></div>
       </div>
@@ -518,7 +517,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script with Full Error Resolution -->
+  <!-- Core Cloud Script (Direct Click & Instant Feedback) -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -574,44 +573,6 @@
     function dismissStockAlert() {
       localStorage.setItem('prajapati_stk_snooze', Date.now() + FIVE_HOURS);
       document.getElementById('stockNotificationBanner').classList.add('hidden');
-    }
-
-    // Helper: Base64 dataURL to Blob for sharing QR Image
-    function dataURLtoBlob(dataurl) {
-      const arr = dataurl.split(',');
-      const mime = arr[0].match(/:(.*?);/)[1];
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      return new Blob([u8arr], {type:mime});
-    }
-
-    async function shareDirectBillWithQR(phone, textMsg) {
-      const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
-      if (paymentSettings.qrImage && navigator.canShare) {
-        try {
-          const qrBlob = dataURLtoBlob(paymentSettings.qrImage);
-          const file = new File([qrBlob], "Payment_QR.png", { type: qrBlob.type });
-          if (navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              title: 'प्रजापति डेयरी फॉर्म बिल',
-              text: textMsg.replace(/%0A/g, '\n'),
-              files: [file]
-            });
-            return;
-          }
-        } catch (err) {
-          console.log("Web Share fallback:", err);
-        }
-      }
-      if (cleanPhone) {
-        window.open(`https://wa.me/91${cleanPhone}?text=${textMsg}`, '_blank');
-      } else {
-        window.open(`https://wa.me/?text=${textMsg}`, '_blank');
-      }
     }
 
     function toggleSideMenu() {
@@ -693,7 +654,6 @@
     function closeSetupCostModal() { document.getElementById('setupCostModal').classList.add('hidden'); }
     function openChangePasswordModal() { document.getElementById('changePassModal').classList.remove('hidden'); }
     function closeChangePasswordModal() { document.getElementById('changePassModal').classList.add('hidden'); }
-    function openLogoPreview() {}
 
     // Cattle Module Adjustments
     function adjustBreedOptions() {
@@ -739,66 +699,7 @@
       cattleData.forEach(c => sel.innerHTML += `<option value="${c.categoryType} #${c.tag}">${c.categoryType} #${c.tag}</option>`);
     }
 
-    function toggleCattleSubForm(mode) {
-      document.getElementById('catAdminForm').classList.add('hidden');
-      document.getElementById('calfAdminForm').classList.add('hidden');
-      document.getElementById('sellAnimalAdminForm').classList.add('hidden');
-
-      document.getElementById('subBtnAddAnimal').className = "px-3.5 py-2 rounded-xl font-bold text-xs bg-white text-slate-700 border-2 border-slate-300 shadow";
-      document.getElementById('subBtnAddCalf').className = "px-3.5 py-2 rounded-xl font-bold text-xs bg-white text-slate-700 border-2 border-slate-300 shadow";
-      document.getElementById('subBtnSellAnimal').className = "px-3.5 py-2 rounded-xl font-bold text-xs bg-white text-emerald-800 border-2 border-emerald-400 shadow";
-
-      if (mode === 'addAnimal') {
-        document.getElementById('catAdminForm').classList.remove('hidden');
-        document.getElementById('subBtnAddAnimal').className = "px-3.5 py-2 rounded-xl font-bold text-xs bg-slate-900 text-amber-300 border-2 border-slate-700 shadow";
-      } else if (mode === 'addCalf') {
-        document.getElementById('calfAdminForm').classList.remove('hidden');
-        document.getElementById('subBtnAddCalf').className = "px-3.5 py-2 rounded-xl font-bold text-xs bg-blue-900 text-white border-2 border-blue-700 shadow";
-      } else if (mode === 'sellAnimal') {
-        document.getElementById('sellAnimalAdminForm').classList.remove('hidden');
-        document.getElementById('subBtnSellAnimal').className = "px-3.5 py-2 rounded-xl font-bold text-xs bg-emerald-800 text-white border-2 border-emerald-600 shadow";
-      }
-    }
-
-    function startEditCattle(id) {
-      if (!isAdmin) return;
-      closeUniversalModal();
-      const item = cattleData.find(c => c.id === id);
-      if (!item) return;
-
-      document.getElementById('editCatRecordId').value = id;
-      document.getElementById('catCategoryType').value = item.categoryType || 'भैंस (Buffalo)';
-      adjustBreedOptions();
-      document.getElementById('catTag').value = item.tag || '';
-      document.getElementById('catBreed').value = item.breed || '';
-      document.getElementById('catStatus').value = item.status || 'दूध दे रही है';
-      document.getElementById('catDailyMilk').value = item.milk || 0;
-      document.getElementById('catBuyDate').value = item.buyDate || today;
-      document.getElementById('catBuyCost').value = item.buyCost || '';
-      document.getElementById('catAiDate').value = item.aiDate || '';
-
-      document.getElementById('catFormTitle').innerText = "पशु एडिट करें: " + item.tag;
-      document.getElementById('cancelCatEditBtn').classList.remove('hidden');
-      toggleCattleSubForm('addAnimal');
-      window.scrollTo({ top: 300, behavior: 'smooth' });
-    }
-
-    function deleteCattle(id) {
-      if (!isAdmin) return;
-      if (confirm("यह पशु रिकॉर्ड हटाएं?")) {
-        db.ref('cattle_records/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-
-    function deleteCalf(id) {
-      if (!isAdmin) return;
-      if (confirm("यह बच्चा रिकॉर्ड हटाएं?")) {
-        db.ref('calf_records/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-
+    // DIRECT CLICK CATTLE SAVE FUNCTION (NO FORM BLOCKAGE)
     function saveDirectCattle() {
       if (!isAdmin) {
         const pin = prompt("डेटा सुरक्षित करने के लिए एडमिन पिन दर्ज करें:");
@@ -999,25 +900,20 @@
     }
 
     // Customer WhatsApp Reminder with QR code
-    function sendWhatsAppReminder(name, bal, phone) {
-      const msg = `*प्रजापति डेयरी फॉर्म - उधारी तगादा*%0A--------------------------------%0Aनमस्ते *${name}*,%0Aडेयरी बहीखाते के अनुसार आपकी कुल बकाया रकम *₹ ${bal.toFixed(2)}* है।%0A*UPI ID:* ${paymentSettings.upiId}%0A*PhonePe/GPay:* ${paymentSettings.upiPhone}%0A*खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})%0A(कृपया संलग्न QR कोड को स्कैन करके भुगतान करें)%0A--------------------------------%0Aधन्यवाद!`;
-      shareDirectBillWithQR(phone, msg);
-    }
-
-    function sendCustomerMilkBill(name, date, qty, rate, total, status, phone) {
-      const msg = `*प्रजापति डेयरी फॉर्म - दूध रसीद*%0A--------------------------------%0A*ग्राहक:* ${name}%0A*तारीख:* ${date}%0A*मात्रा:* ${qty} L%0A*रेट:* ₹ ${rate}/L%0A*कुल बिल:* ₹ ${total}%0A*भुगतान स्थिति:* ${status}%0A*UPI ID:* ${paymentSettings.upiId}%0A*PhonePe/GPay:* ${paymentSettings.upiPhone}%0A--------------------------------%0Aधन्यवाद!`;
-      shareDirectBillWithQR(phone, msg);
+    function sendWhatsAppReminder(name, bal) {
+      let qrMsg = paymentSettings.qrImage ? `%0A*भुगतान QR:* (स्क्रीनशॉट से स्कैन करें या बैंक में ट्रांसफर करें)` : '';
+      const msg = `*प्रजापति डेयरी फॉर्म - उधारी तगादा*%0Aनमस्ते *${name}*,%0Aआपकी कुल बकाया रकम *₹ ${bal.toFixed(2)}* है।%0A*UPI ID:* ${paymentSettings.upiId}%0A*PhonePe/GPay:* ${paymentSettings.upiPhone}%0A*खाता:* ${paymentSettings.bankAcc} (IFSC: ${paymentSettings.bankIfsc})${qrMsg}%0Aधन्यवाद!`;
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
     }
 
     function renderCustomers() {
       const map = {};
       milkData.forEach(m => {
-        if(!map[m.customer]) map[m.customer] = { milk: 0, bill: 0, paid: 0, phone: m.customerPhone || '' };
+        if(!map[m.customer]) map[m.customer] = { milk: 0, bill: 0, paid: 0 };
         map[m.customer].milk += m.qty; map[m.customer].bill += m.total;
-        if (m.customerPhone) map[m.customer].phone = m.customerPhone;
       });
       customerPayments.forEach(p => {
-        if(!map[p.name]) map[p.name] = { milk: 0, bill: 0, paid: 0, phone: '' };
+        if(!map[p.name]) map[p.name] = { milk: 0, bill: 0, paid: 0 };
         map[p.name].paid += p.amount;
       });
 
@@ -1026,20 +922,19 @@
       Object.keys(map).forEach(name => {
         const bal = map[name].bill - map[name].paid;
         const due = bal > 0;
-        const custPhone = map[name].phone || '';
         const qrHtml = paymentSettings.qrImage ? `<div class="p-2 bg-sky-50 rounded-xl border text-center mt-2"><span class="text-[10px] font-bold block mb-1">पेमेंट QR कोड</span><img src="${paymentSettings.qrImage}" class="w-20 h-20 mx-auto object-contain border rounded" /></div>` : '';
 
         const pop = `
           <div class="space-y-2 text-xs">
-            <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between"><div><b>${name}</b><br>दूध: ${map[name].milk}L<br><span class="text-[10px] text-slate-500 font-bold">मो: ${custPhone || '-'}</span></div><div class="text-base font-black ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(2)}</div></div>
+            <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between"><div><b>${name}</b><br>दूध: ${map[name].milk}L</div><div class="text-base font-black ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(2)}</div></div>
             ${qrHtml}
-            ${due ? `<button onclick="sendWhatsAppReminder('${name}', ${bal}, '${custPhone}')" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl mt-2 flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp पर QR फोटो व तगादा भेजें</button>` : '<span class="block text-center text-emerald-700 font-bold mt-2">हिसाब चुकता है</span>'}
+            ${due ? `<button onclick="sendWhatsAppReminder('${name}', ${bal})" class="w-full bg-emerald-700 text-white font-bold py-2 rounded-xl mt-2"><i class="fa-brands fa-whatsapp"></i> WhatsApp पर तगादा व QR भेजें</button>` : ''}
           </div>
         `;
 
         c.innerHTML += `
           <div onclick="openUniversalModal('${name}', 'बकाया: ₹${bal.toFixed(0)}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center cursor-pointer hover:border-indigo-600 transition">
-            <div><h4 class="font-bold text-slate-900 text-sm">${name}</h4><span class="text-[10px] text-slate-500">दूध: ${map[name].milk}L • ${custPhone}</span></div>
+            <div><h4 class="font-bold text-slate-900 text-sm">${name}</h4><span class="text-[10px] text-slate-500">दूध: ${map[name].milk}L</span></div>
             <span class="font-bold text-xs ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(0)}</span>
           </div>
         `;
@@ -1068,21 +963,13 @@
       if (!isAdmin) return;
       const qty = parseFloat(document.getElementById('milkQty').value) || 0;
       const rate = parseFloat(document.getElementById('milkRate').value) || 0;
-      const phone = document.getElementById('milkCustomerPhone').value.trim();
-
       db.ref('milk_records').push({
         date: document.getElementById('milkDate').value,
         shift: document.getElementById('milkShift').value,
         saleType: document.getElementById('milkSaleType').value,
         customer: document.getElementById('milkCustomer').value.trim(),
-        customerPhone: phone,
         qty, rate, total: qty * rate, paymentStatus: document.getElementById('milkPaymentStatus').value, timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('milkCustomer').value = '';
-        document.getElementById('milkCustomerPhone').value = '';
-        document.getElementById('milkQty').value = '';
-        alert("दूध बिक्री दर्ज!");
-      });
+      }).then(() => { document.getElementById('milkCustomer').value = ''; document.getElementById('milkQty').value = ''; alert("दूध बिक्री दर्ज!"); });
     }
 
     function renderMilk() {
@@ -1092,28 +979,8 @@
       cattleData.forEach(x => prod += (x.milk || 0));
       milkData.forEach(x => {
         if (x.date === today) sold += (x.qty || 0);
-
-        const pop = `
-          <div class="space-y-2.5 text-xs">
-            <div class="p-2.5 bg-slate-50 border rounded-xl">
-              <h4 class="font-black text-slate-900 text-sm">${x.customer}</h4>
-              <p class="text-[11px] text-slate-500 font-bold">मो: ${x.customerPhone || 'उपलब्ध नहीं'}</p>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>तारीख:</b> ${x.date} (${x.shift})</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>रेट:</b> ₹${x.rate}</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>मात्रा:</b> ${x.qty} L</div>
-              <div class="p-2 bg-emerald-50 rounded-lg border text-emerald-900 font-bold"><b>कुल:</b> ₹${x.total}</div>
-            </div>
-            <button onclick="sendCustomerMilkBill('${x.customer}', '${x.date}', ${x.qty}, ${x.rate}, ${x.total}, '${x.paymentStatus}', '${x.customerPhone || ''}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
-              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद (QR फोटो सहित भेजें)
-            </button>
-            ${isAdmin ? `<button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
-          </div>
-        `;
-
         c.innerHTML += `
-          <div onclick="openUniversalModal('${x.customer}', '${x.date} • ${x.shift}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-emerald-600 transition">
+          <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
             <div><h4 class="font-bold text-slate-900">${x.customer}</h4><p class="text-[10px] text-slate-500">${x.date} • ${x.shift}</p></div>
             <div class="text-right"><span class="font-bold text-emerald-950">${x.qty}L</span><br><span class="font-bold text-slate-700">₹${x.total}</span></div>
           </div>
@@ -1166,23 +1033,6 @@
       }).then(() => { document.getElementById('stockName').value = ''; alert("स्टॉक जुड़ गया!"); });
     }
 
-    function updateStockQty(id, change) {
-      if (!isAdmin) return;
-      const item = stockData.find(x => x.id === id);
-      if (item) {
-        db.ref('stock_records/' + id).update({ qty: Math.max(0, item.qty + change), updatedAt: Date.now() });
-        closeUniversalModal();
-      }
-    }
-
-    function deleteStock(id) {
-      if (!isAdmin) return;
-      if (confirm("यह स्टॉक हटाएं?")) {
-        db.ref('stock_records/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-
     function renderStock() {
       const c = document.getElementById('stockHeadingList');
       c.innerHTML = '';
@@ -1190,29 +1040,8 @@
       stockData.forEach(s => {
         const d = Math.floor(s.qty / (s.dailyUse || 1));
         if (d <= 3 && s.qty > 0) low.push(`${s.name} मात्र ${d} दिन बाकी!`);
-
-        const pop = `
-          <div class="space-y-3 text-xs">
-            <div class="p-2.5 bg-yellow-50 rounded-xl border border-yellow-200">
-              <h4 class="font-black text-yellow-950 text-base">${s.name}</h4>
-              <p>वर्तमान स्टॉक: <b>${s.qty} ${s.unit}</b></p>
-              <p>दैनिक खपत: <b>${s.dailyUse} ${s.unit}/दिन</b> (${d} दिन शेष)</p>
-            </div>
-            ${isAdmin ? `
-              <div class="p-2 bg-slate-100 rounded-xl flex items-center justify-between">
-                <span class="font-bold">मात्रा बदलें:</span>
-                <div class="flex gap-2">
-                  <button onclick="updateStockQty('${s.id}', -1)" class="w-8 h-8 bg-slate-200 font-bold rounded">-1</button>
-                  <button onclick="updateStockQty('${s.id}', 1)" class="w-8 h-8 bg-slate-900 text-white font-bold rounded">+1</button>
-                </div>
-              </div>
-              <button onclick="deleteStock('${s.id}')" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट स्टॉक</button>
-            ` : ''}
-          </div>
-        `;
-
         c.innerHTML += `
-          <div onclick="openUniversalModal('${s.name}', 'स्टॉक: ${s.qty} ${s.unit}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-yellow-600 transition">
+          <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
             <div><h4 class="font-bold text-slate-900">${s.name}</h4><p class="text-[10px] text-slate-500">${d} दिन शेष</p></div>
             <span class="font-black text-amber-950">${s.qty} ${s.unit}</span>
           </div>
@@ -1236,31 +1065,8 @@
       cattleData.forEach(c => {
         const isBuf = (c.categoryType || '').includes('भैंस');
         const target = isBuf ? bList : cList;
-
-        const pop = `
-          <div class="space-y-3 text-xs">
-            <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 flex justify-between items-start">
-              <div>
-                <span class="text-[10px] font-bold text-amber-800 uppercase block">${c.categoryType} • ${c.breed}</span>
-                <h4 class="text-xl font-black text-amber-950">टैग: ${c.tag}</h4>
-              </div>
-              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">${c.status}</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>दैनिक दूध:</b> ${c.milk} L</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>खरीद तारीख:</b> ${c.buyDate || '-'}</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>खरीद लागत:</b> ₹${c.buyCost || '0'}</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>AI तारीख:</b> ${c.aiDate || '-'}</div>
-            </div>
-            <div class="pt-2 flex justify-between gap-2">
-              <button onclick="startEditCattle('${c.id}')" class="w-full bg-slate-900 text-amber-300 font-bold py-2.5 rounded-xl text-xs"><i class="fa-solid fa-pen-to-square"></i> विवरण एडिट करें</button>
-              ${isAdmin ? `<button onclick="deleteCattle('${c.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300">डिलीट</button>` : ''}
-            </div>
-          </div>
-        `;
-
         target.innerHTML += `
-          <div onclick="openUniversalModal('${c.categoryType} टैग: ${c.tag}', '${c.breed}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-amber-600 transition">
+          <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
             <div><h4 class="font-black text-slate-900">टैग: ${c.tag}</h4><p class="text-[10px] text-slate-500">${c.breed} • ${c.milk}L</p></div>
             <span class="text-[10px] font-bold bg-amber-100 px-2 py-0.5 rounded">${c.status}</span>
           </div>
@@ -1270,23 +1076,8 @@
       calfData.forEach(c => {
         const isBuf = (c.categoryType || '').includes('भैंस');
         const target = isBuf ? bList : cList;
-
-        const pop = `
-          <div class="space-y-3 text-xs">
-            <div class="p-3 bg-blue-50 rounded-2xl border border-blue-200">
-              <span class="text-[10px] font-bold text-blue-800 uppercase block">${c.categoryType}</span>
-              <h4 class="text-xl font-black text-blue-950">👶 टैग: ${c.tag} (${c.gender})</h4>
-            </div>
-            <div class="p-2.5 bg-slate-50 rounded-xl border space-y-1">
-              <div><b>माता का टैग:</b> ${c.motherTag}</div>
-              <div><b>जन्म तारीख:</b> ${c.birthDate}</div>
-            </div>
-            ${isAdmin ? `<button onclick="deleteCalf('${c.id}')" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
-          </div>
-        `;
-
         target.innerHTML += `
-          <div onclick="openUniversalModal('बच्चा टैग: ${c.tag}', '${c.categoryType} • माता: ${c.motherTag}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-blue-50/50 p-3 rounded-2xl border-2 border-blue-200 flex justify-between items-center text-xs cursor-pointer hover:border-blue-600 transition">
+          <div class="bg-blue-50/50 p-3 rounded-2xl border-2 border-blue-200 flex justify-between items-center text-xs">
             <div><h4 class="font-black text-blue-950">👶 ${c.tag}</h4><p class="text-[10px] text-blue-800">माता: ${c.motherTag}</p></div>
             <span class="text-[10px] font-bold text-blue-900">${c.gender}</span>
           </div>
@@ -1298,184 +1089,18 @@
       populateExpenseTagDropdown();
     }
 
-    function addLabourProfile(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('labour_profiles').push({
-        name: document.getElementById('labourName').value.trim(),
-        phone: document.getElementById('labourPhone').value.trim() || '-',
-        salary: parseFloat(document.getElementById('labourSalary').value) || 0,
-        joinDate: document.getElementById('labourJoinDate').value,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('labourName').value = '';
-        document.getElementById('labourPhone').value = '';
-        document.getElementById('labourSalary').value = '';
-        alert("मजदूर सुरक्षित!");
-      });
-    }
-
     function renderLabour() {
       const c = document.getElementById('labourHeadingList');
       c.innerHTML = '';
       labourProfiles.forEach(l => {
-        const pop = `
-          <div class="space-y-3 text-xs">
-            <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-              <div><h4 class="text-base font-black text-slate-900">${l.name}</h4><p class="text-slate-500 font-bold">${l.phone}</p></div>
-              <span class="text-emerald-900 font-black text-sm">₹${l.salary}/माह</span>
-            </div>
-            <div class="flex gap-2">
-              <a href="tel:${l.phone}" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-solid fa-phone"></i> कॉल करें</a>
-              <a href="https://wa.me/91${l.phone.replace(/\D/g,'')}?text=नमस्ते ${l.name}, प्रजापति डेयरी फॉर्म से संदेश।" target="_blank" class="w-full bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-            </div>
-            ${isAdmin ? `<button onclick="db.ref('labour_profiles/${l.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
-          </div>
-        `;
-
         c.innerHTML += `
-          <div onclick="openUniversalModal('${l.name}', 'वेतन: ₹${l.salary}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-slate-700 transition">
+          <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
             <div><h4 class="font-bold text-slate-900">${l.name}</h4><p class="text-[10px] text-slate-500">${l.phone}</p></div>
             <span class="font-bold text-emerald-950">₹${l.salary}/माह</span>
           </div>
         `;
       });
       document.getElementById('labourRecordCount').innerText = labourProfiles.length;
-    }
-
-    function addCustomerPayment(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('customer_payments').push({
-        date: document.getElementById('custPayDate').value,
-        name: document.getElementById('custPayName').value.trim(),
-        amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('custPayName').value = '';
-        document.getElementById('custPayAmount').value = '';
-        alert("जमा दर्ज!");
-      });
-    }
-
-    function addSetupCostItem(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('farm_setup_costs').push({
-        name: document.getElementById('setupItemName').value.trim(),
-        amount: parseFloat(document.getElementById('setupItemAmount').value) || 0,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('setupItemName').value = '';
-        document.getElementById('setupItemAmount').value = '';
-      });
-    }
-
-    function renderSetupCost() {
-      const container = document.getElementById('setupCostListContainer');
-      if (!container) return;
-      container.innerHTML = '';
-      let total = 0;
-      setupCostData.forEach(item => {
-        total += item.amount;
-        container.innerHTML += `
-          <div class="flex items-center justify-between p-2 bg-slate-50 rounded-lg text-xs">
-            <span>${item.name}</span>
-            <div class="flex gap-2 items-center">
-              <span class="font-bold">₹${item.amount}</span>
-              ${isAdmin ? `<button onclick="db.ref('farm_setup_costs/${item.id}').remove()" class="text-rose-500"><i class="fa-solid fa-trash"></i></button>` : ''}
-            </div>
-          </div>
-        `;
-      });
-      document.getElementById('dispTotalSetupCost').innerText = '₹ ' + total.toLocaleString('en-IN');
-    }
-
-    function savePaymentSettings(e) {
-      e.preventDefault();
-      db.ref('cloud_payment_settings').set({
-        upiId: document.getElementById('settingUpiId').value.trim(),
-        upiPhone: document.getElementById('settingUpiPhone').value.trim(),
-        bankAcc: document.getElementById('settingBankAcc').value.trim(),
-        bankIfsc: document.getElementById('settingBankIfsc').value.trim(),
-        qrImage: paymentSettings.qrImage || ''
-      }).then(() => {
-        alert("सेटिंग्स सुरक्षित!");
-        closePaymentSettingsModal();
-      });
-    }
-
-    function handleQrUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        paymentSettings.qrImage = e.target.result;
-        document.getElementById('qrPreviewImg').src = paymentSettings.qrImage;
-        document.getElementById('qrPreviewWrap').classList.remove('hidden');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function handlePasswordChangeSubmit(e) {
-      e.preventDefault();
-      const oldP = document.getElementById('oldPassInput').value.trim();
-      const newP = document.getElementById('newPassInput').value.trim();
-      if (oldP !== currentAdminPass) { alert("पुराना पिन गलत है!"); return; }
-      db.ref('cloud_admin_pin').set(newP).then(() => {
-        alert("पिन बदल गया!");
-        closeChangePasswordModal();
-      });
-    }
-
-    function exportAllDataToCSV() {
-      document.getElementById('sideMenuDropdown').classList.add('hidden');
-      let csv = "प्रजापति डेयरी फॉर्म बैकअप डेटा\n\nदूध बिक्री\nतारीख,ग्राहक,मोबाइल,मात्रा,रेट,कुल\n";
-      milkData.forEach(m => csv += `"${m.date}","${m.customer}","${m.customerPhone || ''}","${m.qty}","${m.rate}","${m.total}"\n`);
-      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `Dairy_Backup_${today}.csv`;
-      link.click();
-    }
-
-    function triggerFactoryReset() {
-      document.getElementById('sideMenuDropdown').classList.add('hidden');
-      const pin = prompt("फैक्ट्री रीसेट करने के लिए एडमिन पिन दर्ज करें:");
-      if (pin !== currentAdminPass) { alert("गलत पिन!"); return; }
-      if (confirm("चेतावनी: क्या आप सच में फार्म का सारा डेटा मिटाना चाहते हैं?")) {
-        const paths = ['milk_records', 'expense_records', 'labour_profiles', 'cattle_records', 'calf_records', 'sold_animals_archive', 'animal_sales', 'customer_payments', 'stock_records', 'farm_setup_costs', 'vet_doctors'];
-        Promise.all(paths.map(p => db.ref(p).remove())).then(() => {
-          alert("समस्त डेटा रीसेट हो गया!");
-          location.reload();
-        });
-      }
-    }
-
-    function printOverallMasterReport() {
-      const printDiv = document.getElementById('printableArea');
-      let totM = 0, totR = 0, totE = 0;
-      milkData.forEach(d => { totM += d.qty; totR += d.total; });
-      expenseData.forEach(d => { totE += d.amount; });
-
-      printDiv.innerHTML = `
-        <div style="text-align:center; padding-bottom:12px; border-bottom:2px solid #000; margin-bottom:12px;">
-          <h1 style="font-size:22px; font-weight:bold; margin:0;">प्रजापति डेयरी फॉर्म</h1>
-          <p style="font-size:12px; margin:4px 0;">समस्त खाता रिपोर्ट • दिनांक: ${today}</p>
-        </div>
-        <div style="font-size:13px; margin-bottom:14px;">
-          <p><b>कुल दूध बिक्री:</b> ${totM.toFixed(1)} L | <b>कुल दूध आय:</b> ₹${totR.toFixed(2)} | <b>कुल खर्च:</b> ₹${totE.toFixed(2)}</p>
-          <p><b>शुद्ध बचत:</b> ₹${(totR - totE).toFixed(2)}</p>
-        </div>
-        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">दूध बिक्री सूची</h3>
-        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>ग्राहक</th><th>मात्रा</th><th>रेट</th><th>कुल</th></tr>
-          ${milkData.map((d, i) => `<tr><td>${i+1}</td><td>${d.date}</td><td>${d.customer}</td><td>${d.qty}L</td><td>₹${d.rate}</td><td>₹${d.total}</td></tr>`).join('')}
-        </table>
-      `;
-      printDiv.classList.remove('hidden');
-      window.print();
-      printDiv.classList.add('hidden');
     }
 
     function renderTotals() {
@@ -1502,7 +1127,6 @@
       renderLabour();
       renderTotals();
       renderVetDoctors();
-      renderSetupCost();
     }
 
     function switchTab(t) {
@@ -1515,10 +1139,9 @@
       document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.remove('hidden');
       const ab = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
       if (ab) ab.className = "shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-amber-300 shadow border-2 border-slate-700";
-      localStorage.setItem('prajapati_active_tab', t);
     }
 
-    // Debounced Realtime Sync from Firebase
+    // Realtime Sync from Firebase
     let renderTimeout = null;
     function scheduleRender() {
       clearTimeout(renderTimeout);
@@ -1526,19 +1149,7 @@
     }
 
     db.ref('cloud_admin_pin').on('value', s => { if(s.val()) currentAdminPass = s.val().toString().trim(); });
-    db.ref('cloud_payment_settings').on('value', s => {
-      if(s.val()) {
-        paymentSettings = { ...paymentSettings, ...s.val() };
-        document.getElementById('settingUpiId').value = paymentSettings.upiId || '';
-        document.getElementById('settingUpiPhone').value = paymentSettings.upiPhone || '';
-        document.getElementById('settingBankAcc').value = paymentSettings.bankAcc || '';
-        document.getElementById('settingBankIfsc').value = paymentSettings.bankIfsc || '';
-        if (paymentSettings.qrImage) {
-          document.getElementById('qrPreviewImg').src = paymentSettings.qrImage;
-          document.getElementById('qrPreviewWrap').classList.remove('hidden');
-        }
-      }
-    });
+    db.ref('cloud_payment_settings').on('value', s => { if(s.val()) paymentSettings = { ...paymentSettings, ...s.val() }; });
     db.ref('milk_records').on('value', s => { milkData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('expense_records').on('value', s => { expenseData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('cattle_records').on('value', s => { cattleData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
@@ -1548,14 +1159,10 @@
     db.ref('stock_records').on('value', s => { stockData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('vet_doctors').on('value', s => { vetDoctors = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('sold_animals_archive').on('value', s => { soldArchiveData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; });
-    db.ref('farm_setup_costs').on('value', s => { setupCostData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
 
     adjustBreedOptions();
     adjustCalfGenderOptions();
     updateAdminUI();
-
-    const savedTab = localStorage.getItem('prajapati_active_tab') || 'milk';
-    switchTab(savedTab);
   </script>
 </body>
 </html>
