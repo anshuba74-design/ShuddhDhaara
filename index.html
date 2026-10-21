@@ -49,9 +49,10 @@
           <span class="hidden sm:inline">लागत हिसाब</span>
         </button>
 
+        <!-- COMPLETE OVERALL MASTER REPORT PDF -->
         <button onclick="printOverallMasterReport()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow border-2 border-sky-400 flex items-center gap-1.5 transition active:scale-95">
           <i class="fa-solid fa-file-pdf text-amber-300"></i>
-          <span class="hidden sm:inline">PDF रिपोर्ट</span>
+          <span class="hidden sm:inline">संपूर्ण PDF रिपोर्ट</span>
           <span class="sm:hidden">PDF</span>
         </button>
 
@@ -504,7 +505,7 @@
     </div>
   </div>
 
-  <!-- POPUP: LOGO PREVIEW & UPLOAD (FIXED) -->
+  <!-- POPUP: LOGO PREVIEW & UPLOAD -->
   <div id="logoPreviewModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="relative bg-white rounded-3xl p-5 max-w-xs w-full shadow-2xl border-4 border-amber-400 text-center">
       <button onclick="closeLogoPreview()" class="absolute -top-3 -right-3 w-8 h-8 bg-rose-600 text-white rounded-full flex items-center justify-center font-black">✕</button>
@@ -1160,14 +1161,12 @@
       let prod = 0;
       let sold = 0;
 
-      // 1. कुल उत्पादित दूध (सक्रिय दुधारू पशुओं का दैनिक दूध)
       cattleData.forEach(c => {
         if (!c.status || c.status.includes('दूध दे रही')) {
           prod += parseFloat(c.milk || 0);
         }
       });
 
-      // 2. चयनित तारीख पर कुल बिका दूध
       milkData.forEach(m => {
         if (m.date === selDate) {
           sold += parseFloat(m.qty || 0);
@@ -1559,37 +1558,152 @@
       }
     }
 
-    // FIXED: Universal Master PDF Report Generation
+    // FIXED: COMPLETE 5-SECTION MASTER PDF REPORT
     function printOverallMasterReport() {
       const printDiv = document.getElementById('printableArea');
-      let totM = 0, totR = 0, totE = 0;
+      let totM = 0, totR = 0, totE = 0, totAnim = 0;
+      
       milkData.forEach(d => { totM += (parseFloat(d.qty) || 0); totR += (parseFloat(d.total) || 0); });
       expenseData.forEach(d => { totE += (parseFloat(d.amount) || 0); });
+      animalSaleData.forEach(d => { totAnim += (parseFloat(d.amount) || 0); });
 
-      let logoHtml = currentLogoUrl ? `<img src="${currentLogoUrl}" style="width:60px; height:60px; object-fit:contain; border-radius:8px; margin-right:12px;" />` : '';
+      const netProfit = (totR + totAnim) - totE;
+      let logoHtml = currentLogoUrl ? `<img src="${currentLogoUrl}" style="width:65px; height:65px; object-fit:contain; border-radius:8px; margin-right:15px; border:1px solid #ccc;" />` : '';
 
-      printDiv.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:center; border-bottom:3px solid #000; padding-bottom:10px; margin-bottom:15px;">
+      let content = `
+        <div style="display:flex; align-items:center; justify-content:center; border-bottom:3px solid #064e3b; padding-bottom:10px; margin-bottom:15px;">
           ${logoHtml}
           <div style="text-align:center;">
             <h1 style="font-size:24px; font-weight:bold; margin:0; color:#064e3b;">प्रजापति डेयरी फॉर्म</h1>
-            <p style="font-size:12px; margin:2px 0;">लाइव क्लाउड खाता रिपोर्ट • दिनांक: ${today}</p>
+            <p style="font-size:12px; margin:2px 0; color:#333;">संपूर्ण मास्टर रिपोर्ट (लाइव क्लाउड खाता) • दिनांक: ${today}</p>
           </div>
         </div>
-        <div style="border:1px solid #ccc; padding:10px; border-radius:6px; margin-bottom:15px; font-size:12px; background:#f9fafb;">
-          <table style="width:100%;">
-            <tr><td><b>कुल दूध बिक्री:</b> ${totM.toFixed(1)} L</td><td><b>कुल दूध आमदनी:</b> ₹${totR.toFixed(2)}</td></tr>
-            <tr><td><b>कुल फार्म खर्च:</b> ₹${totE.toFixed(2)}</td><td><b>शुद्ध बचत (मुनाफा):</b> ₹${(totR - totE).toFixed(2)}</td></tr>
+
+        <!-- 1. वित्तीय सारांश (Financial Summary) -->
+        <div style="border:2px solid #0f172a; padding:12px; border-radius:8px; margin-bottom:15px; font-size:12px; background:#f8fafc;">
+          <h3 style="font-size:13px; font-weight:bold; margin-top:0; margin-bottom:8px; text-decoration:underline;">१. वित्तीय सारांश (Financial Overview)</h3>
+          <table style="width:100%; border:none;">
+            <tr>
+              <td><b>कुल दूध बिक्री मात्रा:</b> ${totM.toFixed(1)} L</td>
+              <td><b>कुल दूध आमदनी:</b> ₹ ${totR.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td><b>पशु बिक्री से आमदनी:</b> ₹ ${totAnim.toFixed(2)}</td>
+              <td><b>कुल फार्म खर्च:</b> ₹ ${totE.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding-top:6px; font-size:14px;">
+                <b>शुद्ध बचत (नेट मुनाफा):</b> 
+                <span style="font-weight:bold; color:${netProfit >= 0 ? '#166534' : '#991b1b'};">
+                  ₹ ${netProfit.toFixed(2)}
+                </span>
+              </td>
+            </tr>
           </table>
         </div>
-        <h3 style="font-size:14px; font-weight:bold; margin-bottom:6px;">दूध बिक्री रिकॉर्ड्स (${milkData.length})</h3>
-        <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px;">
-          <tr style="background:#f1f5f9;"><th>क्र.</th><th>तारीख</th><th>ग्राहक</th><th>मोबाइल</th><th>मात्रा (L)</th><th>रेट (₹)</th><th>कुल (₹)</th></tr>
-          ${milkData.map((d, i) => `<tr><td>${i+1}</td><td>${d.date} (${d.shift || 'सुबह'})</td><td>${d.customer}</td><td>${d.customerPhone || '-'}</td><td>${d.qty}</td><td>₹${d.rate}</td><td>₹${d.total}</td></tr>`).join('')}
+
+        <!-- 2. दूध बिक्री रिकॉर्ड (Milk Sales) -->
+        <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">२. दूध बिक्री रिकॉर्ड्स (${milkData.length} एंट्री)</h3>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
+          <tr style="background:#f1f5f9;">
+            <th>क्र.</th><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक नाम</th><th>मोबाइल</th><th>मात्रा (L)</th><th>रेट (₹)</th><th>कुल (₹)</th><th>भुगतान</th>
+          </tr>
+          ${milkData.length === 0 ? '<tr><td colspan="9" style="text-align:center;">कोई रिकॉर्ड नहीं</td></tr>' : milkData.map((d, i) => `
+            <tr>
+              <td style="text-align:center;">${i+1}</td>
+              <td>${d.date}</td>
+              <td>${d.shift || 'सुबह'}</td>
+              <td>${d.customer}</td>
+              <td>${d.customerPhone || '-'}</td>
+              <td style="text-align:right;">${d.qty}</td>
+              <td style="text-align:right;">₹${d.rate}</td>
+              <td style="text-align:right;">₹${d.total}</td>
+              <td style="text-align:center;">${d.paymentStatus || 'नकद'}</td>
+            </tr>
+          `).join('')}
+          <tr style="background:#e2e8f0; font-weight:bold;">
+            <td colspan="5">कुल योग</td>
+            <td style="text-align:right;">${totM.toFixed(1)} L</td>
+            <td>-</td>
+            <td style="text-align:right;">₹ ${totR.toFixed(2)}</td>
+            <td>-</td>
+          </tr>
+        </table>
+
+        <!-- 3. फार्म खर्च रिकॉर्ड (Expenses) -->
+        <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">३. फार्म खर्च रिकॉर्ड्स (${expenseData.length} एंट्री)</h3>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
+          <tr style="background:#f1f5f9;">
+            <th>क्र.</th><th>तारीख</th><th>मद / कैटेगरी</th><th>संबंधित पशु</th><th>विवरण</th><th>माध्यम</th><th>रकम (₹)</th>
+          </tr>
+          ${expenseData.length === 0 ? '<tr><td colspan="7" style="text-align:center;">कोई खर्च रिकॉर्ड नहीं</td></tr>' : expenseData.map((e, i) => `
+            <tr>
+              <td style="text-align:center;">${i+1}</td>
+              <td>${e.date}</td>
+              <td>${e.category}</td>
+              <td>${e.animalTag || '-'}</td>
+              <td>${e.detail}</td>
+              <td>${e.paymentMode || 'UPI'}</td>
+              <td style="text-align:right;">₹ ${e.amount}</td>
+            </tr>
+          `).join('')}
+          <tr style="background:#e2e8f0; font-weight:bold;">
+            <td colspan="6">कुल खर्च</td>
+            <td style="text-align:right;">₹ ${totE.toFixed(2)}</td>
+          </tr>
+        </table>
+
+        <!-- 4. सक्रिय पशु व बछड़ा रिकॉर्ड (Cattle) -->
+        <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">४. सक्रिय पशु व बछड़ा सूची (${cattleData.length} पशु + ${calfData.length} बच्चे)</h3>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
+          <tr style="background:#f1f5f9;">
+            <th>क्र.</th><th>वर्ग</th><th>टैग संख्या</th><th>नस्ल / लिंग</th><th>दैनिक दूध (L)</th><th>स्थिति</th><th>खरीद मूल्य</th>
+          </tr>
+          ${cattleData.map((c, i) => `
+            <tr>
+              <td style="text-align:center;">${i+1}</td>
+              <td>${c.categoryType}</td>
+              <td><b>${c.tag}</b></td>
+              <td>${c.breed}</td>
+              <td style="text-align:right;">${c.milk} L</td>
+              <td>${c.status}</td>
+              <td style="text-align:right;">₹ ${c.buyCost || '0'}</td>
+            </tr>
+          `).join('')}
+          ${calfData.map((cal, i) => `
+            <tr>
+              <td style="text-align:center;">-</td>
+              <td>${cal.categoryType}</td>
+              <td><b>👶 ${cal.tag}</b></td>
+              <td>${cal.gender}</td>
+              <td style="text-align:center;">-</td>
+              <td>माता: ${cal.motherTag}</td>
+              <td style="text-align:center;">जन्म: ${cal.birthDate}</td>
+            </tr>
+          `).join('')}
+        </table>
+
+        <!-- 5. मजदूर प्रोफाइल व वेतन (Labour) -->
+        <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">५. पंजीकृत मजदूर सूची (${labourProfiles.length} मजदूर)</h3>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
+          <tr style="background:#f1f5f9;">
+            <th>क्र.</th><th>नाम</th><th>मोबाइल नंबर</th><th>मासिक वेतन (₹)</th><th>जॉइनिंग तारीख</th>
+          </tr>
+          ${labourProfiles.length === 0 ? '<tr><td colspan="5" style="text-align:center;">कोई मजदूर पंजीकृत नहीं</td></tr>' : labourProfiles.map((l, i) => `
+            <tr>
+              <td style="text-align:center;">${i+1}</td>
+              <td><b>${l.name}</b></td>
+              <td>${l.phone}</td>
+              <td>₹ ${l.salary} / माह</td>
+              <td>${l.joinDate}</td>
+            </tr>
+          `).join('')}
         </table>
       `;
 
+      printDiv.innerHTML = content;
       printDiv.classList.remove('hidden');
+
       setTimeout(() => {
         window.print();
         setTimeout(() => { printDiv.classList.add('hidden'); }, 1000);
@@ -1659,6 +1773,7 @@
       }
     });
 
+    // All Firebase Realtime Listeners Connected
     db.ref('milk_records').on('value', s => { milkData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('expense_records').on('value', s => { expenseData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('cattle_records').on('value', s => { cattleData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
@@ -1668,8 +1783,9 @@
     db.ref('stock_records').on('value', s => { stockData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('vet_doctors').on('value', s => { vetDoctors = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('sold_animals_archive').on('value', s => { soldArchiveData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; });
+    db.ref('animal_sales').on('value', s => { animalSaleData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     
-    // Setup Cost Listener (FIXED: Permanently Connected)
+    // Setup Cost Listener
     db.ref('farm_setup_costs').on('value', s => {
       setupCostData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : [];
       renderSetupCost();
