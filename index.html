@@ -86,6 +86,12 @@
               <span>Excel / CSV बैकअप</span>
             </button>
 
+            <!-- JSON Backup Download Button -->
+            <button onclick="exportAllDataToJSON()" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-amber-300 transition border-t border-slate-800">
+              <i class="fa-solid fa-file-code text-amber-400 text-sm"></i>
+              <span>JSON बैकअप डाउनलोड</span>
+            </button>
+
             <button onclick="openPaymentSettingsModal()" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-sky-300 transition border-t border-slate-800">
               <i class="fa-solid fa-qrcode text-sky-400 text-sm"></i>
               <span>बैंक व UPI सेटिंग्स</span>
@@ -399,7 +405,7 @@
       </div>
     </section>
 
-    <!-- TAB 4: CATTLE MANAGEMENT (NOW WITH PHOTO UPLOADS ON BUY, BIRTH & SELL) -->
+    <!-- TAB 4: CATTLE MANAGEMENT -->
     <section id="tabCattle" class="mt-4 space-y-4 hidden">
       <div class="flex flex-wrap items-center gap-2">
         <button onclick="toggleCattleSubForm('addAnimal')" id="subBtnAddAnimal" class="px-3.5 py-2 rounded-xl font-bold text-xs bg-slate-900 text-amber-300 border-2 border-slate-700 shadow">+ पशु जोड़ें</button>
@@ -410,7 +416,7 @@
         </button>
       </div>
 
-      <!-- Add Cattle Form (With Photo) -->
+      <!-- Add Cattle Form -->
       <div id="catAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-amber-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-cow text-amber-600"></i> <span id="catFormTitle">नया पशु प्रोफाइल</span></h2>
         <input type="hidden" id="editCatRecordId" value="" />
@@ -457,7 +463,7 @@
         </div>
       </div>
 
-      <!-- Add Calf Form (With Photo) -->
+      <!-- Add Calf Form -->
       <div id="calfAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-blue-500">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-baby text-blue-600"></i> बच्चा जन्म रिकॉर्ड</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -491,7 +497,7 @@
         </div>
       </div>
 
-      <!-- Sell Animal Form (With Photo) -->
+      <!-- Sell Animal Form -->
       <div id="sellAnimalAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-emerald-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> पशु बेचें (आर्काइव में जाएगा)</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -1544,7 +1550,7 @@
         if(headerImg) { headerImg.src = url; headerImg.classList.remove('hidden'); }
         if(headerDef) { headerDef.classList.add('hidden'); }
         if(prevImg) { prevImg.src = url; prevImg.classList.remove('hidden'); }
-        if(prevDef) { prevDef.classList.remove('hidden'); }
+        if(prevDef) { prevDef.classList.add('hidden'); }
       } else {
         if(headerImg) { headerImg.classList.add('hidden'); }
         if(headerDef) { headerDef.classList.remove('hidden'); }
@@ -2663,7 +2669,7 @@
       } else b.classList.add('hidden');
     }
 
-    // Cattle & Calves (With Integrated Photos)
+    // Cattle & Calves
     function renderCattleLists() {
       const bList = document.getElementById('buffaloHeadingList');
       const cList = document.getElementById('cowHeadingList');
@@ -2973,7 +2979,7 @@
       });
     }
 
-    // HIGH-TECH UPGRADE: SETUP COST
+    // Setup Cost Module
     function addSetupCostItem(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -3027,7 +3033,6 @@
       document.getElementById('recoveryPercentText').innerText = percent.toFixed(1) + '% कवर';
       document.getElementById('recoveryProgressBar').style.width = percent + '%';
 
-      // High-Tech Indicators
       const statusElem = document.getElementById('recoveryHealthStatus');
       if (statusElem) {
         if (total === 0) {
@@ -3045,7 +3050,7 @@
       if (countElem) countElem.innerText = setupCostData.length + ' मदें दर्ज';
     }
 
-    // HIGH-TECH UPGRADE: OVERALL SUMMARY (कुल हिसाब)
+    // Overall Summary
     function renderTotals() {
       let mQty = 0, mRev = 0, exp = 0, animalRev = 0;
       milkData.forEach(x => { 
@@ -3073,7 +3078,6 @@
         document.getElementById('dispProfitPerLiter').innerText = '₹ 0.00 / L';
       }
 
-      // High-Tech Metrics
       const avgRateElem = document.getElementById('modalAvgMilkRate');
       if (avgRateElem) {
         avgRateElem.innerText = mQty > 0 ? '₹ ' + (mRev / mQty).toFixed(2) + ' / L' : '₹ 0.00 / L';
@@ -3145,6 +3149,25 @@
       link.href = URL.createObjectURL(blob);
       link.download = `Dairy_Backup_${today}.csv`;
       link.click();
+    }
+
+    // Direct JSON Backup Exporter
+    function exportAllDataToJSON() {
+      document.getElementById('sideMenuDropdown').classList.add('hidden');
+      db.ref('/').once('value').then(snapshot => {
+        const fullData = snapshot.val();
+        if (!fullData) {
+          alert("कोई डेटा नहीं मिला!");
+          return;
+        }
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullData, null, 2));
+        const dlAnchorElem = document.createElement('a');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", `Dairy_Full_Backup_${today}.json`);
+        document.body.appendChild(dlAnchorElem);
+        dlAnchorElem.click();
+        dlAnchorElem.remove();
+      }).catch(err => alert("JSON Download Error: " + err.message));
     }
 
     function triggerFactoryReset() {
