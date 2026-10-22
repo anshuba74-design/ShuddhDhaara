@@ -2214,7 +2214,7 @@
     db.ref('customer_payments').on('value', s => { customerPayments = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('stock_records').on('value', s => { stockData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('vet_doctors').on('value', s => { vetDoctors = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
-    db.ref('sold_animals_archive').on('value', s => { soldArchiveData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; });
+    db.ref('sold_animals_archive').on('value', s => { soldArchiveData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('animal_sales').on('value', s => { animalSaleData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     
     // Setup Cost Listener
