@@ -86,7 +86,6 @@
               <span>Excel / CSV बैकअप</span>
             </button>
 
-            <!-- JSON Backup Download Button -->
             <button onclick="exportAllDataToJSON()" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold hover:bg-slate-800 flex items-center gap-2.5 text-amber-300 transition border-t border-slate-800">
               <i class="fa-solid fa-file-code text-amber-400 text-sm"></i>
               <span>JSON बैकअप डाउनलोड</span>
@@ -436,7 +435,6 @@
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">खरीद मूल्य (₹)</label><input type="number" id="catBuyCost" placeholder="70000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">AI / सीमन तारीख</label><input type="date" id="catAiDate" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 font-semibold" /></div>
 
-          <!-- Dual Camera / Gallery Proof Input for Cattle Buy -->
           <div class="sm:col-span-2 lg:col-span-4 p-3 bg-amber-50/60 border rounded-xl">
             <span class="block text-[11px] font-bold text-amber-950 uppercase mb-1.5"><i class="fa-solid fa-camera text-amber-700 mr-1"></i> पशु की फोटो / खरीद रसीद (वैकल्पिक)</span>
             <div class="flex flex-wrap items-center gap-2">
@@ -473,7 +471,6 @@
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">लिंग</label><select id="calfGender" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"></select></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जन्म तारीख</label><input type="date" id="calfBirthDate" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
 
-          <!-- Dual Camera / Gallery Proof Input for Calf Birth -->
           <div class="sm:col-span-2 lg:col-span-3 p-3 bg-blue-50/60 border rounded-xl">
             <span class="block text-[11px] font-bold text-blue-950 uppercase mb-1.5"><i class="fa-solid fa-camera text-blue-700 mr-1"></i> नवजात बच्चे की फोटो (वैकल्पिक)</span>
             <div class="flex flex-wrap items-center gap-2">
@@ -515,7 +512,6 @@
           </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री रकम (₹)</label><input type="number" id="saleAnimalAmount" placeholder="75000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
 
-          <!-- Dual Camera / Gallery Proof Input for Animal Sale -->
           <div class="sm:col-span-2 lg:col-span-4 p-3 bg-emerald-50/60 border rounded-xl">
             <span class="block text-[11px] font-bold text-emerald-950 uppercase mb-1.5"><i class="fa-solid fa-camera text-emerald-700 mr-1"></i> बिक्री रसीद / खरीदार के साथ फोटो (वैकल्पिक)</span>
             <div class="flex flex-wrap items-center gap-2">
@@ -1057,11 +1053,26 @@
       }
     }
 
-    function formatDateTime(ts) {
+    // High-precision Date and Time Formatter
+    function formatDateTime(ts, fallbackDate) {
+      if (!ts && fallbackDate) {
+        return fallbackDate;
+      }
       if (!ts) return '-';
       const d = new Date(ts);
-      if (isNaN(d.getTime())) return ts;
-      return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      if (isNaN(d.getTime())) {
+        return fallbackDate || ts;
+      }
+      const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const dateStr = d.toLocaleDateString('en-GB');
+      return `${dateStr}, ${timeStr}`;
+    }
+
+    function formatTimeOnly(ts) {
+      if (!ts) return '';
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
     }
 
     // Convert file to base64 with safe image compression
@@ -1550,7 +1561,7 @@
         if(headerImg) { headerImg.src = url; headerImg.classList.remove('hidden'); }
         if(headerDef) { headerDef.classList.add('hidden'); }
         if(prevImg) { prevImg.src = url; prevImg.classList.remove('hidden'); }
-        if(prevDef) { prevDef.classList.add('hidden'); }
+        if(prevDef) { prevDef.classList.remove('hidden'); }
       } else {
         if(headerImg) { headerImg.classList.add('hidden'); }
         if(headerDef) { headerDef.classList.remove('hidden'); }
@@ -1850,7 +1861,7 @@
               <div>
                 <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-200 text-amber-950">${item.categoryType}</span>
                 <h4 class="text-base font-black text-slate-900 mt-1">टैग: ${item.tag} (${item.breed})</h4>
-                <p class="text-[11px] text-slate-500">बिक्री: ${item.date} • खरीदार: <b>${item.buyer}</b></p>
+                <p class="text-[11px] text-slate-500">बिक्री समय: <b>${formatDateTime(item.timestamp, item.date)}</b> • खरीदार: <b>${item.buyer}</b></p>
                 ${photoBtn}
               </div>
               <div class="text-right"><span class="text-[10px] text-slate-400 font-bold block uppercase">बिक्री</span><span class="text-base font-black text-emerald-800">₹ ${item.amount.toLocaleString('en-IN')}</span></div>
@@ -2168,7 +2179,7 @@
 
         rowsHtml += `
           <tr class="border-b text-[11px]">
-            <td class="p-2 font-semibold">${formatDateTime(e.timestamp)}</td>
+            <td class="p-2 font-semibold">${formatDateTime(e.timestamp, e.date)}</td>
             <td class="p-2">
               <b>${e.title}</b> ${proofBtn}<br>
               <span class="text-[9px] text-slate-400">${e.mode}</span>
@@ -2289,7 +2300,7 @@
 
         rowsHtml += `
           <tr class="border-b text-[11px]">
-            <td class="p-2 font-semibold">${formatDateTime(e.timestamp)}</td>
+            <td class="p-2 font-semibold">${formatDateTime(e.timestamp, e.date)}</td>
             <td class="p-2">
               <b>${e.title}</b> ${proofBtn}<br>
               <span class="text-[9px] text-slate-400">${e.mode}</span>
@@ -2422,6 +2433,9 @@
       c.innerHTML = '';
       milkData.forEach(x => {
         const itm = x.itemName || 'दूध';
+        const formattedFullTime = formatDateTime(x.timestamp, x.date);
+        const timeOnly = formatTimeOnly(x.timestamp);
+
         const proofHtml = x.proofPic ? `
           <div class="mt-2 text-center">
             <button onclick="openProofImageModal('${x.proofPic}', '${x.customer} - ${itm} रसीद')" class="bg-emerald-50 text-emerald-800 font-bold px-3 py-1.5 rounded-xl border border-emerald-300 text-xs inline-flex items-center gap-1.5 shadow-sm">
@@ -2441,7 +2455,7 @@
               <span class="text-[10px] font-bold px-2 py-0.5 rounded ${x.paymentStatus && x.paymentStatus.includes('Paid') ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${x.paymentStatus || 'Paid'}</span>
             </div>
             <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>तारीख:</b> ${x.date} (${x.shift})</div>
+              <div class="p-2 bg-slate-50 rounded-lg border"><b>तारीख व समय:</b><br>${formattedFullTime} (${x.shift})</div>
               <div class="p-2 bg-slate-50 rounded-lg border"><b>रेट:</b> ₹${x.rate}</div>
               <div class="p-2 bg-slate-50 rounded-lg border"><b>मात्रा:</b> ${x.qty}</div>
               <div class="p-2 bg-emerald-50 rounded-lg border text-emerald-900 font-bold"><b>कुल:</b> ₹${x.total}</div>
@@ -2474,7 +2488,7 @@
           <div onclick="openUniversalModal('${(x.customer || '').replace(/'/g, "\\'")}', '${itm} • ${x.date}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-emerald-600 transition">
             <div class="truncate">
               <div class="flex items-center gap-1.5"><span class="text-[9px] font-black bg-emerald-100 text-emerald-900 px-1.5 py-0.5 rounded">${itm}</span><h4 class="font-bold text-slate-900 truncate">${x.customer}</h4></div>
-              <p class="text-[10px] text-slate-500 mt-0.5">${x.date} • ${x.shift} ${x.proofPic ? '📸' : ''}</p>
+              <p class="text-[10px] text-slate-500 mt-0.5">${x.date} ${timeOnly ? '• ' + timeOnly : ''} • ${x.shift} ${x.proofPic ? '📸' : ''}</p>
             </div>
             <div class="flex items-center">
               <div class="text-right shrink-0"><span class="font-bold text-emerald-950">${x.qty}</span><br><span class="font-bold text-slate-700">₹${x.total}</span></div>
@@ -2527,6 +2541,7 @@
       const c = document.getElementById('expenseHeadingList');
       c.innerHTML = '';
       expenseData.forEach(x => {
+        const timeOnly = formatTimeOnly(x.timestamp);
         const proofBadge = x.proofPic ? `<button onclick="event.stopPropagation(); openProofImageModal('${x.proofPic}', '${x.detail} - बिल प्रूफ')" class="text-purple-700 bg-purple-100 hover:bg-purple-200 px-1.5 py-0.5 rounded text-[10px] font-bold ml-1">📸 पर्ची</button>` : '';
 
         const cardAdminIcons = isAdmin ? `
@@ -2544,7 +2559,7 @@
           <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
             <div class="truncate">
               <h4 class="font-bold text-slate-900 flex items-center truncate">${x.detail} ${proofBadge}</h4>
-              <p class="text-[10px] text-slate-500">${x.date} • ${x.vendorName ? x.vendorName + ' • ' : ''}${x.animalTag || x.category}</p>
+              <p class="text-[10px] text-slate-500">${x.date} ${timeOnly ? '• ' + timeOnly : ''} • ${x.vendorName ? x.vendorName + ' • ' : ''}${x.animalTag || x.category}</p>
             </div>
             <div class="flex items-center shrink-0">
               <span class="font-bold text-purple-950">₹${x.amount}</span>
@@ -2698,7 +2713,7 @@
             </div>
             <div class="grid grid-cols-2 gap-2">
               <div class="p-2 bg-slate-50 rounded-lg border"><b>दैनिक दूध:</b> ${c.milk} L</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>खरीद तारीख:</b> ${c.buyDate || '-'}</div>
+              <div class="p-2 bg-slate-50 rounded-lg border"><b>खरीद समय:</b> ${formatDateTime(c.timestamp, c.buyDate)}</div>
               <div class="p-2 bg-slate-50 rounded-lg border"><b>खरीद लागत:</b> ₹${c.buyCost || '0'}</div>
               <div class="p-2 bg-slate-50 rounded-lg border"><b>AI तारीख:</b> ${c.aiDate || '-'}</div>
             </div>
@@ -2756,7 +2771,7 @@
             </div>
             <div class="p-2.5 bg-slate-50 rounded-xl border space-y-1">
               <div><b>माता का टैग:</b> ${c.motherTag}</div>
-              <div><b>जन्म तारीख:</b> ${c.birthDate}</div>
+              <div><b>जन्म समय:</b> ${formatDateTime(c.timestamp, c.birthDate)}</div>
             </div>
             ${photoPreviewBtn}
             ${isAdmin ? `<button onclick="deleteCalf('${c.id}')" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300 flex items-center justify-center gap-1.5"><i class="fa-solid fa-trash-can"></i> डिलीट करें</button>` : ''}
@@ -3255,7 +3270,7 @@
               ${(milkData || []).length === 0 ? '<tr><td colspan="9" style="text-align:center;">कोई रिकॉर्ड नहीं</td></tr>' : milkData.map((d, i) => `
                 <tr>
                   <td style="text-align:center;">${i+1}</td>
-                  <td>${d.date || '-'}</td>
+                  <td>${formatDateTime(d.timestamp, d.date)}</td>
                   <td><b>${d.itemName || 'दूध'}</b></td>
                   <td>${d.customer || '-'}</td>
                   <td>${d.customerPhone || '-'}</td>
@@ -3281,7 +3296,7 @@
               ${(expenseData || []).length === 0 ? '<tr><td colspan="7" style="text-align:center;">कोई खर्च रिकॉर्ड नहीं</td></tr>' : expenseData.map((e, i) => `
                 <tr>
                   <td style="text-align:center;">${i+1}</td>
-                  <td>${e.date || '-'}</td>
+                  <td>${formatDateTime(e.timestamp, e.date)}</td>
                   <td>${e.category || '-'}</td>
                   <td>${e.vendorName || '-'}</td>
                   <td>${e.detail || '-'}</td>
