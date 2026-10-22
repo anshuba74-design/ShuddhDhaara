@@ -201,7 +201,11 @@
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="milkDate" onchange="renderMilkSummaryStats()" required class="w-full text-sm border-2 rounded-xl p-2.5 outline-none" /></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">समय</label><select id="milkShift" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white"><option value="सुबह (Morning)">सुबह (Morning)</option><option value="शाम (Evening)">शाम (Evening)</option></select></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री प्रकार</label><select id="milkSaleType" onchange="toggleMilkSaleType()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="retail">ग्राहक (Fixed Rate)</option><option value="plant">डेयरी प्लांट (FAT/SNF)</option></select></div>
-            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक/प्लांट नाम</label><input type="text" id="milkCustomer" required placeholder="उदा. राम जी" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक/प्लांट नाम (सर्च / चुनें)</label>
+              <input type="text" id="milkCustomer" list="customerDatalist" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+              <datalist id="customerDatalist"></datalist>
+            </div>
             <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मोबाइल नंबर (WhatsApp)</label><input type="tel" id="milkCustomerPhone" placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-emerald-300 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
           </div>
 
@@ -231,10 +235,10 @@
       </div>
     </section>
 
-    <!-- TAB 2: EXPENSES (WITH VENDOR DUE/PAYMENT OPTIONS) -->
+    <!-- TAB 2: EXPENSES (WITH VENDOR SEARCH / DROPDOWN & DUAL SYNC) -->
     <section id="tabExpense" class="mt-4 hidden space-y-4">
       <div id="expAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-purple-600">
-        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wallet text-purple-700"></i> खर्च / भुगतान दर्ज करें</h2>
+        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wallet text-purple-700"></i> खर्च / उधारी भुगतान दर्ज करें</h2>
         <form onsubmit="addExpenseEntry(event)" class="space-y-3">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="expDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
@@ -251,8 +255,9 @@
               </select>
             </div>
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दुकानदार/सप्लायर का नाम</label>
-              <input type="text" id="expVendorName" placeholder="उदा. किसान खाद भंडार" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दुकानदार / सप्लायर (सर्च / चुनें)</label>
+              <input type="text" id="expVendorName" list="vendorDatalist" placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+              <datalist id="vendorDatalist"></datalist>
             </div>
             <div>
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु से लिंक करें (इलाज)</label>
@@ -262,7 +267,7 @@
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान विवरण</label><input type="text" id="expDetail" required placeholder="उदा. 2 बोरी चोकर" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान विवरण</label><input type="text" id="expDetail" required placeholder="उदा. 2 बोरी चोकर या उधारी का भुगतान" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रकम (₹)</label><input type="number" id="expAmount" required placeholder="0" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
             <div>
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान माध्यम</label>
@@ -291,7 +296,7 @@
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मजदूर का नाम</label><input type="text" id="labourName" required placeholder="उदा. कल्लू राम" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर</label><input type="tel" id="labourPhone" required placeholder="9876543210" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मासिक वेतन (₹)</label><input type="number" id="labourSalary" required placeholder="12000" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-950" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख</label><input type="date" id="labourJoinDate" required class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख (Joining Date)</label><input type="date" id="labourJoinDate" required class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
           <div>
             <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">वेतन अलर्ट (दिन पूर्व)</label>
             <input type="number" id="labourAlertDays" required value="3" placeholder="उदा. 3" min="1" max="15" class="w-full text-sm border-2 border-rose-300 bg-rose-50 rounded-xl p-2.5 font-black text-rose-950" />
@@ -381,7 +386,7 @@
       </div>
     </section>
 
-    <!-- TAB 5: ADVANCED BahiKhata / Ledger (NEW TWO-WAY AUTO KHATA) -->
+    <!-- TAB 5: ADVANCED BahiKhata / Ledger (WITH SEARCH DROPDOWNS & LIVE TIME PASSBOOK) -->
     <section id="tabKhata" class="mt-4 hidden space-y-4">
       <!-- 3 Summary Overview Cards -->
       <div class="grid grid-cols-3 gap-2 text-center">
@@ -399,12 +404,15 @@
         </div>
       </div>
 
-      <!-- Quick Payment Entries Area -->
+      <!-- Quick Payment Entries Area (Customer Payment) -->
       <div id="custAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-indigo-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-indigo-700"></i> ग्राहक से रुपया जमा दर्ज करें</h2>
         <form onsubmit="addCustomerPayment(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="custPayDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक का नाम</label><input type="text" id="custPayName" required placeholder="उदा. राम जी" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक का नाम (सर्च / चुनें)</label>
+            <input type="text" id="custPayName" list="customerDatalist" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+          </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label><input type="number" id="custPayAmount" required placeholder="उदा. 700" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
           <div>
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माध्यम</label>
@@ -459,7 +467,7 @@
     </section>
   </main>
 
-  <!-- UNIVERSAL DETAIL MODAL (WITH FULL PASSBOOK SUPPORT) -->
+  <!-- UNIVERSAL DETAIL MODAL (WITH LIVE TIME PASSBOOK) -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between border-b shrink-0">
@@ -638,7 +646,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script with Robust Khata / Passbook Implementation -->
+  <!-- Core Script with Datalists, Live Timestamp & Perfect Khata Synchronization -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -704,6 +712,14 @@
       } else {
         window.open(`https://wa.me/?text=${textMsg}`, '_blank');
       }
+    }
+
+    // Helper: Formats timestamp to "DD/MM/YYYY, HH:MM:SS AM/PM"
+    function formatDateTime(ts) {
+      if (!ts) return '-';
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return ts;
+      return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
     }
 
     function toggleSideMenu() {
@@ -875,6 +891,29 @@
       if (!sel) return;
       sel.innerHTML = '<option value="">-- सामान्य फार्म खर्च --</option>';
       cattleData.forEach(c => sel.innerHTML += `<option value="${c.categoryType} #${c.tag}">${c.categoryType} #${c.tag}</option>`);
+    }
+
+    // Dynamic Search Datalists Populator
+    function updateSearchDatalists() {
+      // 1. Customer Datalist
+      const custList = document.getElementById('customerDatalist');
+      if (custList) {
+        const custNames = new Set();
+        milkData.forEach(m => { if (m.customer) custNames.add(m.customer.trim()); });
+        customerPayments.forEach(p => { if (p.name) custNames.add(p.name.trim()); });
+        custList.innerHTML = Array.from(custNames).map(n => `<option value="${n}"></option>`).join('');
+      }
+
+      // 2. Vendor Datalist
+      const vendList = document.getElementById('vendorDatalist');
+      if (vendList) {
+        const vendNames = new Set();
+        expenseData.forEach(e => {
+          const v = (e.vendorName || '').trim();
+          if (v) vendNames.add(v);
+        });
+        vendList.innerHTML = Array.from(vendNames).map(n => `<option value="${n}"></option>`).join('');
+      }
     }
 
     function toggleCattleSubForm(mode) {
@@ -1152,7 +1191,7 @@
       });
     }
 
-    // Customer WhatsApp Reminder (CLEAN BANK/UPI MESSAGE)
+    // Customer WhatsApp Reminder
     function sendWhatsAppReminder(name, bal, phone) {
       const bankNameText = paymentSettings.bankName ? `%0A*बैंक का नाम:* ${paymentSettings.bankName}` : '';
       const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
@@ -1173,67 +1212,74 @@
       sendWhatsAppText(phone, msg);
     }
 
-    // ==================== ADVANCED TWO-WAY AUTOMATIC KHATA / LEDGER ====================
+    // ==================== ADVANCED TWO-WAY AUTOMATIC KHATA / LEDGER (PERFECT DUAL MATCH) ====================
     function renderKhata() {
       // 1. ग्राहक हिसाब (Receivables)
       const custMap = {};
       milkData.forEach(m => {
-        if (!m.customer) return;
-        if (!custMap[m.customer]) custMap[m.customer] = { totalBill: 0, totalPaid: 0, phone: m.customerPhone || '', entries: [] };
-        custMap[m.customer].totalBill += (parseFloat(m.total) || 0);
-        if (m.customerPhone) custMap[m.customer].phone = m.customerPhone;
-        custMap[m.customer].entries.push({
+        const cName = (m.customer || '').trim();
+        if (!cName) return;
+        if (!custMap[cName]) custMap[cName] = { totalBill: 0, totalPaid: 0, phone: m.customerPhone || '', entries: [] };
+        custMap[cName].totalBill += (parseFloat(m.total) || 0);
+        if (m.customerPhone) custMap[cName].phone = m.customerPhone;
+        custMap[cName].entries.push({
           date: m.date,
-          type: 'bill',
-          detail: `दूध ${m.qty}L (${m.shift || 'सुबह'}) @ ₹${m.rate}`,
+          title: `दूध बिक्री (${m.qty}L @ ₹${m.rate})`,
           mode: m.paymentStatus || 'उधारी',
           amount: parseFloat(m.total) || 0,
-          timestamp: m.timestamp || 0
+          type: 'debit',
+          timestamp: m.timestamp || new Date(m.date).getTime()
         });
       });
 
       customerPayments.forEach(p => {
-        if (!p.name) return;
-        if (!custMap[p.name]) custMap[p.name] = { totalBill: 0, totalPaid: 0, phone: '', entries: [] };
-        custMap[p.name].totalPaid += (parseFloat(p.amount) || 0);
-        custMap[p.name].entries.push({
+        const cName = (p.name || '').trim();
+        if (!cName) return;
+        if (!custMap[cName]) custMap[cName] = { totalBill: 0, totalPaid: 0, phone: '', entries: [] };
+        custMap[cName].totalPaid += (parseFloat(p.amount) || 0);
+        custMap[cName].entries.push({
           date: p.date,
-          type: 'paid',
-          detail: 'रुपया जमा किया',
+          title: 'जमा / भुगतान प्राप्त',
           mode: p.mode || 'PhonePe / UPI',
           amount: parseFloat(p.amount) || 0,
-          timestamp: p.timestamp || 0
+          type: 'credit',
+          timestamp: p.timestamp || new Date(p.date).getTime()
         });
       });
 
-      // 2. दुकानदार हिसाब (Payables)
+      // 2. दुकानदार हिसाब (Payables - Robust Case-Insensitive Matching)
       const vendorMap = {};
       expenseData.forEach(e => {
-        const vName = (e.vendorName || '').trim();
-        if (!vName && e.paymentMode !== 'दुकानदार उधारी (Vendor Due)' && e.category !== 'दुकानदार उधारी चुकाई (Vendor Paid)') return;
-        const name = vName || 'अन्य दुकानदार';
+        let vName = (e.vendorName || '').trim();
+        const isVendorDue = e.paymentMode === 'दुकानदार उधारी (Vendor Due)';
+        const isVendorPaid = e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)';
 
-        if (!vendorMap[name]) vendorMap[name] = { totalDue: 0, totalPaid: 0, entries: [] };
+        if (!vName && (isVendorDue || isVendorPaid)) {
+          vName = 'अन्य दुकानदार';
+        }
+        if (!vName) return;
 
-        if (e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)') {
-          vendorMap[name].totalPaid += (parseFloat(e.amount) || 0);
-          vendorMap[name].entries.push({
+        if (!vendorMap[vName]) vendorMap[vName] = { totalDue: 0, totalPaid: 0, entries: [] };
+
+        if (isVendorPaid) {
+          vendorMap[vName].totalPaid += (parseFloat(e.amount) || 0);
+          vendorMap[vName].entries.push({
             date: e.date,
-            type: 'paid',
-            detail: e.detail || 'उधारी का भुगतान किया',
+            title: e.detail || 'उधारी का भुगतान किया',
             mode: e.paymentMode || 'नकद',
             amount: parseFloat(e.amount) || 0,
-            timestamp: e.timestamp || 0
+            type: 'paid',
+            timestamp: e.timestamp || new Date(e.date).getTime()
           });
-        } else if (e.paymentMode === 'दुकानदार उधारी (Vendor Due)') {
-          vendorMap[name].totalDue += (parseFloat(e.amount) || 0);
-          vendorMap[name].entries.push({
+        } else if (isVendorDue) {
+          vendorMap[vName].totalDue += (parseFloat(e.amount) || 0);
+          vendorMap[vName].entries.push({
             date: e.date,
-            type: 'due',
-            detail: `${e.detail || e.category} (उधारी माल)`,
+            title: `${e.detail || e.category} (उधारी माल)`,
             mode: 'उधारी',
             amount: parseFloat(e.amount) || 0,
-            timestamp: e.timestamp || 0
+            type: 'due',
+            timestamp: e.timestamp || new Date(e.date).getTime()
           });
         }
       });
@@ -1275,7 +1321,7 @@
           const isDue = bal > 0;
 
           cList.innerHTML += `
-            <div onclick="openCustomerPassbook('${name}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-emerald-600 transition">
+            <div onclick="openCustomerPassbook('${name.replace(/'/g, "\\'")}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-emerald-600 transition">
               <div>
                 <h4 class="font-extrabold text-slate-900 text-sm">${name}</h4>
                 <p class="text-[10px] text-slate-500 font-semibold mt-0.5">कुल बिल: ₹${cData.totalBill.toFixed(0)} | जमा: ₹${cData.totalPaid.toFixed(0)}</p>
@@ -1306,7 +1352,7 @@
           const isDue = bal > 0;
 
           vList.innerHTML += `
-            <div onclick="openVendorPassbook('${name}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-rose-600 transition">
+            <div onclick="openVendorPassbook('${name.replace(/'/g, "\\'")}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-rose-600 transition">
               <div>
                 <h4 class="font-extrabold text-slate-900 text-sm">${name}</h4>
                 <p class="text-[10px] text-slate-500 font-semibold mt-0.5">कुल उधारी: ₹${vData.totalDue.toFixed(0)} | चुकाया: ₹${vData.totalPaid.toFixed(0)}</p>
@@ -1321,15 +1367,16 @@
           `;
         });
       }
+      updateSearchDatalists();
     }
 
-    // CUSTOMER PASSBOOK POPUP WITH DATES & RUNNING BALANCE
+    // CUSTOMER PASSBOOK POPUP WITH LIVE DATE + CURRENT TIME
     function openCustomerPassbook(customerName) {
       let entries = [];
       let totalBill = 0, totalPaid = 0, phone = '';
 
       milkData.forEach(m => {
-        if (m.customer === customerName) {
+        if ((m.customer || '').trim() === customerName.trim()) {
           totalBill += (parseFloat(m.total) || 0);
           if (m.customerPhone) phone = m.customerPhone;
           entries.push({
@@ -1344,7 +1391,7 @@
       });
 
       customerPayments.forEach(p => {
-        if (p.name === customerName) {
+        if ((p.name || '').trim() === customerName.trim()) {
           totalPaid += (parseFloat(p.amount) || 0);
           entries.push({
             date: p.date,
@@ -1361,13 +1408,15 @@
 
       let runningBal = 0;
       let rowsHtml = '';
-      entries.forEach((e, idx) => {
+      entries.forEach(e => {
         if (e.type === 'debit') runningBal += e.amount;
         else runningBal -= e.amount;
 
         rowsHtml += `
           <tr class="border-b text-[11px]">
-            <td class="p-2 font-semibold">${e.date}</td>
+            <td class="p-2 font-semibold">
+              ${formatDateTime(e.timestamp)}
+            </td>
             <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
             <td class="p-2 text-right font-bold ${e.type === 'credit' ? 'text-emerald-700' : 'text-rose-700'}">
               ${e.type === 'credit' ? '- ₹' + e.amount : '+ ₹' + e.amount}
@@ -1393,15 +1442,15 @@
 
           <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
             <table class="w-full text-left">
-              <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b">
-                <tr><th class="p-2">तारीख</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">बकाया शेष</th></tr>
+              <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b sticky top-0">
+                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">बकाया शेष</th></tr>
               </thead>
               <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
             </table>
           </div>
 
           <div class="flex gap-2">
-            ${finalBal > 0 ? `<button onclick="sendWhatsAppReminder('${customerName}', ${finalBal}, '${phone}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp पर तगादा भेजें</button>` : ''}
+            ${finalBal > 0 ? `<button onclick="sendWhatsAppReminder('${customerName.replace(/'/g, "\\'")}', ${finalBal}, '${phone}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp पर तगादा भेजें</button>` : ''}
             <button onclick="closeUniversalModal()" class="w-full bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs">बंद करें</button>
           </div>
         </div>
@@ -1410,15 +1459,22 @@
       openUniversalModal("ग्राहक पासबुक विवरण", customerName, html);
     }
 
-    // VENDOR PASSBOOK POPUP WITH DATES & RUNNING BALANCE
+    // VENDOR PASSBOOK POPUP WITH LIVE DATE + CURRENT TIME (FIXED DUAL DISPLAY)
     function openVendorPassbook(vendorName) {
       let entries = [];
       let totalDue = 0, totalPaid = 0;
 
       expenseData.forEach(e => {
-        const vName = (e.vendorName || '').trim() || (e.paymentMode === 'दुकानदार उधारी (Vendor Due)' ? 'अन्य दुकानदार' : '');
-        if (vName === vendorName) {
-          if (e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)') {
+        let vName = (e.vendorName || '').trim();
+        const isVendorDue = e.paymentMode === 'दुकानदार उधारी (Vendor Due)';
+        const isVendorPaid = e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)';
+
+        if (!vName && (isVendorDue || isVendorPaid)) {
+          vName = 'अन्य दुकानदार';
+        }
+
+        if (vName.toLowerCase() === vendorName.trim().toLowerCase()) {
+          if (isVendorPaid) {
             totalPaid += (parseFloat(e.amount) || 0);
             entries.push({
               date: e.date,
@@ -1428,7 +1484,7 @@
               type: 'paid',
               timestamp: e.timestamp || new Date(e.date).getTime()
             });
-          } else if (e.paymentMode === 'दुकानदार उधारी (Vendor Due)') {
+          } else if (isVendorDue) {
             totalDue += (parseFloat(e.amount) || 0);
             entries.push({
               date: e.date,
@@ -1452,7 +1508,9 @@
 
         rowsHtml += `
           <tr class="border-b text-[11px]">
-            <td class="p-2 font-semibold">${e.date}</td>
+            <td class="p-2 font-semibold">
+              ${formatDateTime(e.timestamp)}
+            </td>
             <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
             <td class="p-2 text-right font-bold ${e.type === 'paid' ? 'text-emerald-700' : 'text-rose-700'}">
               ${e.type === 'paid' ? '- ₹' + e.amount : '+ ₹' + e.amount}
@@ -1468,7 +1526,7 @@
           <div class="p-3 bg-rose-50 rounded-2xl border-2 border-rose-300 flex justify-between items-center">
             <div>
               <h4 class="font-black text-rose-950 text-base">${vendorName}</h4>
-              <p class="text-[11px] text-rose-800 font-semibold">दुकानदार / सप्लायर खाता</p>
+              <p class="text-[11px] text-rose-800 font-semibold">कुल उधारी: ₹${totalDue} | चुकाया: ₹${totalPaid}</p>
             </div>
             <div class="text-right">
               <span class="text-[10px] text-slate-500 font-bold uppercase block">कुल देना बाकी</span>
@@ -1478,14 +1536,14 @@
 
           <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
             <table class="w-full text-left">
-              <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b">
-                <tr><th class="p-2">तारीख</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">देना शेष</th></tr>
+              <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b sticky top-0">
+                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">देना शेष</th></tr>
               </thead>
               <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
             </table>
           </div>
 
-          <button onclick="closeUniversalModal()" class="w-full bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs">बंद करें</button>
+          <button onclick="closeUniversalModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs">बंद करें</button>
         </div>
       `;
 
@@ -1571,7 +1629,7 @@
               <div class="p-2 bg-slate-50 rounded-lg border"><b>मात्रा:</b> ${x.qty} L</div>
               <div class="p-2 bg-emerald-50 rounded-lg border text-emerald-900 font-bold"><b>कुल:</b> ₹${x.total}</div>
             </div>
-            <button onclick="sendCustomerMilkBill('${x.customer}', '${x.date}', ${x.qty}, ${x.rate}, ${x.total}, '${x.paymentStatus}', '${x.customerPhone || ''}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
+            <button onclick="sendCustomerMilkBill('${(x.customer || '').replace(/'/g, "\\'")}', '${x.date}', ${x.qty}, ${x.rate}, ${x.total}, '${x.paymentStatus}', '${x.customerPhone || ''}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
               <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद भेजें
             </button>
             ${isAdmin ? `<button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
@@ -1579,7 +1637,7 @@
         `;
 
         c.innerHTML += `
-          <div onclick="openUniversalModal('${x.customer}', '${x.date} • ${x.shift}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-emerald-600 transition">
+          <div onclick="openUniversalModal('${(x.customer || '').replace(/'/g, "\\'")}', '${x.date} • ${x.shift}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-emerald-600 transition">
             <div><h4 class="font-bold text-slate-900">${x.customer}</h4><p class="text-[10px] text-slate-500">${x.date} • ${x.shift}</p></div>
             <div class="text-right"><span class="font-bold text-emerald-950">${x.qty}L</span><br><span class="font-bold text-slate-700">₹${x.total}</span></div>
           </div>
@@ -2015,7 +2073,6 @@
       }
     }
 
-    // COMPLETE 5-SECTION MASTER PDF PRINT (SAFE & RELIABLE)
     function printOverallMasterReport() {
       try {
         const printDiv = document.getElementById('printableArea');
