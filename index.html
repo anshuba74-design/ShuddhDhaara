@@ -146,30 +146,45 @@
     </div>
   </div>
 
-  <!-- Navigation Tabs (Only Icons, Clean & Right-aligned Khata) -->
+  <!-- Navigation Tabs (With Icons, Names & Unique Contrast Colors) -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 no-print">
     <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none justify-between sm:justify-start">
       <div class="flex items-center gap-2">
-        <button onclick="switchTab('milk')" id="tabMilkBtn" title="दूध बिक्री" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg bg-slate-900 text-amber-300 shadow border-2 border-slate-700">
-          <i class="fa-solid fa-bottle-droplet"></i>
+        <!-- Tab 1: Milk -->
+        <button onclick="switchTab('milk')" id="tabMilkBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
+          <i class="fa-solid fa-bottle-droplet text-base"></i>
+          <span>दूध बिक्री</span>
         </button>
-        <button onclick="switchTab('expense')" id="tabExpenseBtn" title="खर्च / मजदूरी" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-purple-700 bg-white border-2 border-slate-300">
-          <i class="fa-solid fa-wallet"></i>
+
+        <!-- Tab 2: Expense -->
+        <button onclick="switchTab('expense')" id="tabExpenseBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
+          <i class="fa-solid fa-wallet text-base"></i>
+          <span>खर्च / हिसाब</span>
         </button>
-        <button onclick="switchTab('labour')" id="tabLabourBtn" title="मजदूर" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-cyan-700 bg-white border-2 border-slate-300">
-          <i class="fa-solid fa-user-group"></i>
+
+        <!-- Tab 3: Labour -->
+        <button onclick="switchTab('labour')" id="tabLabourBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
+          <i class="fa-solid fa-user-group text-base"></i>
+          <span>मजदूर</span>
         </button>
-        <button onclick="switchTab('cattle')" id="tabCattleBtn" title="पशु व बछड़ा" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-amber-600 bg-white border-2 border-slate-300">
-          <i class="fa-solid fa-cow"></i>
+
+        <!-- Tab 4: Cattle -->
+        <button onclick="switchTab('cattle')" id="tabCattleBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
+          <i class="fa-solid fa-cow text-base"></i>
+          <span>पशु व बछड़ा</span>
         </button>
-        <button onclick="switchTab('stock')" id="tabStockBtn" title="चारा स्टॉक" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-yellow-600 bg-white border-2 border-slate-300">
-          <i class="fa-solid fa-wheat-awn"></i>
+
+        <!-- Tab 5: Stock -->
+        <button onclick="switchTab('stock')" id="tabStockBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
+          <i class="fa-solid fa-wheat-awn text-base"></i>
+          <span>चारा स्टॉक</span>
         </button>
       </div>
 
-      <!-- Khata Tab shifted to the Right Side -->
-      <button onclick="switchTab('khata')" id="tabKhataBtn" title="उधारी बहीखाता" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-emerald-700 bg-white border-2 border-slate-300 ml-auto sm:ml-4 shadow-sm">
-        <i class="fa-solid fa-book-bookmark"></i>
+      <!-- Tab 6: Khata (Right-aligned) -->
+      <button onclick="switchTab('khata')" id="tabKhataBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 ml-auto sm:ml-4 shadow-sm border-2">
+        <i class="fa-solid fa-book-bookmark text-base"></i>
+        <span>उधारी बहीखाता</span>
       </button>
     </div>
 
@@ -201,7 +216,12 @@
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री प्रकार</label><select id="milkSaleType" onchange="toggleMilkSaleType()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="retail">ग्राहक (Fixed Rate)</option><option value="plant">डेयरी प्लांट (FAT/SNF)</option></select></div>
             <div class="relative">
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक नाम (सर्च / चुनें)</label>
-              <input type="text" id="milkCustomer" autocomplete="off" onfocus="showCustomerDropdown()" oninput="filterCustomerDropdown(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+              <div class="relative">
+                <input type="text" id="milkCustomer" autocomplete="off" onfocus="showCustomerDropdown()" oninput="filterCustomerDropdown(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 pr-9 font-bold" />
+                <button type="button" onmousedown="event.preventDefault(); toggleCustomerDropdownOnly('milkCustomerSuggestions', 'milkCustomer');" class="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-emerald-700 flex items-center justify-center cursor-pointer">
+                  <i class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+              </div>
               <div id="milkCustomerSuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-emerald-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
             </div>
             <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मोबाइल नंबर (WhatsApp)</label><input type="tel" id="milkCustomerPhone" placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-emerald-300 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
@@ -428,7 +448,12 @@
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="custPayDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div class="relative">
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक का नाम (सर्च / चुनें)</label>
-            <input type="text" id="custPayName" autocomplete="off" onfocus="showCustomerDropdown2()" oninput="filterCustomerDropdown2(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+            <div class="relative">
+              <input type="text" id="custPayName" autocomplete="off" onfocus="showCustomerDropdown2()" oninput="filterCustomerDropdown2(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 pr-9 font-bold" />
+              <button type="button" onmousedown="event.preventDefault(); toggleCustomerDropdownOnly('custPaySuggestions', 'custPayName');" class="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-indigo-700 flex items-center justify-center cursor-pointer">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </button>
+            </div>
             <div id="custPaySuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-indigo-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
           </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label><input type="number" id="custPayAmount" required placeholder="उदा. 700" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
@@ -824,14 +849,27 @@
       document.getElementById('custPaySuggestions').classList.add('hidden');
     }
 
+    function toggleCustomerDropdownOnly(dropdownId, inputId) {
+      const box = document.getElementById(dropdownId);
+      if (!box) return;
+      if (box.classList.contains('hidden')) {
+        const inp = document.getElementById(inputId);
+        const val = inp ? inp.value : '';
+        if (inputId === 'milkCustomer') filterCustomerDropdown(val);
+        else filterCustomerDropdown2(val);
+      } else {
+        box.classList.add('hidden');
+      }
+    }
+
     document.addEventListener('click', e => {
       if (!e.target.closest('#expVendorName') && !e.target.closest('#vendorSuggestions')) {
         document.getElementById('vendorSuggestions')?.classList.add('hidden');
       }
-      if (!e.target.closest('#milkCustomer') && !e.target.closest('#milkCustomerSuggestions')) {
+      if (!e.target.closest('#milkCustomer') && !e.target.closest('#milkCustomerSuggestions') && !e.target.closest('button[onmousedown*="milkCustomerSuggestions"]')) {
         document.getElementById('milkCustomerSuggestions')?.classList.add('hidden');
       }
-      if (!e.target.closest('#custPayName') && !e.target.closest('#custPaySuggestions')) {
+      if (!e.target.closest('#custPayName') && !e.target.closest('#custPaySuggestions') && !e.target.closest('button[onmousedown*="custPaySuggestions"]')) {
         document.getElementById('custPaySuggestions')?.classList.add('hidden');
       }
     });
@@ -2421,20 +2459,51 @@
       checkDailyAutoFeedDeduction();
     }
 
-    // Switch Tabs by Icon
+    // Switch Tabs with Unique Contrast Styles for Each Tab
+    const tabThemeStyles = {
+      milk: {
+        active: "bg-emerald-900 text-amber-300 border-emerald-500 shadow-md",
+        inactive: "bg-emerald-50 text-emerald-900 border-emerald-300 hover:bg-emerald-100"
+      },
+      expense: {
+        active: "bg-purple-900 text-amber-300 border-purple-500 shadow-md",
+        inactive: "bg-purple-50 text-purple-900 border-purple-300 hover:bg-purple-100"
+      },
+      labour: {
+        active: "bg-cyan-900 text-cyan-200 border-cyan-500 shadow-md",
+        inactive: "bg-cyan-50 text-cyan-950 border-cyan-300 hover:bg-cyan-100"
+      },
+      cattle: {
+        active: "bg-amber-900 text-amber-200 border-amber-500 shadow-md",
+        inactive: "bg-amber-50 text-amber-950 border-amber-300 hover:bg-amber-100"
+      },
+      stock: {
+        active: "bg-yellow-900 text-yellow-200 border-yellow-500 shadow-md",
+        inactive: "bg-yellow-50 text-yellow-950 border-yellow-300 hover:bg-yellow-100"
+      },
+      khata: {
+        active: "bg-indigo-900 text-indigo-200 border-indigo-500 shadow-md",
+        inactive: "bg-indigo-50 text-indigo-950 border-indigo-300 hover:bg-indigo-100"
+      }
+    };
+
     function switchTab(t) {
       ['milk', 'expense', 'labour', 'cattle', 'khata', 'stock'].forEach(tab => {
         const sec = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
         const btn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
         if (sec) sec.classList.add('hidden');
         if (btn) {
-          btn.className = "w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg bg-white text-slate-700 border-2 border-slate-300";
+          const theme = tabThemeStyles[tab];
+          const baseClasses = "px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2";
+          btn.className = `${baseClasses} ${theme.inactive} ${tab === 'khata' ? 'ml-auto sm:ml-4' : ''}`;
         }
       });
       document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.remove('hidden');
       const ab = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
       if (ab) {
-        ab.className = "w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg bg-slate-900 text-amber-300 shadow border-2 border-slate-700";
+        const activeTheme = tabThemeStyles[t];
+        const baseClasses = "px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2";
+        ab.className = `${baseClasses} ${activeTheme.active} ${t === 'khata' ? 'ml-auto sm:ml-4' : ''}`;
       }
       localStorage.setItem('prajapati_active_tab', t);
     }
