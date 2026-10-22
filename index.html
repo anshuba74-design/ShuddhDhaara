@@ -49,10 +49,12 @@
           <span class="hidden sm:inline">लागत हिसाब</span>
         </button>
 
-        <button onclick="printOverallMasterReport()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow border-2 border-sky-400 flex items-center gap-1.5 transition active:scale-95">
+        <!-- Admin Only PDF Button -->
+        <button onclick="printOverallMasterReport()" id="pdfReportBtn" title="केवल एडमिन के लिए" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow border-2 border-sky-400 flex items-center gap-1.5 transition active:scale-95">
           <i class="fa-solid fa-file-pdf text-amber-300"></i>
           <span class="hidden sm:inline">संपूर्ण PDF रिपोर्ट</span>
           <span class="sm:hidden">PDF</span>
+          <i class="fa-solid fa-lock text-[10px] text-amber-300 ml-0.5" id="pdfLockIcon"></i>
         </button>
 
         <button onclick="openSummaryModal()" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs sm:text-sm font-bold px-2.5 py-2 rounded-xl shadow border border-emerald-600 flex items-center gap-1 transition">
@@ -182,7 +184,7 @@
       </button>
     </div>
 
-    <!-- TAB 1: MILK & PRODUCT SALE (EXPANDED TO ALL DAIRY PRODUCTS) -->
+    <!-- TAB 1: MILK & PRODUCT SALE -->
     <section id="tabMilk" class="mt-4 space-y-4">
       <div class="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-900 text-white p-3.5 rounded-2xl shadow border-2 border-emerald-600 grid grid-cols-3 gap-2 text-center">
         <div>
@@ -500,9 +502,8 @@
       </div>
     </section>
 
-    <!-- TAB 6: ADVANCED BahiKhata / Ledger (WITH BOTH CUSTOMER & VENDOR SETTLEMENTS + DUAL PROOF PIC) -->
+    <!-- TAB 6: ADVANCED BahiKhata / Ledger -->
     <section id="tabKhata" class="mt-4 hidden space-y-4">
-      <!-- 3 Summary Overview Cards -->
       <div class="grid grid-cols-3 gap-2 text-center">
         <div class="bg-emerald-950 text-white p-3 rounded-2xl border-2 border-emerald-500 shadow">
           <span class="text-[10px] text-emerald-300 font-bold uppercase block">कुल लेना है (मार्केट)</span>
@@ -518,7 +519,7 @@
         </div>
       </div>
 
-      <!-- Action Forms Wrapper (Customer Received & Vendor Paid) -->
+      <!-- Action Forms Wrapper -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- Card 1: Customer Payment Received -->
         <div id="custAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-indigo-600 space-y-3">
@@ -574,7 +575,7 @@
           </form>
         </div>
 
-        <!-- Card 2: Vendor Due Paid (Shifted from Expense) -->
+        <!-- Card 2: Vendor Due Paid -->
         <div id="vendorAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-rose-600 space-y-3">
           <h2 class="font-extrabold text-slate-900 text-sm mb-1 flex items-center gap-2"><i class="fa-solid fa-money-bill-transfer text-rose-600"></i> दुकानदार को उधारी चुकाई दर्ज करें</h2>
           <form onsubmit="addVendorPaymentSettlement(event)" class="space-y-3">
@@ -632,7 +633,7 @@
 
       <!-- 2 Side-by-Side Ledgers -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Section A: Market Receivables (Customer Dues) -->
+        <!-- Section A: Market Receivables -->
         <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
           <div class="p-3 bg-emerald-50 border-b flex justify-between items-center">
             <span class="font-extrabold text-emerald-950 text-xs sm:text-sm flex items-center gap-1.5"><i class="fa-solid fa-arrow-down-left text-emerald-700"></i> ग्राहक खाता (मुझसे लेना बाकी है)</span>
@@ -641,7 +642,7 @@
           <div id="khataCustomerList" class="p-3 space-y-2 max-h-[500px] overflow-y-auto"></div>
         </div>
 
-        <!-- Section B: Farm Payables (Vendor/Shopkeeper Dues) -->
+        <!-- Section B: Farm Payables -->
         <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
           <div class="p-3 bg-rose-50 border-b flex justify-between items-center">
             <span class="font-extrabold text-rose-950 text-xs sm:text-sm flex items-center gap-1.5"><i class="fa-solid fa-arrow-up-right text-rose-700"></i> दुकानदार खाता (मुझे देना बाकी है)</span>
@@ -653,7 +654,7 @@
     </section>
   </main>
 
-  <!-- UNIVERSAL DETAIL MODAL (WITH LIVE TIME PASSBOOK, PROOF PREVIEW & EDIT/DELETE ICONS) -->
+  <!-- UNIVERSAL DETAIL MODAL -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between border-b shrink-0">
@@ -843,7 +844,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script with Multi-Product Sale, Dual Camera/Gallery & Universal Realtime Ledger -->
+  <!-- Core Script with Universal Inline Pencil (Edit) & Bin (Delete) + Admin Guard -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -1187,20 +1188,28 @@
       }
     });
 
-    // ==================== EDIT & DELETE ENTRY FUNCTIONS ====================
+    // ==================== EDIT & DELETE ENTRY FUNCTIONS (ADMIN CONTROLLED) ====================
     function deleteRecordPrompt(nodePath, recordId, refreshName, isVendor) {
-      if (!isAdmin) { alert("केवल एडमिन ही डिलीट कर सकते हैं!"); return; }
+      if (!isAdmin) { 
+        alert("🔒 यह अधिकार केवल एडमिन के पास है! पहले एडमिन मोड ऑन करें।"); 
+        return; 
+      }
       if (confirm("क्या आप वाकई इस प्रविष्टि (Entry) को हमेशा के लिए हटाना चाहते हैं?")) {
         db.ref(nodePath + '/' + recordId).remove().then(() => {
           alert("✅ एंट्री हटा दी गई!");
-          if (isVendor) openVendorPassbook(refreshName);
-          else openCustomerPassbook(refreshName);
+          if (refreshName) {
+            if (isVendor) openVendorPassbook(refreshName);
+            else openCustomerPassbook(refreshName);
+          }
         });
       }
     }
 
     function editRecordPrompt(nodePath, recordId, oldAmount, oldDetail, refreshName, isVendor) {
-      if (!isAdmin) { alert("केवल एडमिन ही सुधार कर सकते हैं!"); return; }
+      if (!isAdmin) { 
+        alert("🔒 सुधार का अधिकार केवल एडमिन के पास है! पहले एडमिन मोड ऑन करें।"); 
+        return; 
+      }
       const newAmountStr = prompt("संशोधित नई रकम (₹) दर्ज करें:", oldAmount);
       if (newAmountStr === null) return;
       const newAmount = parseFloat(newAmountStr);
@@ -1216,8 +1225,87 @@
         editedAt: Date.now()
       }).then(() => {
         alert("✅ एंट्री सफलतापूर्वक सुधारी गई!");
-        if (isVendor) openVendorPassbook(refreshName);
-        else openCustomerPassbook(refreshName);
+        if (refreshName) {
+          if (isVendor) openVendorPassbook(refreshName);
+          else openCustomerPassbook(refreshName);
+        }
+      });
+    }
+
+    function editMilkDirect(id) {
+      if (!isAdmin) { alert("🔒 केवल एडमिन ही सुधार कर सकते हैं!"); return; }
+      const item = milkData.find(x => x.id === id);
+      if (!item) return;
+      const newQtyStr = prompt("नई मात्रा दर्ज करें:", item.qty);
+      if (newQtyStr === null) return;
+      const newRateStr = prompt("नया रेट (₹) दर्ज करें:", item.rate);
+      if (newRateStr === null) return;
+
+      const q = parseFloat(newQtyStr) || item.qty;
+      const r = parseFloat(newRateStr) || item.rate;
+
+      db.ref('milk_records/' + id).update({
+        qty: q,
+        rate: r,
+        total: q * r,
+        editedAt: Date.now()
+      }).then(() => {
+        alert("✅ बिक्री रिकॉर्ड अपडेट!");
+        closeUniversalModal();
+      });
+    }
+
+    function editExpenseDirect(id) {
+      if (!isAdmin) { alert("🔒 केवल एडमिन ही सुधार कर सकते हैं!"); return; }
+      const item = expenseData.find(x => x.id === id);
+      if (!item) return;
+      const newAmtStr = prompt("संशोधित रकम (₹):", item.amount);
+      if (newAmtStr === null) return;
+      const newDetail = prompt("संशोधित विवरण:", item.detail);
+      if (newDetail === null) return;
+
+      db.ref('expense_records/' + id).update({
+        amount: parseFloat(newAmtStr) || item.amount,
+        detail: newDetail || item.detail,
+        editedAt: Date.now()
+      }).then(() => alert("✅ खर्च अपडेट हो गया!"));
+    }
+
+    function editLabourDirect(id) {
+      if (!isAdmin) { alert("🔒 केवल एडमिन ही सुधार कर सकते हैं!"); return; }
+      const l = labourProfiles.find(x => x.id === id);
+      if (!l) return;
+      const newSal = prompt(`'${l.name}' का नया मासिक वेतन (₹):`, l.salary);
+      if (newSal === null) return;
+      const newPhone = prompt(`'${l.name}' का मोबाइल नंबर:`, l.phone);
+      if (newPhone === null) return;
+
+      db.ref('labour_profiles/' + id).update({
+        salary: parseFloat(newSal) || l.salary,
+        phone: newPhone || l.phone,
+        editedAt: Date.now()
+      }).then(() => {
+        alert("✅ मजदूर विवरण अपडेट!");
+        closeUniversalModal();
+      });
+    }
+
+    function editStockDirect(id) {
+      if (!isAdmin) { alert("🔒 केवल एडमिन ही सुधार कर सकते हैं!"); return; }
+      const s = stockData.find(x => x.id === id);
+      if (!s) return;
+      const newQty = prompt(`'${s.name}' का नया स्टॉक (${s.unit}):`, s.qty);
+      if (newQty === null) return;
+      const newDaily = prompt(`दैनिक ऑटो खपत (${s.unit}/दिन):`, s.dailyUse);
+      if (newDaily === null) return;
+
+      db.ref('stock_records/' + id).update({
+        qty: parseFloat(newQty) || s.qty,
+        dailyUse: parseFloat(newDaily) || s.dailyUse,
+        editedAt: Date.now()
+      }).then(() => {
+        alert("✅ स्टॉक अपडेट हो गया!");
+        closeUniversalModal();
       });
     }
 
@@ -1244,7 +1332,7 @@
         isAdmin = false;
         localStorage.removeItem('prajapati_is_admin_logged_in');
         updateAdminUI();
-        alert("लॉगआउट सफल!");
+        alert("लॉगआउट सफल! अब आप User Mode (View Only) में हैं।");
       }
     }
 
@@ -1255,17 +1343,19 @@
       const menuChangePassBtn = document.getElementById('menuChangePassBtn');
       const setupAdminArea = document.getElementById('setupCostAdminForm');
       const logoAdminArea = document.getElementById('adminLogoChangeArea');
+      const pdfLock = document.getElementById('pdfLockIcon');
 
       const adminForms = ['milkAdminForm', 'expAdminForm', 'labourAdminForm', 'catAdminForm', 'calfAdminForm', 'sellAnimalAdminForm', 'custAdminForm', 'vendorAdminForm', 'stockAdminForm'];
 
       if (isAdmin) {
         badge.innerText = "Admin Active";
         badge.className = "text-[9px] sm:text-[10px] bg-emerald-700 text-white px-2.5 py-0.5 rounded-full font-bold border border-emerald-400";
-        statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Admin Mode`;
+        statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Admin Mode (Full Edit/Delete)`;
         menuAdminBtnText.innerText = "Admin Logout";
         menuChangePassBtn.classList.remove('hidden');
         if (setupAdminArea) setupAdminArea.classList.remove('hidden');
         if (logoAdminArea) logoAdminArea.classList.remove('hidden');
+        if (pdfLock) pdfLock.className = "fa-solid fa-unlock text-[10px] text-emerald-200 ml-0.5";
         adminForms.forEach(id => document.getElementById(id)?.classList.remove('hidden'));
       } else {
         badge.innerText = "User Mode";
@@ -1275,6 +1365,7 @@
         menuChangePassBtn.classList.add('hidden');
         if (setupAdminArea) setupAdminArea.classList.add('hidden');
         if (logoAdminArea) logoAdminArea.classList.add('hidden');
+        if (pdfLock) pdfLock.className = "fa-solid fa-lock text-[10px] text-amber-300 ml-0.5";
         adminForms.forEach(id => document.getElementById(id)?.classList.add('hidden'));
       }
       renderAll();
@@ -1411,7 +1502,7 @@
     }
 
     function startEditCattle(id) {
-      if (!isAdmin) return;
+      if (!isAdmin) { alert("🔒 केवल एडमिन ही पशु विवरण सुधार सकते हैं!"); return; }
       closeUniversalModal();
       const item = cattleData.find(c => c.id === id);
       if (!item) return;
@@ -1434,15 +1525,15 @@
     }
 
     function deleteCattle(id) {
-      if (!isAdmin) return;
-      if (confirm("यह पशु रिकॉर्ड हटाएं?")) {
+      if (!isAdmin) { alert("🔒 केवल एडमिन ही डिलीट कर सकते हैं!"); return; }
+      if (confirm("यह पशु रिकॉर्ड हमेशा के लिए हटाएं?")) {
         db.ref('cattle_records/' + id).remove();
         closeUniversalModal();
       }
     }
 
     function deleteCalf(id) {
-      if (!isAdmin) return;
+      if (!isAdmin) { alert("🔒 केवल एडमिन ही डिलीट कर सकते हैं!"); return; }
       if (confirm("यह बच्चा रिकॉर्ड हटाएं?")) {
         db.ref('calf_records/' + id).remove();
         closeUniversalModal();
@@ -1671,7 +1762,6 @@
 
     // ==================== ADVANCED TWO-WAY AUTOMATIC KHATA / LEDGER ====================
     function renderKhata() {
-      // 1. ग्राहक हिसाब (Receivables)
       const custMap = {};
       milkData.forEach(m => {
         const cName = (m.customer || '').trim();
@@ -1711,7 +1801,6 @@
         });
       });
 
-      // 2. दुकानदार हिसाब (Payables)
       const vendorMap = {};
       expenseData.forEach(e => {
         let vName = (e.vendorName || '').trim();
@@ -1754,7 +1843,6 @@
         }
       });
 
-      // 3. Render Top Cards
       let totalReceivable = 0;
       Object.keys(custMap).forEach(k => {
         const bal = custMap[k].totalBill - custMap[k].totalPaid;
@@ -1776,7 +1864,6 @@
       netElem.innerText = (netBalance >= 0 ? '+ ₹ ' : '- ₹ ') + Math.abs(netBalance).toLocaleString('en-IN');
       netElem.className = "text-base sm:text-xl font-black mt-1 block " + (netBalance >= 0 ? "text-emerald-400" : "text-rose-400");
 
-      // 4. Render Customer List
       const cList = document.getElementById('khataCustomerList');
       cList.innerHTML = '';
       const cKeys = Object.keys(custMap);
@@ -1807,7 +1894,6 @@
         });
       }
 
-      // 5. Render Vendor List
       const vList = document.getElementById('khataVendorList');
       vList.innerHTML = '';
       const vKeys = Object.keys(vendorMap);
@@ -1821,6 +1907,7 @@
           const bal = vData.totalDue - vData.totalPaid;
           const isDue = bal > 0;
 
+          cList.innerHTML += '';
           vList.innerHTML += `
             <div onclick="openVendorPassbook('${name.replace(/'/g, "\\'")}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-rose-600 transition">
               <div>
@@ -1839,7 +1926,7 @@
       }
     }
 
-    // CUSTOMER PASSBOOK POPUP WITH INLINE PROOF PIC PREVIEW
+    // CUSTOMER PASSBOOK POPUP WITH INLINE PROOF PIC PREVIEW & PENCIL/BIN
     function openCustomerPassbook(customerName) {
       let entries = [];
       let totalBill = 0, totalPaid = 0, phone = '';
@@ -1894,13 +1981,14 @@
           </button>
         ` : '';
 
+        // Universal Pencil & Trash Bin (Admin Protected)
         const actionBtns = isAdmin ? `
-          <div class="inline-flex items-center gap-1.5 ml-1.5">
-            <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${customerName.replace(/'/g, "\\'")}', false)" title="एडिट करें" class="text-amber-600 hover:text-amber-800 p-1">
+          <div class="inline-flex items-center gap-1.5 ml-2">
+            <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${customerName.replace(/'/g, "\\'")}', false)" title="संशोधित करें" class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 flex items-center justify-center transition">
               <i class="fa-solid fa-pen text-[10px]"></i>
             </button>
-            <button onclick="deleteRecordPrompt('${e.nodePath}', '${e.id}', '${customerName.replace(/'/g, "\\'")}', false)" title="डिलीट करें" class="text-rose-600 hover:text-rose-800 p-1">
-              <i class="fa-solid fa-trash text-[10px]"></i>
+            <button onclick="deleteRecordPrompt('${e.nodePath}', '${e.id}', '${customerName.replace(/'/g, "\\'")}', false)" title="हटाएं" class="w-6 h-6 rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center transition">
+              <i class="fa-solid fa-trash-can text-[10px]"></i>
             </button>
           </div>
         ` : '';
@@ -1940,7 +2028,7 @@
           <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
             <table class="w-full text-left">
               <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b sticky top-0">
-                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">बकाया (एक्शन)</th></tr>
+                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">बकाया ${isAdmin ? '(एक्शन)' : ''}</th></tr>
               </thead>
               <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
             </table>
@@ -1956,7 +2044,7 @@
       openUniversalModal("ग्राहक पासबुक विवरण", customerName, html);
     }
 
-    // VENDOR PASSBOOK POPUP WITH INLINE PROOF PIC PREVIEW
+    // VENDOR PASSBOOK POPUP WITH INLINE PROOF PIC PREVIEW & PENCIL/BIN
     function openVendorPassbook(vendorName) {
       let entries = [];
       let totalDue = 0, totalPaid = 0;
@@ -2015,13 +2103,14 @@
           </button>
         ` : '';
 
+        // Universal Pencil & Trash Bin (Admin Protected)
         const actionBtns = isAdmin ? `
-          <div class="inline-flex items-center gap-1.5 ml-1.5">
-            <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${vendorName.replace(/'/g, "\\'")}', true)" title="एडिट करें" class="text-amber-600 hover:text-amber-800 p-1">
+          <div class="inline-flex items-center gap-1.5 ml-2">
+            <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${vendorName.replace(/'/g, "\\'")}', true)" title="संशोधित करें" class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 flex items-center justify-center transition">
               <i class="fa-solid fa-pen text-[10px]"></i>
             </button>
-            <button onclick="deleteRecordPrompt('${e.nodePath}', '${e.id}', '${vendorName.replace(/'/g, "\\'")}', true)" title="डिलीट करें" class="text-rose-600 hover:text-rose-800 p-1">
-              <i class="fa-solid fa-trash text-[10px]"></i>
+            <button onclick="deleteRecordPrompt('${e.nodePath}', '${e.id}', '${vendorName.replace(/'/g, "\\'")}', true)" title="हटाएं" class="w-6 h-6 rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200 flex items-center justify-center transition">
+              <i class="fa-solid fa-trash-can text-[10px]"></i>
             </button>
           </div>
         ` : '';
@@ -2061,7 +2150,7 @@
           <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
             <table class="w-full text-left">
               <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b sticky top-0">
-                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">देना शेष (एक्शन)</th></tr>
+                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">देना शेष ${isAdmin ? '(एक्शन)' : ''}</th></tr>
               </thead>
               <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
             </table>
@@ -2189,17 +2278,36 @@
             <button onclick="sendCustomerMilkBill('${(x.customer || '').replace(/'/g, "\\'")}', '${itm.replace(/'/g, "\\'")}', '${x.date}', ${x.qty}, ${x.rate}, ${x.total}, '${x.paymentStatus}', '${x.customerPhone || ''}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
               <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद भेजें
             </button>
-            ${isAdmin ? `<button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
+            ${isAdmin ? `
+              <div class="flex gap-2 pt-1">
+                <button onclick="editMilkDirect('${x.id}')" class="w-1/2 bg-amber-100 text-amber-800 font-bold py-2 rounded-xl border border-amber-300 flex items-center justify-center gap-1"><i class="fa-solid fa-pen text-xs"></i> एडिट करें</button>
+                <button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-1/2 bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300 flex items-center justify-center gap-1"><i class="fa-solid fa-trash-can text-xs"></i> हटाएं</button>
+              </div>
+            ` : ''}
           </div>
         `;
 
+        const cardAdminIcons = isAdmin ? `
+          <div class="flex items-center gap-1 ml-2" onclick="event.stopPropagation()">
+            <button onclick="editMilkDirect('${x.id}')" title="संशोधित करें" class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 flex items-center justify-center border border-amber-200">
+              <i class="fa-solid fa-pen text-xs"></i>
+            </button>
+            <button onclick="deleteRecordPrompt('milk_records', '${x.id}')" title="हटाएं" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 flex items-center justify-center border border-rose-200">
+              <i class="fa-solid fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        ` : '';
+
         c.innerHTML += `
           <div onclick="openUniversalModal('${(x.customer || '').replace(/'/g, "\\'")}', '${itm} • ${x.date}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-emerald-600 transition">
-            <div>
-              <div class="flex items-center gap-1.5"><span class="text-[9px] font-black bg-emerald-100 text-emerald-900 px-1.5 py-0.5 rounded">${itm}</span><h4 class="font-bold text-slate-900">${x.customer}</h4></div>
+            <div class="truncate">
+              <div class="flex items-center gap-1.5"><span class="text-[9px] font-black bg-emerald-100 text-emerald-900 px-1.5 py-0.5 rounded">${itm}</span><h4 class="font-bold text-slate-900 truncate">${x.customer}</h4></div>
               <p class="text-[10px] text-slate-500 mt-0.5">${x.date} • ${x.shift} ${x.proofPic ? '📸' : ''}</p>
             </div>
-            <div class="text-right"><span class="font-bold text-emerald-950">${x.qty}</span><br><span class="font-bold text-slate-700">₹${x.total}</span></div>
+            <div class="flex items-center">
+              <div class="text-right shrink-0"><span class="font-bold text-emerald-950">${x.qty}</span><br><span class="font-bold text-slate-700">₹${x.total}</span></div>
+              ${cardAdminIcons}
+            </div>
           </div>
         `;
       });
@@ -2249,13 +2357,27 @@
       expenseData.forEach(x => {
         const proofBadge = x.proofPic ? `<button onclick="event.stopPropagation(); openProofImageModal('${x.proofPic}', '${x.detail} - बिल प्रूफ')" class="text-purple-700 bg-purple-100 hover:bg-purple-200 px-1.5 py-0.5 rounded text-[10px] font-bold ml-1">📸 पर्ची</button>` : '';
 
+        const cardAdminIcons = isAdmin ? `
+          <div class="flex items-center gap-1 ml-2" onclick="event.stopPropagation()">
+            <button onclick="editExpenseDirect('${x.id}')" title="संशोधित करें" class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 flex items-center justify-center border border-amber-200">
+              <i class="fa-solid fa-pen text-xs"></i>
+            </button>
+            <button onclick="deleteRecordPrompt('expense_records', '${x.id}')" title="हटाएं" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 flex items-center justify-center border border-rose-200">
+              <i class="fa-solid fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        ` : '';
+
         c.innerHTML += `
           <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
-            <div>
-              <h4 class="font-bold text-slate-900 flex items-center">${x.detail} ${proofBadge}</h4>
+            <div class="truncate">
+              <h4 class="font-bold text-slate-900 flex items-center truncate">${x.detail} ${proofBadge}</h4>
               <p class="text-[10px] text-slate-500">${x.date} • ${x.vendorName ? x.vendorName + ' • ' : ''}${x.animalTag || x.category}</p>
             </div>
-            <span class="font-bold text-purple-950">₹${x.amount}</span>
+            <div class="flex items-center shrink-0">
+              <span class="font-bold text-purple-950">₹${x.amount}</span>
+              ${cardAdminIcons}
+            </div>
           </div>
         `;
       });
@@ -2335,15 +2457,32 @@
                   <button onclick="updateStockQty('${s.id}', 1)" class="w-8 h-8 bg-slate-900 text-white font-bold rounded">+1</button>
                 </div>
               </div>
-              <button onclick="deleteStock('${s.id}')" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट स्टॉक</button>
+              <div class="flex gap-2 pt-1">
+                <button onclick="editStockDirect('${s.id}')" class="w-1/2 bg-amber-100 text-amber-800 font-bold py-2 rounded-xl border border-amber-300 flex items-center justify-center gap-1"><i class="fa-solid fa-pen text-xs"></i> एडिट</button>
+                <button onclick="deleteStock('${s.id}')" class="w-1/2 bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300 flex items-center justify-center gap-1"><i class="fa-solid fa-trash-can text-xs"></i> हटाएं</button>
+              </div>
             ` : ''}
           </div>
         `;
 
+        const cardAdminIcons = isAdmin ? `
+          <div class="flex items-center gap-1 ml-2" onclick="event.stopPropagation()">
+            <button onclick="editStockDirect('${s.id}')" title="संशोधित करें" class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 flex items-center justify-center border border-amber-200">
+              <i class="fa-solid fa-pen text-xs"></i>
+            </button>
+            <button onclick="deleteStock('${s.id}')" title="हटाएं" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 flex items-center justify-center border border-rose-200">
+              <i class="fa-solid fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        ` : '';
+
         c.innerHTML += `
           <div onclick="openUniversalModal('${s.name}', 'स्टॉक: ${s.qty} ${s.unit}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-yellow-600 transition">
             <div><h4 class="font-bold text-slate-900">${s.name}</h4><p class="text-[10px] text-slate-500">${d} दिन शेष</p></div>
-            <span class="font-black text-amber-950">${s.qty} ${s.unit}</span>
+            <div class="flex items-center">
+              <span class="font-black text-amber-950">${s.qty} ${s.unit}</span>
+              ${cardAdminIcons}
+            </div>
           </div>
         `;
       });
@@ -2381,17 +2520,33 @@
               <div class="p-2 bg-slate-50 rounded-lg border"><b>खरीद लागत:</b> ₹${c.buyCost || '0'}</div>
               <div class="p-2 bg-slate-50 rounded-lg border"><b>AI तारीख:</b> ${c.aiDate || '-'}</div>
             </div>
-            <div class="pt-2 flex justify-between gap-2">
-              <button onclick="startEditCattle('${c.id}')" class="w-full bg-slate-900 text-amber-300 font-bold py-2.5 rounded-xl text-xs"><i class="fa-solid fa-pen-to-square"></i> विवरण एडिट करें</button>
-              ${isAdmin ? `<button onclick="deleteCattle('${c.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300">डिलीट</button>` : ''}
-            </div>
+            ${isAdmin ? `
+              <div class="pt-2 flex justify-between gap-2">
+                <button onclick="startEditCattle('${c.id}')" class="w-full bg-slate-900 text-amber-300 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-pen-to-square"></i> विवरण एडिट करें</button>
+                <button onclick="deleteCattle('${c.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300 flex items-center justify-center gap-1"><i class="fa-solid fa-trash-can"></i> डिलीट</button>
+              </div>
+            ` : ''}
           </div>
         `;
+
+        const cardAdminIcons = isAdmin ? `
+          <div class="flex items-center gap-1 ml-2" onclick="event.stopPropagation()">
+            <button onclick="startEditCattle('${c.id}')" title="संशोधित करें" class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 flex items-center justify-center border border-amber-200">
+              <i class="fa-solid fa-pen text-xs"></i>
+            </button>
+            <button onclick="deleteCattle('${c.id}')" title="हटाएं" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 flex items-center justify-center border border-rose-200">
+              <i class="fa-solid fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        ` : '';
 
         target.innerHTML += `
           <div onclick="openUniversalModal('${c.categoryType} टैग: ${c.tag}', '${c.breed}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-amber-600 transition">
             <div><h4 class="font-black text-slate-900">टैग: ${c.tag}</h4><p class="text-[10px] text-slate-500">${c.breed} • ${c.milk}L</p></div>
-            <span class="text-[10px] font-bold bg-amber-100 px-2 py-0.5 rounded">${c.status}</span>
+            <div class="flex items-center">
+              <span class="text-[10px] font-bold bg-amber-100 px-2 py-0.5 rounded">${c.status}</span>
+              ${cardAdminIcons}
+            </div>
           </div>
         `;
       });
@@ -2410,14 +2565,25 @@
               <div><b>माता का टैग:</b> ${c.motherTag}</div>
               <div><b>जन्म तारीख:</b> ${c.birthDate}</div>
             </div>
-            ${isAdmin ? `<button onclick="deleteCalf('${c.id}')" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
+            ${isAdmin ? `<button onclick="deleteCalf('${c.id}')" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300 flex items-center justify-center gap-1.5"><i class="fa-solid fa-trash-can"></i> डिलीट करें</button>` : ''}
           </div>
         `;
+
+        const cardAdminIcons = isAdmin ? `
+          <div class="flex items-center gap-1 ml-2" onclick="event.stopPropagation()">
+            <button onclick="deleteCalf('${c.id}')" title="हटाएं" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 flex items-center justify-center border border-rose-200">
+              <i class="fa-solid fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        ` : '';
 
         target.innerHTML += `
           <div onclick="openUniversalModal('बच्चा टैग: ${c.tag}', '${c.categoryType} • माता: ${c.motherTag}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-blue-50/50 p-3 rounded-2xl border-2 border-blue-200 flex justify-between items-center text-xs cursor-pointer hover:border-blue-600 transition">
             <div><h4 class="font-black text-blue-950">👶 ${c.tag}</h4><p class="text-[10px] text-blue-800">माता: ${c.motherTag}</p></div>
-            <span class="text-[10px] font-bold text-blue-900">${c.gender}</span>
+            <div class="flex items-center">
+              <span class="text-[10px] font-bold text-blue-900">${c.gender}</span>
+              ${cardAdminIcons}
+            </div>
           </div>
         `;
       });
@@ -2512,14 +2678,33 @@
               <a href="tel:${l.phone}" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-solid fa-phone"></i> कॉल करें</a>
               <a href="https://wa.me/91${l.phone.replace(/\D/g,'')}?text=नमस्ते ${l.name}, प्रजापति डेयरी फॉर्म से संदेश।" target="_blank" class="w-full bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
             </div>
-            ${isAdmin ? `<button onclick="db.ref('labour_profiles/${l.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
+            ${isAdmin ? `
+              <div class="flex gap-2 pt-1">
+                <button onclick="editLabourDirect('${l.id}')" class="w-1/2 bg-amber-100 text-amber-800 font-bold py-2 rounded-xl border border-amber-300 flex items-center justify-center gap-1"><i class="fa-solid fa-pen text-xs"></i> एडिट</button>
+                <button onclick="db.ref('labour_profiles/${l.id}').remove(); closeUniversalModal();" class="w-1/2 bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300 flex items-center justify-center gap-1"><i class="fa-solid fa-trash-can text-xs"></i> हटाएं</button>
+              </div>
+            ` : ''}
           </div>
         `;
+
+        const cardAdminIcons = isAdmin ? `
+          <div class="flex items-center gap-1 ml-2" onclick="event.stopPropagation()">
+            <button onclick="editLabourDirect('${l.id}')" title="संशोधित करें" class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 flex items-center justify-center border border-amber-200">
+              <i class="fa-solid fa-pen text-xs"></i>
+            </button>
+            <button onclick="deleteRecordPrompt('labour_profiles', '${l.id}')" title="हटाएं" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 flex items-center justify-center border border-rose-200">
+              <i class="fa-solid fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        ` : '';
 
         c.innerHTML += `
           <div onclick="openUniversalModal('${l.name}', 'वेतन: ₹${l.salary}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-slate-700 transition">
             <div><h4 class="font-bold text-slate-900">${l.name}</h4><p class="text-[10px] text-slate-500">${l.phone} • अलर्ट: ${threshold} दिन पूर्व</p></div>
-            <span class="font-bold text-emerald-950">₹${l.salary}/माह</span>
+            <div class="flex items-center">
+              <span class="font-bold text-emerald-950">₹${l.salary}/माह</span>
+              ${cardAdminIcons}
+            </div>
           </div>
         `;
       });
@@ -2626,7 +2811,7 @@
             <span class="font-bold text-slate-800">${item.name}</span>
             <div class="flex gap-2 items-center">
               <span class="font-black text-amber-950">₹ ${item.amount.toLocaleString('en-IN')}</span>
-              ${isAdmin ? `<button onclick="db.ref('farm_setup_costs/${item.id}').remove()" class="text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>` : ''}
+              ${isAdmin ? `<button onclick="db.ref('farm_setup_costs/${item.id}').remove()" class="text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}
             </div>
           </div>
         `;
@@ -2706,8 +2891,20 @@
       }
     }
 
-    // COMPLETE 5-SECTION MASTER PDF PRINT (SAFE & RELIABLE)
+    // COMPLETE 5-SECTION MASTER PDF PRINT (LOCKED TO ADMIN ONLY)
     function printOverallMasterReport() {
+      if (!isAdmin) {
+        const pin = prompt("🔒 संपूर्ण PDF रिपोर्ट केवल एडमिन के लिए है!\nकृपया एडमिन पिन दर्ज करें:");
+        if (pin === currentAdminPass) {
+          isAdmin = true;
+          localStorage.setItem('prajapati_is_admin_logged_in', 'true');
+          updateAdminUI();
+        } else {
+          alert("गलत पिन! केवल एडमिन ही PDF डाउनलोड कर सकते हैं।");
+          return;
+        }
+      }
+
       try {
         const printDiv = document.getElementById('printableArea');
         if (!printDiv) return;
@@ -2979,7 +3176,7 @@
     db.ref('sold_animals_archive').on('value', s => { soldArchiveData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; });
     db.ref('animal_sales').on('value', s => { animalSaleData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     
-    // Setup Cost Listener (Locked)
+    // Setup Cost Listener
     db.ref('farm_setup_costs').on('value', s => {
       setupCostData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : [];
       renderSetupCost();
