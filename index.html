@@ -146,32 +146,30 @@
     </div>
   </div>
 
-  <!-- Navigation Tabs -->
+  <!-- Navigation Tabs (Only Icons, Clean & Right-aligned Khata) -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 no-print">
-    <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-      <button onclick="switchTab('milk')" id="tabMilkBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-amber-300 shadow border-2 border-slate-700">
-        <i class="fa-solid fa-bottle-droplet text-amber-300"></i>
-        <span>दूध बिक्री</span>
-      </button>
-      <button onclick="switchTab('expense')" id="tabExpenseBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300">
-        <i class="fa-solid fa-wallet text-purple-700"></i>
-        <span>खर्च / मजदूरी</span>
-      </button>
-      <button onclick="switchTab('labour')" id="tabLabourBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300">
-        <i class="fa-solid fa-user-group text-cyan-700"></i>
-        <span>मजदूर</span>
-      </button>
-      <button onclick="switchTab('cattle')" id="tabCattleBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300">
-        <i class="fa-solid fa-shield-cat text-amber-600"></i>
-        <span>पशु व बछड़ा</span>
-      </button>
-      <button onclick="switchTab('khata')" id="tabKhataBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300">
-        <i class="fa-solid fa-book-bookmark text-emerald-600"></i>
-        <span>उधारी बहीखाता</span>
-      </button>
-      <button onclick="switchTab('stock')" id="tabStockBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300">
-        <i class="fa-solid fa-wheat-awn text-yellow-600"></i>
-        <span>चारा स्टॉक</span>
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none justify-between sm:justify-start">
+      <div class="flex items-center gap-2">
+        <button onclick="switchTab('milk')" id="tabMilkBtn" title="दूध बिक्री" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg bg-slate-900 text-amber-300 shadow border-2 border-slate-700">
+          <i class="fa-solid fa-bottle-droplet"></i>
+        </button>
+        <button onclick="switchTab('expense')" id="tabExpenseBtn" title="खर्च / मजदूरी" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-purple-700 bg-white border-2 border-slate-300">
+          <i class="fa-solid fa-wallet"></i>
+        </button>
+        <button onclick="switchTab('labour')" id="tabLabourBtn" title="मजदूर" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-cyan-700 bg-white border-2 border-slate-300">
+          <i class="fa-solid fa-user-group"></i>
+        </button>
+        <button onclick="switchTab('cattle')" id="tabCattleBtn" title="पशु व बछड़ा" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-amber-600 bg-white border-2 border-slate-300">
+          <i class="fa-solid fa-cow"></i>
+        </button>
+        <button onclick="switchTab('stock')" id="tabStockBtn" title="चारा स्टॉक" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-yellow-600 bg-white border-2 border-slate-300">
+          <i class="fa-solid fa-wheat-awn"></i>
+        </button>
+      </div>
+
+      <!-- Khata Tab shifted to the Right Side -->
+      <button onclick="switchTab('khata')" id="tabKhataBtn" title="उधारी बहीखाता" class="w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg text-emerald-700 bg-white border-2 border-slate-300 ml-auto sm:ml-4 shadow-sm">
+        <i class="fa-solid fa-book-bookmark"></i>
       </button>
     </div>
 
@@ -201,10 +199,10 @@
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="milkDate" onchange="renderMilkSummaryStats()" required class="w-full text-sm border-2 rounded-xl p-2.5 outline-none" /></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">समय</label><select id="milkShift" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white"><option value="सुबह (Morning)">सुबह (Morning)</option><option value="शाम (Evening)">शाम (Evening)</option></select></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री प्रकार</label><select id="milkSaleType" onchange="toggleMilkSaleType()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="retail">ग्राहक (Fixed Rate)</option><option value="plant">डेयरी प्लांट (FAT/SNF)</option></select></div>
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक/प्लांट नाम (सर्च / चुनें)</label>
-              <input type="text" id="milkCustomer" list="customerDatalist" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
-              <datalist id="customerDatalist"></datalist>
+            <div class="relative">
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक नाम (सर्च / चुनें)</label>
+              <input type="text" id="milkCustomer" autocomplete="off" onfocus="showCustomerDropdown()" oninput="filterCustomerDropdown(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+              <div id="milkCustomerSuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-emerald-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
             </div>
             <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मोबाइल नंबर (WhatsApp)</label><input type="tel" id="milkCustomerPhone" placeholder="उदा. 9876543210" class="w-full text-sm border-2 border-emerald-300 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
           </div>
@@ -235,7 +233,7 @@
       </div>
     </section>
 
-    <!-- TAB 2: EXPENSES (WITH VENDOR SEARCH / DROPDOWN & DUAL SYNC) -->
+    <!-- TAB 2: EXPENSES (WITH PROPER VENDOR AUTOCOMPLETE DROPDOWN) -->
     <section id="tabExpense" class="mt-4 hidden space-y-4">
       <div id="expAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-purple-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wallet text-purple-700"></i> खर्च / उधारी भुगतान दर्ज करें</h2>
@@ -254,10 +252,10 @@
                 <option value="अन्य खर्च">अन्य खर्च</option>
               </select>
             </div>
-            <div>
+            <div class="relative">
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दुकानदार / सप्लायर (सर्च / चुनें)</label>
-              <input type="text" id="expVendorName" list="vendorDatalist" placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
-              <datalist id="vendorDatalist"></datalist>
+              <input type="text" id="expVendorName" autocomplete="off" onfocus="showVendorDropdown()" oninput="filterVendorDropdown(this.value)" placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+              <div id="vendorSuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-purple-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
             </div>
             <div>
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु से लिंक करें (इलाज)</label>
@@ -386,7 +384,26 @@
       </div>
     </section>
 
-    <!-- TAB 5: ADVANCED BahiKhata / Ledger (WITH SEARCH DROPDOWNS & LIVE TIME PASSBOOK) -->
+    <!-- TAB 5: FEED STOCK -->
+    <section id="tabStock" class="mt-4 hidden space-y-4">
+      <div id="stockAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-yellow-600">
+        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wheat-awn text-yellow-700"></i> चारा स्टॉक जोड़ें</h2>
+        <form onsubmit="addStockItem(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान नाम</label><input type="text" id="stockName" required placeholder="उदा. सरसों खली" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मात्रा</label><input type="number" step="0.5" id="stockQty" required placeholder="20" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">इकाई</label><select id="stockUnit" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white"><option value="बोरी (Bags)">बोरी</option><option value="क्विंटल (Quintal)">क्विंटल</option><option value="किलोग्राम (Kg)">Kg</option></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक खपत</label><input type="number" step="0.1" id="stockDailyUse" required placeholder="1.5" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div class="sm:col-span-4 flex justify-end"><button type="submit" class="bg-yellow-900 text-white font-bold py-2.5 px-6 rounded-xl text-sm shadow">स्टॉक सुरक्षित करें</button></div>
+        </form>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
+        <div class="p-3 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-xs sm:text-sm">चारा व दाना स्टॉक</span><span class="text-xs bg-yellow-100 text-yellow-950 font-bold px-2.5 py-0.5 rounded-full" id="stockRecordCount">0</span></div>
+        <div id="stockHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+      </div>
+    </section>
+
+    <!-- TAB 6: ADVANCED BahiKhata / Ledger (RIGHT-MOST POSITION) -->
     <section id="tabKhata" class="mt-4 hidden space-y-4">
       <!-- 3 Summary Overview Cards -->
       <div class="grid grid-cols-3 gap-2 text-center">
@@ -409,9 +426,10 @@
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-indigo-700"></i> ग्राहक से रुपया जमा दर्ज करें</h2>
         <form onsubmit="addCustomerPayment(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="custPayDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div>
+          <div class="relative">
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक का नाम (सर्च / चुनें)</label>
-            <input type="text" id="custPayName" list="customerDatalist" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+            <input type="text" id="custPayName" autocomplete="off" onfocus="showCustomerDropdown2()" oninput="filterCustomerDropdown2(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+            <div id="custPaySuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-indigo-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
           </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label><input type="number" id="custPayAmount" required placeholder="उदा. 700" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
           <div>
@@ -446,28 +464,9 @@
         </div>
       </div>
     </section>
-
-    <!-- TAB 6: FEED STOCK -->
-    <section id="tabStock" class="mt-4 hidden space-y-4">
-      <div id="stockAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-yellow-600">
-        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wheat-awn text-yellow-700"></i> चारा स्टॉक जोड़ें</h2>
-        <form onsubmit="addStockItem(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान नाम</label><input type="text" id="stockName" required placeholder="उदा. सरसों खली" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मात्रा</label><input type="number" step="0.5" id="stockQty" required placeholder="20" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">इकाई</label><select id="stockUnit" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white"><option value="बोरी (Bags)">बोरी</option><option value="क्विंटल (Quintal)">क्विंटल</option><option value="किलोग्राम (Kg)">Kg</option></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक खपत</label><input type="number" step="0.1" id="stockDailyUse" required placeholder="1.5" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div class="sm:col-span-4 flex justify-end"><button type="submit" class="bg-yellow-900 text-white font-bold py-2.5 px-6 rounded-xl text-sm shadow">स्टॉक सुरक्षित करें</button></div>
-        </form>
-      </div>
-
-      <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
-        <div class="p-3 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-xs sm:text-sm">चारा व दाना स्टॉक</span><span class="text-xs bg-yellow-100 text-yellow-950 font-bold px-2.5 py-0.5 rounded-full" id="stockRecordCount">0</span></div>
-        <div id="stockHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
-      </div>
-    </section>
   </main>
 
-  <!-- UNIVERSAL DETAIL MODAL (WITH LIVE TIME PASSBOOK) -->
+  <!-- UNIVERSAL DETAIL MODAL (WITH LIVE TIME PASSBOOK & EDIT/DELETE ICONS) -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between border-b shrink-0">
@@ -646,7 +645,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script with Datalists, Live Timestamp & Perfect Khata Synchronization -->
+  <!-- Core Script with Interactive Dropdowns, Inline Edit/Delete & Live Passbook -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -714,12 +713,161 @@
       }
     }
 
-    // Helper: Formats timestamp to "DD/MM/YYYY, HH:MM:SS AM/PM"
     function formatDateTime(ts) {
       if (!ts) return '-';
       const d = new Date(ts);
       if (isNaN(d.getTime())) return ts;
       return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    }
+
+    // ==================== INTERACTIVE AUTOCOMPLETE DROPDOWNS ====================
+    function getUniqueVendors() {
+      const set = new Set();
+      expenseData.forEach(e => {
+        const v = (e.vendorName || '').trim();
+        if (v) set.add(v);
+      });
+      return Array.from(set);
+    }
+
+    function getUniqueCustomers() {
+      const set = new Set();
+      milkData.forEach(m => {
+        const c = (m.customer || '').trim();
+        if (c) set.add(c);
+      });
+      customerPayments.forEach(p => {
+        const c = (p.name || '').trim();
+        if (c) set.add(c);
+      });
+      return Array.from(set);
+    }
+
+    function showVendorDropdown() {
+      filterVendorDropdown(document.getElementById('expVendorName').value);
+    }
+
+    function filterVendorDropdown(val) {
+      const box = document.getElementById('vendorSuggestions');
+      const list = getUniqueVendors();
+      const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
+
+      if (filtered.length === 0) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      box.innerHTML = filtered.map(name => `
+        <div onclick="selectVendorName('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-purple-100 cursor-pointer transition">
+          <i class="fa-solid fa-shop text-purple-600 mr-2"></i> ${name}
+        </div>
+      `).join('');
+      box.classList.remove('hidden');
+    }
+
+    function selectVendorName(name) {
+      document.getElementById('expVendorName').value = name;
+      document.getElementById('vendorSuggestions').classList.add('hidden');
+    }
+
+    function showCustomerDropdown() {
+      filterCustomerDropdown(document.getElementById('milkCustomer').value);
+    }
+
+    function filterCustomerDropdown(val) {
+      const box = document.getElementById('milkCustomerSuggestions');
+      const list = getUniqueCustomers();
+      const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
+
+      if (filtered.length === 0) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      box.innerHTML = filtered.map(name => `
+        <div onclick="selectCustomerName('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-emerald-100 cursor-pointer transition">
+          <i class="fa-solid fa-user text-emerald-600 mr-2"></i> ${name}
+        </div>
+      `).join('');
+      box.classList.remove('hidden');
+    }
+
+    function selectCustomerName(name) {
+      document.getElementById('milkCustomer').value = name;
+      document.getElementById('milkCustomerSuggestions').classList.add('hidden');
+    }
+
+    function showCustomerDropdown2() {
+      filterCustomerDropdown2(document.getElementById('custPayName').value);
+    }
+
+    function filterCustomerDropdown2(val) {
+      const box = document.getElementById('custPaySuggestions');
+      const list = getUniqueCustomers();
+      const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
+
+      if (filtered.length === 0) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      box.innerHTML = filtered.map(name => `
+        <div onclick="selectCustomerName2('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-indigo-100 cursor-pointer transition">
+          <i class="fa-solid fa-user text-indigo-600 mr-2"></i> ${name}
+        </div>
+      `).join('');
+      box.classList.remove('hidden');
+    }
+
+    function selectCustomerName2(name) {
+      document.getElementById('custPayName').value = name;
+      document.getElementById('custPaySuggestions').classList.add('hidden');
+    }
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#expVendorName') && !e.target.closest('#vendorSuggestions')) {
+        document.getElementById('vendorSuggestions')?.classList.add('hidden');
+      }
+      if (!e.target.closest('#milkCustomer') && !e.target.closest('#milkCustomerSuggestions')) {
+        document.getElementById('milkCustomerSuggestions')?.classList.add('hidden');
+      }
+      if (!e.target.closest('#custPayName') && !e.target.closest('#custPaySuggestions')) {
+        document.getElementById('custPaySuggestions')?.classList.add('hidden');
+      }
+    });
+
+    // ==================== EDIT & DELETE ENTRY FUNCTIONS ====================
+    function deleteRecordPrompt(nodePath, recordId, refreshName, isVendor) {
+      if (!isAdmin) { alert("केवल एडमिन ही डिलीट कर सकते हैं!"); return; }
+      if (confirm("क्या आप वाकई इस प्रविष्टि (Entry) को हमेशा के लिए हटाना चाहते हैं?")) {
+        db.ref(nodePath + '/' + recordId).remove().then(() => {
+          alert("✅ एंट्री हटा दी गई!");
+          if (isVendor) openVendorPassbook(refreshName);
+          else openCustomerPassbook(refreshName);
+        });
+      }
+    }
+
+    function editRecordPrompt(nodePath, recordId, oldAmount, oldDetail, refreshName, isVendor) {
+      if (!isAdmin) { alert("केवल एडमिन ही सुधार कर सकते हैं!"); return; }
+      const newAmountStr = prompt("संशोधित नई रकम (₹) दर्ज करें:", oldAmount);
+      if (newAmountStr === null) return;
+      const newAmount = parseFloat(newAmountStr);
+      if (isNaN(newAmount) || newAmount <= 0) { alert("कृपया वैध रकम डालें!"); return; }
+
+      const newDetail = prompt("संशोधित विवरण दर्ज करें:", oldDetail);
+      if (newDetail === null) return;
+
+      db.ref(nodePath + '/' + recordId).update({
+        amount: newAmount,
+        detail: newDetail || oldDetail,
+        total: newAmount, // For milk
+        editedAt: Date.now()
+      }).then(() => {
+        alert("✅ एंट्री सफलतापूर्वक सुधारी गई!");
+        if (isVendor) openVendorPassbook(refreshName);
+        else openCustomerPassbook(refreshName);
+      });
     }
 
     function toggleSideMenu() {
@@ -781,7 +929,6 @@
       renderAll();
     }
 
-    // Modal Helpers
     function openUniversalModal(title, sub, html) {
       document.getElementById('universalModalTitle').innerText = title;
       document.getElementById('universalModalSub').innerText = sub;
@@ -849,7 +996,6 @@
       }
     }
 
-    // Cattle Module Adjustments
     function adjustBreedOptions() {
       const type = document.getElementById('catCategoryType').value;
       const sel = document.getElementById('catBreed');
@@ -891,29 +1037,6 @@
       if (!sel) return;
       sel.innerHTML = '<option value="">-- सामान्य फार्म खर्च --</option>';
       cattleData.forEach(c => sel.innerHTML += `<option value="${c.categoryType} #${c.tag}">${c.categoryType} #${c.tag}</option>`);
-    }
-
-    // Dynamic Search Datalists Populator
-    function updateSearchDatalists() {
-      // 1. Customer Datalist
-      const custList = document.getElementById('customerDatalist');
-      if (custList) {
-        const custNames = new Set();
-        milkData.forEach(m => { if (m.customer) custNames.add(m.customer.trim()); });
-        customerPayments.forEach(p => { if (p.name) custNames.add(p.name.trim()); });
-        custList.innerHTML = Array.from(custNames).map(n => `<option value="${n}"></option>`).join('');
-      }
-
-      // 2. Vendor Datalist
-      const vendList = document.getElementById('vendorDatalist');
-      if (vendList) {
-        const vendNames = new Set();
-        expenseData.forEach(e => {
-          const v = (e.vendorName || '').trim();
-          if (v) vendNames.add(v);
-        });
-        vendList.innerHTML = Array.from(vendNames).map(n => `<option value="${n}"></option>`).join('');
-      }
     }
 
     function toggleCattleSubForm(mode) {
@@ -1191,7 +1314,6 @@
       });
     }
 
-    // Customer WhatsApp Reminder
     function sendWhatsAppReminder(name, bal, phone) {
       const bankNameText = paymentSettings.bankName ? `%0A*बैंक का नाम:* ${paymentSettings.bankName}` : '';
       const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
@@ -1212,7 +1334,7 @@
       sendWhatsAppText(phone, msg);
     }
 
-    // ==================== ADVANCED TWO-WAY AUTOMATIC KHATA / LEDGER (PERFECT DUAL MATCH) ====================
+    // ==================== ADVANCED TWO-WAY AUTOMATIC KHATA / LEDGER ====================
     function renderKhata() {
       // 1. ग्राहक हिसाब (Receivables)
       const custMap = {};
@@ -1223,6 +1345,8 @@
         custMap[cName].totalBill += (parseFloat(m.total) || 0);
         if (m.customerPhone) custMap[cName].phone = m.customerPhone;
         custMap[cName].entries.push({
+          id: m.id,
+          nodePath: 'milk_records',
           date: m.date,
           title: `दूध बिक्री (${m.qty}L @ ₹${m.rate})`,
           mode: m.paymentStatus || 'उधारी',
@@ -1238,6 +1362,8 @@
         if (!custMap[cName]) custMap[cName] = { totalBill: 0, totalPaid: 0, phone: '', entries: [] };
         custMap[cName].totalPaid += (parseFloat(p.amount) || 0);
         custMap[cName].entries.push({
+          id: p.id,
+          nodePath: 'customer_payments',
           date: p.date,
           title: 'जमा / भुगतान प्राप्त',
           mode: p.mode || 'PhonePe / UPI',
@@ -1247,7 +1373,7 @@
         });
       });
 
-      // 2. दुकानदार हिसाब (Payables - Robust Case-Insensitive Matching)
+      // 2. दुकानदार हिसाब (Payables)
       const vendorMap = {};
       expenseData.forEach(e => {
         let vName = (e.vendorName || '').trim();
@@ -1264,6 +1390,8 @@
         if (isVendorPaid) {
           vendorMap[vName].totalPaid += (parseFloat(e.amount) || 0);
           vendorMap[vName].entries.push({
+            id: e.id,
+            nodePath: 'expense_records',
             date: e.date,
             title: e.detail || 'उधारी का भुगतान किया',
             mode: e.paymentMode || 'नकद',
@@ -1274,6 +1402,8 @@
         } else if (isVendorDue) {
           vendorMap[vName].totalDue += (parseFloat(e.amount) || 0);
           vendorMap[vName].entries.push({
+            id: e.id,
+            nodePath: 'expense_records',
             date: e.date,
             title: `${e.detail || e.category} (उधारी माल)`,
             mode: 'उधारी',
@@ -1367,10 +1497,9 @@
           `;
         });
       }
-      updateSearchDatalists();
     }
 
-    // CUSTOMER PASSBOOK POPUP WITH LIVE DATE + CURRENT TIME
+    // CUSTOMER PASSBOOK POPUP WITH INLINE EDIT & DELETE BUTTONS
     function openCustomerPassbook(customerName) {
       let entries = [];
       let totalBill = 0, totalPaid = 0, phone = '';
@@ -1380,6 +1509,8 @@
           totalBill += (parseFloat(m.total) || 0);
           if (m.customerPhone) phone = m.customerPhone;
           entries.push({
+            id: m.id,
+            nodePath: 'milk_records',
             date: m.date,
             title: `दूध बिक्री (${m.qty}L @ ₹${m.rate})`,
             mode: m.paymentStatus || 'उधारी',
@@ -1394,6 +1525,8 @@
         if ((p.name || '').trim() === customerName.trim()) {
           totalPaid += (parseFloat(p.amount) || 0);
           entries.push({
+            id: p.id,
+            nodePath: 'customer_payments',
             date: p.date,
             title: 'जमा / भुगतान प्राप्त',
             mode: p.mode || 'PhonePe / UPI',
@@ -1412,16 +1545,28 @@
         if (e.type === 'debit') runningBal += e.amount;
         else runningBal -= e.amount;
 
+        const actionBtns = isAdmin ? `
+          <div class="inline-flex items-center gap-1.5 ml-2">
+            <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${customerName.replace(/'/g, "\\'")}', false)" title="एडिट करें" class="text-amber-600 hover:text-amber-800 p-1">
+              <i class="fa-solid fa-pen text-[10px]"></i>
+            </button>
+            <button onclick="deleteRecordPrompt('${e.nodePath}', '${e.id}', '${customerName.replace(/'/g, "\\'")}', false)" title="डिलीट करें" class="text-rose-600 hover:text-rose-800 p-1">
+              <i class="fa-solid fa-trash text-[10px]"></i>
+            </button>
+          </div>
+        ` : '';
+
         rowsHtml += `
           <tr class="border-b text-[11px]">
-            <td class="p-2 font-semibold">
-              ${formatDateTime(e.timestamp)}
-            </td>
+            <td class="p-2 font-semibold">${formatDateTime(e.timestamp)}</td>
             <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
             <td class="p-2 text-right font-bold ${e.type === 'credit' ? 'text-emerald-700' : 'text-rose-700'}">
               ${e.type === 'credit' ? '- ₹' + e.amount : '+ ₹' + e.amount}
             </td>
-            <td class="p-2 text-right font-black text-slate-900">₹${runningBal.toFixed(0)}</td>
+            <td class="p-2 text-right font-black text-slate-900">
+              ₹${runningBal.toFixed(0)}
+              ${actionBtns}
+            </td>
           </tr>
         `;
       });
@@ -1443,7 +1588,7 @@
           <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
             <table class="w-full text-left">
               <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b sticky top-0">
-                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">बकाया शेष</th></tr>
+                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">बकाया (एक्शन)</th></tr>
               </thead>
               <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
             </table>
@@ -1459,7 +1604,7 @@
       openUniversalModal("ग्राहक पासबुक विवरण", customerName, html);
     }
 
-    // VENDOR PASSBOOK POPUP WITH LIVE DATE + CURRENT TIME (FIXED DUAL DISPLAY)
+    // VENDOR PASSBOOK POPUP WITH INLINE EDIT & DELETE BUTTONS
     function openVendorPassbook(vendorName) {
       let entries = [];
       let totalDue = 0, totalPaid = 0;
@@ -1477,6 +1622,8 @@
           if (isVendorPaid) {
             totalPaid += (parseFloat(e.amount) || 0);
             entries.push({
+              id: e.id,
+              nodePath: 'expense_records',
               date: e.date,
               title: e.detail || 'उधारी का भुगतान किया',
               mode: e.paymentMode || 'नकद',
@@ -1487,6 +1634,8 @@
           } else if (isVendorDue) {
             totalDue += (parseFloat(e.amount) || 0);
             entries.push({
+              id: e.id,
+              nodePath: 'expense_records',
               date: e.date,
               title: `${e.detail || e.category} (उधारी माल)`,
               mode: 'उधारी',
@@ -1506,16 +1655,28 @@
         if (e.type === 'due') runningBal += e.amount;
         else runningBal -= e.amount;
 
+        const actionBtns = isAdmin ? `
+          <div class="inline-flex items-center gap-1.5 ml-2">
+            <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${vendorName.replace(/'/g, "\\'")}', true)" title="एडिट करें" class="text-amber-600 hover:text-amber-800 p-1">
+              <i class="fa-solid fa-pen text-[10px]"></i>
+            </button>
+            <button onclick="deleteRecordPrompt('${e.nodePath}', '${e.id}', '${vendorName.replace(/'/g, "\\'")}', true)" title="डिलीट करें" class="text-rose-600 hover:text-rose-800 p-1">
+              <i class="fa-solid fa-trash text-[10px]"></i>
+            </button>
+          </div>
+        ` : '';
+
         rowsHtml += `
           <tr class="border-b text-[11px]">
-            <td class="p-2 font-semibold">
-              ${formatDateTime(e.timestamp)}
-            </td>
+            <td class="p-2 font-semibold">${formatDateTime(e.timestamp)}</td>
             <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
             <td class="p-2 text-right font-bold ${e.type === 'paid' ? 'text-emerald-700' : 'text-rose-700'}">
               ${e.type === 'paid' ? '- ₹' + e.amount : '+ ₹' + e.amount}
             </td>
-            <td class="p-2 text-right font-black text-slate-900">₹${runningBal.toFixed(0)}</td>
+            <td class="p-2 text-right font-black text-slate-900">
+              ₹${runningBal.toFixed(0)}
+              ${actionBtns}
+            </td>
           </tr>
         `;
       });
@@ -1537,7 +1698,7 @@
           <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
             <table class="w-full text-left">
               <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b sticky top-0">
-                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">देना शेष</th></tr>
+                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">देना शेष (एक्शन)</th></tr>
               </thead>
               <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
             </table>
@@ -1712,7 +1873,6 @@
       }
     }
 
-    // AUTOMATIC DAILY DEDUCTION LOGIC
     function checkDailyAutoFeedDeduction() {
       const lastCheck = localStorage.getItem('prajapati_feed_auto_date');
       if (lastCheck === today) return;
@@ -2073,6 +2233,7 @@
       }
     }
 
+    // COMPLETE 5-SECTION MASTER PDF PRINT (SAFE & RELIABLE)
     function printOverallMasterReport() {
       try {
         const printDiv = document.getElementById('printableArea');
@@ -2260,16 +2421,21 @@
       checkDailyAutoFeedDeduction();
     }
 
+    // Switch Tabs by Icon
     function switchTab(t) {
       ['milk', 'expense', 'labour', 'cattle', 'khata', 'stock'].forEach(tab => {
         const sec = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
         const btn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
         if (sec) sec.classList.add('hidden');
-        if (btn) btn.className = "shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300";
+        if (btn) {
+          btn.className = "w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg bg-white text-slate-700 border-2 border-slate-300";
+        }
       });
       document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1))?.classList.remove('hidden');
       const ab = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
-      if (ab) ab.className = "shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-amber-300 shadow border-2 border-slate-700";
+      if (ab) {
+        ab.className = "w-12 h-11 rounded-2xl font-bold transition flex items-center justify-center text-lg bg-slate-900 text-amber-300 shadow border-2 border-slate-700";
+      }
       localStorage.setItem('prajapati_active_tab', t);
     }
 
