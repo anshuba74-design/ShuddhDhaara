@@ -60,8 +60,9 @@
           <span class="hidden md:inline">कुल हिसाब</span>
         </button>
 
-        <button onclick="toggleSideMenu()" id="menuToggleBtn" class="w-10 h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 flex items-center justify-center text-lg border-2 border-slate-700 shadow transition active:scale-95">
-          <i class="fa-solid fa-bars"></i>
+        <!-- Bulletproof Menu Button with Inlined Fallback -->
+        <button type="button" onclick="toggleSideMenu(event)" id="menuToggleBtn" class="w-10 h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 flex items-center justify-center text-lg border-2 border-slate-700 shadow transition active:scale-95 cursor-pointer">
+          <i class="fa-solid fa-bars pointer-events-none"></i>
         </button>
 
         <!-- Dropdown Menu -->
@@ -146,7 +147,7 @@
     </div>
   </div>
 
-  <!-- Navigation Tabs (With Names + Logos restored, Khata in Small Icon at Right) -->
+  <!-- Navigation Tabs -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 no-print">
     <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
       <button onclick="switchTab('milk')" id="tabMilkBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 bg-slate-900 text-amber-300 shadow border-2 border-slate-700">
@@ -170,7 +171,7 @@
         <span>चारा स्टॉक</span>
       </button>
 
-      <!-- Khata Tab: Compact Small Icon at Right-most Position -->
+      <!-- Right Compact Khata Tab -->
       <button onclick="switchTab('khata')" id="tabKhataBtn" title="उधारी बहीखाता (Khata)" class="shrink-0 w-10 h-10 rounded-xl font-bold transition flex items-center justify-center text-sm text-emerald-800 bg-white border-2 border-slate-300 ml-auto shadow-sm active:scale-95">
         <i class="fa-solid fa-book-bookmark text-base"></i>
       </button>
@@ -203,12 +204,11 @@
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">समय</label><select id="milkShift" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white"><option value="सुबह (Morning)">सुबह (Morning)</option><option value="शाम (Evening)">शाम (Evening)</option></select></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री प्रकार</label><select id="milkSaleType" onchange="toggleMilkSaleType()" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"><option value="retail">ग्राहक (Fixed Rate)</option><option value="plant">डेयरी प्लांट (FAT/SNF)</option></select></div>
             
-            <!-- Customer Search Field with Dedicated Dropdown Arrow -->
             <div class="relative">
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक नाम</label>
               <div class="relative flex items-center">
                 <input type="text" id="milkCustomer" autocomplete="off" oninput="filterCustomerDropdown(this.value)" required placeholder="टाइप करें..." class="w-full text-sm border-2 rounded-xl p-2.5 pr-8 font-bold" />
-                <button type="button" onclick="toggleCustomerDropdownList(event)" class="absolute right-2 text-slate-400 hover:text-slate-700 p-1 focus:outline-none" title="लिस्ट देखें">
+                <button type="button" onclick="toggleCustomerDropdownList(event)" class="absolute right-2 text-slate-400 hover:text-slate-700 p-1" title="लिस्ट देखें">
                   <i class="fa-solid fa-chevron-down text-xs"></i>
                 </button>
               </div>
@@ -244,7 +244,7 @@
       </div>
     </section>
 
-    <!-- TAB 2: EXPENSES (WITH SEPARATE VENDOR ARROW & DIRECT SELECTION) -->
+    <!-- TAB 2: EXPENSES -->
     <section id="tabExpense" class="mt-4 hidden space-y-4">
       <div id="expAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-purple-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wallet text-purple-700"></i> खर्च / उधारी भुगतान दर्ज करें</h2>
@@ -264,12 +264,11 @@
               </select>
             </div>
             
-            <!-- Vendor Name Field with Dedicated Dropdown Arrow -->
             <div class="relative">
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दुकानदार / सप्लायर</label>
               <div class="relative flex items-center">
                 <input type="text" id="expVendorName" autocomplete="off" oninput="filterVendorDropdown(this.value)" placeholder="टाइप करें..." class="w-full text-sm border-2 rounded-xl p-2.5 pr-8 font-bold" />
-                <button type="button" onclick="toggleVendorDropdownList(event)" class="absolute right-2 text-slate-400 hover:text-slate-700 p-1 focus:outline-none" title="दुकानदार लिस्ट देखें">
+                <button type="button" onclick="toggleVendorDropdownList(event)" class="absolute right-2 text-slate-400 hover:text-slate-700 p-1" title="दुकानदार लिस्ट देखें">
                   <i class="fa-solid fa-chevron-down text-xs"></i>
                 </button>
               </div>
@@ -424,7 +423,6 @@
 
     <!-- TAB 6: ADVANCED BahiKhata / Ledger (RIGHT-MOST COMPACT TAB) -->
     <section id="tabKhata" class="mt-4 hidden space-y-4">
-      <!-- 3 Summary Overview Cards -->
       <div class="grid grid-cols-3 gap-2 text-center">
         <div class="bg-emerald-950 text-white p-3 rounded-2xl border-2 border-emerald-500 shadow">
           <span class="text-[10px] text-emerald-300 font-bold uppercase block">कुल लेना है (मार्केट)</span>
@@ -446,12 +444,11 @@
         <form onsubmit="addCustomerPayment(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="custPayDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           
-          <!-- Customer Name Search Field with Dedicated Dropdown Arrow -->
           <div class="relative">
             <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक का नाम</label>
             <div class="relative flex items-center">
               <input type="text" id="custPayName" autocomplete="off" oninput="filterCustomerDropdown2(this.value)" required placeholder="टाइप करें..." class="w-full text-sm border-2 rounded-xl p-2.5 pr-8 font-bold" />
-              <button type="button" onclick="toggleCustomerDropdownList2(event)" class="absolute right-2 text-slate-400 hover:text-slate-700 p-1 focus:outline-none" title="ग्राहक लिस्ट देखें">
+              <button type="button" onclick="toggleCustomerDropdownList2(event)" class="absolute right-2 text-slate-400 hover:text-slate-700 p-1" title="ग्राहक लिस्ट देखें">
                 <i class="fa-solid fa-chevron-down text-xs"></i>
               </button>
             </div>
@@ -472,7 +469,6 @@
 
       <!-- 2 Side-by-Side Ledgers -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Section A: Market Receivables (Customer Dues) -->
         <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
           <div class="p-3 bg-emerald-50 border-b flex justify-between items-center">
             <span class="font-extrabold text-emerald-950 text-xs sm:text-sm flex items-center gap-1.5"><i class="fa-solid fa-arrow-down-left text-emerald-700"></i> ग्राहक खाता (मुझसे लेना बाकी है)</span>
@@ -481,7 +477,6 @@
           <div id="khataCustomerList" class="p-3 space-y-2 max-h-[500px] overflow-y-auto"></div>
         </div>
 
-        <!-- Section B: Farm Payables (Vendor/Shopkeeper Dues) -->
         <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
           <div class="p-3 bg-rose-50 border-b flex justify-between items-center">
             <span class="font-extrabold text-rose-950 text-xs sm:text-sm flex items-center gap-1.5"><i class="fa-solid fa-arrow-up-right text-rose-700"></i> दुकानदार खाता (मुझे देना बाकी है)</span>
@@ -493,7 +488,7 @@
     </section>
   </main>
 
-  <!-- UNIVERSAL DETAIL MODAL (WITH LIVE TIME PASSBOOK & EDIT/DELETE ICONS) -->
+  <!-- UNIVERSAL DETAIL MODAL -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between border-b shrink-0">
@@ -672,7 +667,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script with Arrow Dropdown Logic & Robust Matchers -->
+  <!-- Core Script with 100% Fail-Safe Listeners & UI Binding -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -731,1287 +726,74 @@
       document.getElementById('stockNotificationBanner').classList.add('hidden');
     }
 
-    function sendWhatsAppText(phone, textMsg) {
-      const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
-      if (cleanPhone) {
-        window.open(`https://wa.me/91${cleanPhone}?text=${textMsg}`, '_blank');
-      } else {
-        window.open(`https://wa.me/?text=${textMsg}`, '_blank');
+    // Direct Bulletproof Side Menu Toggle
+    function toggleSideMenu(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('sideMenuDropdown');
+      if (menu) {
+        menu.classList.toggle('hidden');
       }
-    }
-
-    function formatDateTime(ts) {
-      if (!ts) return '-';
-      const d = new Date(ts);
-      if (isNaN(d.getTime())) return ts;
-      return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-    }
-
-    // ==================== DEDICATED ARROW DROPDOWNS & FILTER LOGIC ====================
-    function getUniqueVendors() {
-      const set = new Set();
-      expenseData.forEach(e => {
-        const v = (e.vendorName || '').trim();
-        if (v) set.add(v);
-      });
-      return Array.from(set);
-    }
-
-    function getUniqueCustomers() {
-      const set = new Set();
-      milkData.forEach(m => {
-        const c = (m.customer || '').trim();
-        if (c) set.add(c);
-      });
-      customerPayments.forEach(p => {
-        const c = (p.name || '').trim();
-        if (c) set.add(c);
-      });
-      return Array.from(set);
-    }
-
-    // 1. Vendor Dropdown
-    function toggleVendorDropdownList(e) {
-      e.stopPropagation();
-      const box = document.getElementById('vendorSuggestions');
-      if (!box.classList.contains('hidden')) {
-        box.classList.add('hidden');
-        return;
-      }
-      renderVendorSuggestions(getUniqueVendors());
-    }
-
-    function filterVendorDropdown(val) {
-      const list = getUniqueVendors();
-      const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
-      renderVendorSuggestions(filtered);
-    }
-
-    function renderVendorSuggestions(list) {
-      const box = document.getElementById('vendorSuggestions');
-      if (list.length === 0) {
-        box.innerHTML = '<div class="p-2.5 text-xs text-slate-400 text-center">कोई पुराना दुकानदार नहीं मिला</div>';
-        box.classList.remove('hidden');
-        return;
-      }
-      box.innerHTML = list.map(name => `
-        <div onclick="selectVendorName('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-purple-100 cursor-pointer transition flex items-center justify-between">
-          <span><i class="fa-solid fa-shop text-purple-600 mr-2"></i> ${name}</span>
-          <i class="fa-solid fa-check text-purple-600 text-[10px]"></i>
-        </div>
-      `).join('');
-      box.classList.remove('hidden');
-    }
-
-    function selectVendorName(name) {
-      document.getElementById('expVendorName').value = name;
-      document.getElementById('vendorSuggestions').classList.add('hidden');
-    }
-
-    // 2. Milk Customer Dropdown
-    function toggleCustomerDropdownList(e) {
-      e.stopPropagation();
-      const box = document.getElementById('milkCustomerSuggestions');
-      if (!box.classList.contains('hidden')) {
-        box.classList.add('hidden');
-        return;
-      }
-      renderCustomerSuggestions(getUniqueCustomers());
-    }
-
-    function filterCustomerDropdown(val) {
-      const list = getUniqueCustomers();
-      const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
-      renderCustomerSuggestions(filtered);
-    }
-
-    function renderCustomerSuggestions(list) {
-      const box = document.getElementById('milkCustomerSuggestions');
-      if (list.length === 0) {
-        box.innerHTML = '<div class="p-2.5 text-xs text-slate-400 text-center">कोई पुराना ग्राहक नहीं मिला</div>';
-        box.classList.remove('hidden');
-        return;
-      }
-      box.innerHTML = list.map(name => `
-        <div onclick="selectCustomerName('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-emerald-100 cursor-pointer transition flex items-center justify-between">
-          <span><i class="fa-solid fa-user text-emerald-600 mr-2"></i> ${name}</span>
-          <i class="fa-solid fa-check text-emerald-600 text-[10px]"></i>
-        </div>
-      `).join('');
-      box.classList.remove('hidden');
-    }
-
-    function selectCustomerName(name) {
-      document.getElementById('milkCustomer').value = name;
-      document.getElementById('milkCustomerSuggestions').classList.add('hidden');
-    }
-
-    // 3. Khata Payment Customer Dropdown
-    function toggleCustomerDropdownList2(e) {
-      e.stopPropagation();
-      const box = document.getElementById('custPaySuggestions');
-      if (!box.classList.contains('hidden')) {
-        box.classList.add('hidden');
-        return;
-      }
-      renderCustomerSuggestions2(getUniqueCustomers());
-    }
-
-    function filterCustomerDropdown2(val) {
-      const list = getUniqueCustomers();
-      const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
-      renderCustomerSuggestions2(filtered);
-    }
-
-    function renderCustomerSuggestions2(list) {
-      const box = document.getElementById('custPaySuggestions');
-      if (list.length === 0) {
-        box.innerHTML = '<div class="p-2.5 text-xs text-slate-400 text-center">कोई पुराना ग्राहक नहीं मिला</div>';
-        box.classList.remove('hidden');
-        return;
-      }
-      box.innerHTML = list.map(name => `
-        <div onclick="selectCustomerName2('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-indigo-100 cursor-pointer transition flex items-center justify-between">
-          <span><i class="fa-solid fa-user text-indigo-600 mr-2"></i> ${name}</span>
-          <i class="fa-solid fa-check text-indigo-600 text-[10px]"></i>
-        </div>
-      `).join('');
-      box.classList.remove('hidden');
-    }
-
-    function selectCustomerName2(name) {
-      document.getElementById('custPayName').value = name;
-      document.getElementById('custPaySuggestions').classList.add('hidden');
     }
 
     document.addEventListener('click', e => {
-      if (!e.target.closest('#expVendorName') && !e.target.closest('#vendorSuggestions')) {
-        document.getElementById('vendorSuggestions')?.classList.add('hidden');
-      }
-      if (!e.target.closest('#milkCustomer') && !e.target.closest('#milkCustomerSuggestions')) {
-        document.getElementById('milkCustomerSuggestions')?.classList.add('hidden');
-      }
-      if (!e.target.closest('#custPayName') && !e.target.closest('#custPaySuggestions')) {
-        document.getElementById('custPaySuggestions')?.classList.add('hidden');
+      const menu = document.getElementById('sideMenuDropdown');
+      const btn = document.getElementById('menuToggleBtn');
+      if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.add('hidden');
       }
     });
 
-    // ==================== EDIT & DELETE ENTRY FUNCTIONS ====================
-    function deleteRecordPrompt(nodePath, recordId, refreshName, isVendor) {
-      if (!isAdmin) { alert("केवल एडमिन ही डिलीट कर सकते हैं!"); return; }
-      if (confirm("क्या आप वाकई इस प्रविष्टि (Entry) को हमेशा के लिए हटाना चाहते हैं?")) {
-        db.ref(nodePath + '/' + recordId).remove().then(() => {
-          alert("✅ एंट्री हटा दी गई!");
-          if (isVendor) openVendorPassbook(refreshName);
-          else openCustomerPassbook(refreshName);
-        });
-      }
-    }
-
-    function editRecordPrompt(nodePath, recordId, oldAmount, oldDetail, refreshName, isVendor) {
-      if (!isAdmin) { alert("केवल एडमिन ही सुधार कर सकते हैं!"); return; }
-      const newAmountStr = prompt("संशोधित नई रकम (₹) दर्ज करें:", oldAmount);
-      if (newAmountStr === null) return;
-      const newAmount = parseFloat(newAmountStr);
-      if (isNaN(newAmount) || newAmount <= 0) { alert("कृपया वैध रकम डालें!"); return; }
-
-      const newDetail = prompt("संशोधित विवरण दर्ज करें:", oldDetail);
-      if (newDetail === null) return;
-
-      db.ref(nodePath + '/' + recordId).update({
-        amount: newAmount,
-        detail: newDetail || oldDetail,
-        total: newAmount,
-        editedAt: Date.now()
-      }).then(() => {
-        alert("✅ एंट्री सफलतापूर्वक सुधारी गई!");
-        if (isVendor) openVendorPassbook(refreshName);
-        else openCustomerPassbook(refreshName);
-      });
-    }
-
-    // ==================== ADVANCED TWO-WAY AUTOMATIC KHATA / LEDGER ====================
-    function renderKhata() {
-      const custMap = {};
-      milkData.forEach(m => {
-        const cName = (m.customer || '').trim();
-        if (!cName) return;
-        if (!custMap[cName]) custMap[cName] = { totalBill: 0, totalPaid: 0, phone: m.customerPhone || '', entries: [] };
-        custMap[cName].totalBill += (parseFloat(m.total) || 0);
-        if (m.customerPhone) custMap[cName].phone = m.customerPhone;
-        custMap[cName].entries.push({
-          id: m.id,
-          nodePath: 'milk_records',
-          date: m.date,
-          title: `दूध बिक्री (${m.qty}L @ ₹${m.rate})`,
-          mode: m.paymentStatus || 'उधारी',
-          amount: parseFloat(m.total) || 0,
-          type: 'debit',
-          timestamp: m.timestamp || new Date(m.date).getTime()
-        });
-      });
-
-      customerPayments.forEach(p => {
-        const cName = (p.name || '').trim();
-        if (!cName) return;
-        if (!custMap[cName]) custMap[cName] = { totalBill: 0, totalPaid: 0, phone: '', entries: [] };
-        custMap[cName].totalPaid += (parseFloat(p.amount) || 0);
-        custMap[cName].entries.push({
-          id: p.id,
-          nodePath: 'customer_payments',
-          date: p.date,
-          title: 'जमा / भुगतान प्राप्त',
-          mode: p.mode || 'PhonePe / UPI',
-          amount: parseFloat(p.amount) || 0,
-          type: 'credit',
-          timestamp: p.timestamp || new Date(p.date).getTime()
-        });
-      });
-
-      const vendorMap = {};
-      expenseData.forEach(e => {
-        let vName = (e.vendorName || '').trim();
-        const isVendorDue = e.paymentMode === 'दुकानदार उधारी (Vendor Due)';
-        const isVendorPaid = e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)';
-
-        if (!vName && (isVendorDue || isVendorPaid)) {
-          vName = 'अन्य दुकानदार';
-        }
-        if (!vName) return;
-
-        if (!vendorMap[vName]) vendorMap[vName] = { totalDue: 0, totalPaid: 0, entries: [] };
-
-        if (isVendorPaid) {
-          vendorMap[vName].totalPaid += (parseFloat(e.amount) || 0);
-          vendorMap[vName].entries.push({
-            id: e.id,
-            nodePath: 'expense_records',
-            date: e.date,
-            title: e.detail || 'उधारी का भुगतान किया',
-            mode: e.paymentMode || 'नकद',
-            amount: parseFloat(e.amount) || 0,
-            type: 'paid',
-            timestamp: e.timestamp || new Date(e.date).getTime()
-          });
-        } else if (isVendorDue) {
-          vendorMap[vName].totalDue += (parseFloat(e.amount) || 0);
-          vendorMap[vName].entries.push({
-            id: e.id,
-            nodePath: 'expense_records',
-            date: e.date,
-            title: `${e.detail || e.category} (उधारी माल)`,
-            mode: 'उधारी',
-            amount: parseFloat(e.amount) || 0,
-            type: 'due',
-            timestamp: e.timestamp || new Date(e.date).getTime()
-          });
-        }
-      });
-
-      let totalReceivable = 0;
-      Object.keys(custMap).forEach(k => {
-        const bal = custMap[k].totalBill - custMap[k].totalPaid;
-        if (bal > 0) totalReceivable += bal;
-      });
-
-      let totalPayable = 0;
-      Object.keys(vendorMap).forEach(k => {
-        const bal = vendorMap[k].totalDue - vendorMap[k].totalPaid;
-        if (bal > 0) totalPayable += bal;
-      });
-
-      const netBalance = totalReceivable - totalPayable;
-
-      document.getElementById('khataTotalReceivable').innerText = '₹ ' + totalReceivable.toLocaleString('en-IN');
-      document.getElementById('khataTotalPayable').innerText = '₹ ' + totalPayable.toLocaleString('en-IN');
-      
-      const netElem = document.getElementById('khataNetBalance');
-      netElem.innerText = (netBalance >= 0 ? '+ ₹ ' : '- ₹ ') + Math.abs(netBalance).toLocaleString('en-IN');
-      netElem.className = "text-base sm:text-xl font-black mt-1 block " + (netBalance >= 0 ? "text-emerald-400" : "text-rose-400");
-
-      const cList = document.getElementById('khataCustomerList');
-      cList.innerHTML = '';
-      const cKeys = Object.keys(custMap);
-      document.getElementById('khataCustomerCount').innerText = cKeys.length;
-
-      if (cKeys.length === 0) {
-        cList.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">कोई ग्राहक खाता मौजूद नहीं है।</div>';
-      } else {
-        cKeys.forEach(name => {
-          const cData = custMap[name];
-          const bal = cData.totalBill - cData.totalPaid;
-          const isDue = bal > 0;
-
-          cList.innerHTML += `
-            <div onclick="openCustomerPassbook('${name.replace(/'/g, "\\'")}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-emerald-600 transition">
-              <div>
-                <h4 class="font-extrabold text-slate-900 text-sm">${name}</h4>
-                <p class="text-[10px] text-slate-500 font-semibold mt-0.5">कुल बिल: ₹${cData.totalBill.toFixed(0)} | जमा: ₹${cData.totalPaid.toFixed(0)}</p>
-              </div>
-              <div class="text-right">
-                <span class="text-xs font-black px-2 py-0.5 rounded-full ${isDue ? 'bg-rose-100 text-rose-800 border border-rose-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'}">
-                  ${isDue ? 'लेना: ₹' + bal.toFixed(0) : 'हिसाब चुकता'}
-                </span>
-                <span class="text-[9px] text-slate-400 block mt-1"><i class="fa-solid fa-book-open"></i> पासबुक देखें</span>
-              </div>
-            </div>
-          `;
-        });
-      }
-
-      const vList = document.getElementById('khataVendorList');
-      vList.innerHTML = '';
-      const vKeys = Object.keys(vendorMap);
-      document.getElementById('khataVendorCount').innerText = vKeys.length;
-
-      if (vKeys.length === 0) {
-        vList.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">कोई दुकानदार उधारी बाकी नहीं है।</div>';
-      } else {
-        vKeys.forEach(name => {
-          const vData = vendorMap[name];
-          const bal = vData.totalDue - vData.totalPaid;
-          const isDue = bal > 0;
-
-          vList.innerHTML += `
-            <div onclick="openVendorPassbook('${name.replace(/'/g, "\\'")}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-rose-600 transition">
-              <div>
-                <h4 class="font-extrabold text-slate-900 text-sm">${name}</h4>
-                <p class="text-[10px] text-slate-500 font-semibold mt-0.5">कुल उधारी: ₹${vData.totalDue.toFixed(0)} | चुकाया: ₹${vData.totalPaid.toFixed(0)}</p>
-              </div>
-              <div class="text-right">
-                <span class="text-xs font-black px-2 py-0.5 rounded-full ${isDue ? 'bg-rose-100 text-rose-800 border border-rose-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'}">
-                  ${isDue ? 'देना: ₹' + bal.toFixed(0) : 'चुकता'}
-                </span>
-                <span class="text-[9px] text-slate-400 block mt-1"><i class="fa-solid fa-book-open"></i> पासबुक देखें</span>
-              </div>
-            </div>
-          `;
-        });
-      }
-    }
-
-    // CUSTOMER PASSBOOK POPUP WITH INLINE EDIT & DELETE BUTTONS
-    function openCustomerPassbook(customerName) {
-      let entries = [];
-      let totalBill = 0, totalPaid = 0, phone = '';
-
-      milkData.forEach(m => {
-        if ((m.customer || '').trim() === customerName.trim()) {
-          totalBill += (parseFloat(m.total) || 0);
-          if (m.customerPhone) phone = m.customerPhone;
-          entries.push({
-            id: m.id,
-            nodePath: 'milk_records',
-            date: m.date,
-            title: `दूध बिक्री (${m.qty}L @ ₹${m.rate})`,
-            mode: m.paymentStatus || 'उधारी',
-            amount: parseFloat(m.total) || 0,
-            type: 'debit',
-            timestamp: m.timestamp || new Date(m.date).getTime()
-          });
-        }
-      });
-
-      customerPayments.forEach(p => {
-        if ((p.name || '').trim() === customerName.trim()) {
-          totalPaid += (parseFloat(p.amount) || 0);
-          entries.push({
-            id: p.id,
-            nodePath: 'customer_payments',
-            date: p.date,
-            title: 'जमा / भुगतान प्राप्त',
-            mode: p.mode || 'PhonePe / UPI',
-            amount: parseFloat(p.amount) || 0,
-            type: 'credit',
-            timestamp: p.timestamp || new Date(p.date).getTime()
-          });
-        }
-      });
-
-      entries.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-
-      let runningBal = 0;
-      let rowsHtml = '';
-      entries.forEach(e => {
-        if (e.type === 'debit') runningBal += e.amount;
-        else runningBal -= e.amount;
-
-        const actionBtns = isAdmin ? `
-          <div class="inline-flex items-center gap-1.5 ml-2">
-            <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${customerName.replace(/'/g, "\\'")}', false)" title="एडिट करें" class="text-amber-600 hover:text-amber-800 p-1">
-              <i class="fa-solid fa-pen text-[10px]"></i>
-            </button>
-            <button onclick="deleteRecordPrompt('${e.nodePath}', '${e.id}', '${customerName.replace(/'/g, "\\'")}', false)" title="डिलीट करें" class="text-rose-600 hover:text-rose-800 p-1">
-              <i class="fa-solid fa-trash text-[10px]"></i>
-            </button>
-          </div>
-        ` : '';
-
-        rowsHtml += `
-          <tr class="border-b text-[11px]">
-            <td class="p-2 font-semibold">${formatDateTime(e.timestamp)}</td>
-            <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
-            <td class="p-2 text-right font-bold ${e.type === 'credit' ? 'text-emerald-700' : 'text-rose-700'}">
-              ${e.type === 'credit' ? '- ₹' + e.amount : '+ ₹' + e.amount}
-            </td>
-            <td class="p-2 text-right font-black text-slate-900">
-              ₹${runningBal.toFixed(0)}
-              ${actionBtns}
-            </td>
-          </tr>
-        `;
-      });
-
-      const finalBal = totalBill - totalPaid;
-      const html = `
-        <div class="space-y-3">
-          <div class="p-3 bg-emerald-50 rounded-2xl border-2 border-emerald-300 flex justify-between items-center">
-            <div>
-              <h4 class="font-black text-emerald-950 text-base">${customerName}</h4>
-              <p class="text-[11px] text-emerald-800 font-semibold">मो: ${phone || 'दर्ज नहीं'}</p>
-            </div>
-            <div class="text-right">
-              <span class="text-[10px] text-slate-500 font-bold uppercase block">वर्तमान शुद्ध बकाया</span>
-              <span class="text-xl font-black ${finalBal > 0 ? 'text-rose-700' : 'text-emerald-700'}">₹ ${finalBal.toFixed(2)}</span>
-            </div>
-          </div>
-
-          <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
-            <table class="w-full text-left">
-              <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b sticky top-0">
-                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">बकाया (एक्शन)</th></tr>
-              </thead>
-              <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
-            </table>
-          </div>
-
-          <div class="flex gap-2">
-            ${finalBal > 0 ? `<button onclick="sendWhatsAppReminder('${customerName.replace(/'/g, "\\'")}', ${finalBal}, '${phone}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp पर तगादा भेजें</button>` : ''}
-            <button onclick="closeUniversalModal()" class="w-full bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs">बंद करें</button>
-          </div>
-        </div>
-      `;
-
-      openUniversalModal("ग्राहक पासबुक विवरण", customerName, html);
-    }
-
-    // VENDOR PASSBOOK POPUP WITH INLINE EDIT & DELETE BUTTONS
-    function openVendorPassbook(vendorName) {
-      let entries = [];
-      let totalDue = 0, totalPaid = 0;
-
-      expenseData.forEach(e => {
-        let vName = (e.vendorName || '').trim();
-        const isVendorDue = e.paymentMode === 'दुकानदार उधारी (Vendor Due)';
-        const isVendorPaid = e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)';
-
-        if (!vName && (isVendorDue || isVendorPaid)) {
-          vName = 'अन्य दुकानदार';
-        }
-
-        if (vName.toLowerCase() === vendorName.trim().toLowerCase()) {
-          if (isVendorPaid) {
-            totalPaid += (parseFloat(e.amount) || 0);
-            entries.push({
-              id: e.id,
-              nodePath: 'expense_records',
-              date: e.date,
-              title: e.detail || 'उधारी का भुगतान किया',
-              mode: e.paymentMode || 'नकद',
-              amount: parseFloat(e.amount) || 0,
-              type: 'paid',
-              timestamp: e.timestamp || new Date(e.date).getTime()
-            });
-          } else if (isVendorDue) {
-            totalDue += (parseFloat(e.amount) || 0);
-            entries.push({
-              id: e.id,
-              nodePath: 'expense_records',
-              date: e.date,
-              title: `${e.detail || e.category} (उधारी माल)`,
-              mode: 'उधारी',
-              amount: parseFloat(e.amount) || 0,
-              type: 'due',
-              timestamp: e.timestamp || new Date(e.date).getTime()
-            });
-          }
-        }
-      });
-
-      entries.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-
-      let runningBal = 0;
-      let rowsHtml = '';
-      entries.forEach(e => {
-        if (e.type === 'due') runningBal += e.amount;
-        else runningBal -= e.amount;
-
-        const actionBtns = isAdmin ? `
-          <div class="inline-flex items-center gap-1.5 ml-2">
-            <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${vendorName.replace(/'/g, "\\'")}', true)" title="एडिट करें" class="text-amber-600 hover:text-amber-800 p-1">
-              <i class="fa-solid fa-pen text-[10px]"></i>
-            </button>
-            <button onclick="deleteRecordPrompt('${e.nodePath}', '${e.id}', '${vendorName.replace(/'/g, "\\'")}', true)" title="डिलीट करें" class="text-rose-600 hover:text-rose-800 p-1">
-              <i class="fa-solid fa-trash text-[10px]"></i>
-            </button>
-          </div>
-        ` : '';
-
-        rowsHtml += `
-          <tr class="border-b text-[11px]">
-            <td class="p-2 font-semibold">${formatDateTime(e.timestamp)}</td>
-            <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
-            <td class="p-2 text-right font-bold ${e.type === 'paid' ? 'text-emerald-700' : 'text-rose-700'}">
-              ${e.type === 'paid' ? '- ₹' + e.amount : '+ ₹' + e.amount}
-            </td>
-            <td class="p-2 text-right font-black text-slate-900">
-              ₹${runningBal.toFixed(0)}
-              ${actionBtns}
-            </td>
-          </tr>
-        `;
-      });
-
-      const finalBal = totalDue - totalPaid;
-      const html = `
-        <div class="space-y-3">
-          <div class="p-3 bg-rose-50 rounded-2xl border-2 border-rose-300 flex justify-between items-center">
-            <div>
-              <h4 class="font-black text-rose-950 text-base">${vendorName}</h4>
-              <p class="text-[11px] text-rose-800 font-semibold">कुल उधारी: ₹${totalDue} | चुकाया: ₹${totalPaid}</p>
-            </div>
-            <div class="text-right">
-              <span class="text-[10px] text-slate-500 font-bold uppercase block">कुल देना बाकी</span>
-              <span class="text-xl font-black ${finalBal > 0 ? 'text-rose-700' : 'text-emerald-700'}">₹ ${finalBal.toFixed(2)}</span>
-            </div>
-          </div>
-
-          <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
-            <table class="w-full text-left">
-              <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b sticky top-0">
-                <tr><th class="p-2">तारीख व समय</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">देना शेष (एक्शन)</th></tr>
-              </thead>
-              <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
-            </table>
-          </div>
-
-          <button onclick="closeUniversalModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs">बंद करें</button>
-        </div>
-      `;
-
-      openUniversalModal("दुकानदार पासबुक विवरण", vendorName, html);
-    }
-
-    // Milk Module Calculations
-    function calcPlantMilkRate() {
-      const f = parseFloat(document.getElementById('plantFat').value) || 0;
-      const s = parseFloat(document.getElementById('plantSnf').value) || 0;
-      const b = parseFloat(document.getElementById('plantBaseRate').value) || 7.5;
-      if (f > 0) { document.getElementById('milkRate').value = ((f * b) + (s * (b * 0.35))).toFixed(2); calcMilkTotal(); }
-    }
-    function calcMilkTotal() {
-      const q = parseFloat(document.getElementById('milkQty').value) || 0;
-      const r = parseFloat(document.getElementById('milkRate').value) || 0;
-      document.getElementById('milkTotal').value = '₹ ' + (q * r).toFixed(2);
-    }
-    function toggleMilkSaleType() {
-      const p = document.getElementById('plantFatSnfBlock');
-      if (document.getElementById('milkSaleType').value === 'plant') { p.classList.remove('hidden'); calcPlantMilkRate(); }
-      else { p.classList.add('hidden'); document.getElementById('milkRate').value = '65'; calcMilkTotal(); }
-    }
-    function addMilkEntry(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      const qty = parseFloat(document.getElementById('milkQty').value) || 0;
-      const rate = parseFloat(document.getElementById('milkRate').value) || 0;
-      const phone = document.getElementById('milkCustomerPhone').value.trim();
-
-      db.ref('milk_records').push({
-        date: document.getElementById('milkDate').value,
-        shift: document.getElementById('milkShift').value,
-        saleType: document.getElementById('milkSaleType').value,
-        customer: document.getElementById('milkCustomer').value.trim(),
-        customerPhone: phone,
-        qty, rate, total: qty * rate, paymentStatus: document.getElementById('milkPaymentStatus').value, timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('milkCustomer').value = '';
-        document.getElementById('milkCustomerPhone').value = '';
-        document.getElementById('milkQty').value = '';
-        alert("दूध बिक्री दर्ज!");
-        renderMilkSummaryStats();
-      });
-    }
-
-    function renderMilkSummaryStats() {
-      const selDate = document.getElementById('milkDate')?.value || today;
-      let prod = 0;
-      let sold = 0;
-
-      cattleData.forEach(c => {
-        if (!c.status || c.status.includes('दूध दे रही')) {
-          prod += parseFloat(c.milk || 0);
-        }
-      });
-
-      milkData.forEach(m => {
-        if (m.date === selDate) {
-          sold += parseFloat(m.qty || 0);
-        }
-      });
-
-      const bal = prod - sold;
-      document.getElementById('dispTodayProduced').innerText = prod.toFixed(1) + ' L';
-      document.getElementById('dispTodaySold').innerText = sold.toFixed(1) + ' L';
-      document.getElementById('dispTodayBalance').innerText = (bal >= 0 ? bal.toFixed(1) : '0.0') + ' L';
-    }
-
-    function renderMilk() {
-      const c = document.getElementById('milkHeadingList');
-      c.innerHTML = '';
-      milkData.forEach(x => {
-        const pop = `
-          <div class="space-y-2.5 text-xs">
-            <div class="p-2.5 bg-slate-50 border rounded-xl">
-              <h4 class="font-black text-slate-900 text-sm">${x.customer}</h4>
-              <p class="text-[11px] text-slate-500 font-bold">मो: ${x.customerPhone || 'उपलब्ध नहीं'}</p>
-            </div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>तारीख:</b> ${x.date} (${x.shift})</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>रेट:</b> ₹${x.rate}</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>मात्रा:</b> ${x.qty} L</div>
-              <div class="p-2 bg-emerald-50 rounded-lg border text-emerald-900 font-bold"><b>कुल:</b> ₹${x.total}</div>
-            </div>
-            <button onclick="sendCustomerMilkBill('${(x.customer || '').replace(/'/g, "\\'")}', '${x.date}', ${x.qty}, ${x.rate}, ${x.total}, '${x.paymentStatus}', '${x.customerPhone || ''}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
-              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद भेजें
-            </button>
-            ${isAdmin ? `<button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
-          </div>
-        `;
-
-        c.innerHTML += `
-          <div onclick="openUniversalModal('${(x.customer || '').replace(/'/g, "\\'")}', '${x.date} • ${x.shift}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-emerald-600 transition">
-            <div><h4 class="font-bold text-slate-900">${x.customer}</h4><p class="text-[10px] text-slate-500">${x.date} • ${x.shift}</p></div>
-            <div class="text-right"><span class="font-bold text-emerald-950">${x.qty}L</span><br><span class="font-bold text-slate-700">₹${x.total}</span></div>
-          </div>
-        `;
-      });
-      document.getElementById('milkRecordCount').innerText = milkData.length;
-      renderMilkSummaryStats();
-    }
-
-    // Expense & Stock
-    function addExpenseEntry(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('expense_records').push({
-        date: document.getElementById('expDate').value,
-        category: document.getElementById('expCategory').value,
-        vendorName: document.getElementById('expVendorName').value.trim(),
-        animalTag: document.getElementById('expAnimalTagRef').value,
-        detail: document.getElementById('expDetail').value.trim(),
-        amount: parseFloat(document.getElementById('expAmount').value) || 0,
-        paymentMode: document.getElementById('expPaymentMode').value,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('expDetail').value = '';
-        document.getElementById('expAmount').value = '';
-        document.getElementById('expVendorName').value = '';
-        alert("खर्च / भुगतान सुरक्षित!");
-      });
-    }
-
-    function renderExpense() {
-      const c = document.getElementById('expenseHeadingList');
-      c.innerHTML = '';
-      expenseData.forEach(x => {
-        c.innerHTML += `
-          <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
-            <div><h4 class="font-bold text-slate-900">${x.detail}</h4><p class="text-[10px] text-slate-500">${x.date} • ${x.vendorName ? x.vendorName + ' • ' : ''}${x.animalTag || x.category}</p></div>
-            <span class="font-bold text-purple-950">₹${x.amount}</span>
-          </div>
-        `;
-      });
-      document.getElementById('expRecordCount').innerText = expenseData.length;
-    }
-
-    function addStockItem(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('stock_records').push({
-        name: document.getElementById('stockName').value.trim(),
-        qty: parseFloat(document.getElementById('stockQty').value) || 0,
-        unit: document.getElementById('stockUnit').value,
-        dailyUse: parseFloat(document.getElementById('stockDailyUse').value) || 1,
-        lastDeductedDate: today,
-        timestamp: Date.now()
-      }).then(() => { document.getElementById('stockName').value = ''; alert("स्टॉक जुड़ गया!"); });
-    }
-
-    function updateStockQty(id, change) {
-      if (!isAdmin) return;
-      const item = stockData.find(x => x.id === id);
-      if (item) {
-        db.ref('stock_records/' + id).update({ qty: Math.max(0, item.qty + change), updatedAt: Date.now() });
-        closeUniversalModal();
-      }
-    }
-
-    function deleteStock(id) {
-      if (!isAdmin) return;
-      if (confirm("यह स्टॉक हटाएं?")) {
-        db.ref('stock_records/' + id).remove();
-        closeUniversalModal();
-      }
-    }
-
-    // AUTOMATIC DAILY DEDUCTION LOGIC
-    function checkDailyAutoFeedDeduction() {
-      const lastCheck = localStorage.getItem('prajapati_feed_auto_date');
-      if (lastCheck === today) return;
-
-      if (isAdmin && stockData.length > 0) {
-        stockData.forEach(s => {
-          const daily = parseFloat(s.dailyUse || 0);
-          if (daily > 0 && s.qty > 0 && s.lastDeductedDate !== today) {
-            const newQty = Math.max(0, s.qty - daily);
-            db.ref('stock_records/' + s.id).update({
-              qty: newQty,
-              lastDeductedDate: today,
-              autoUpdated: true
-            });
-          }
-        });
-        localStorage.setItem('prajapati_feed_auto_date', today);
-      }
-    }
-
-    function renderStock() {
-      const c = document.getElementById('stockHeadingList');
-      c.innerHTML = '';
-      let low = [];
-      stockData.forEach(s => {
-        const d = Math.floor(s.qty / (s.dailyUse || 1));
-        if (d <= 3 && s.qty > 0) low.push(`${s.name} मात्र ${d} दिन बाकी!`);
-
-        const pop = `
-          <div class="space-y-3 text-xs">
-            <div class="p-2.5 bg-yellow-50 rounded-xl border border-yellow-200">
-              <h4 class="font-black text-yellow-950 text-base">${s.name}</h4>
-              <p>वर्तमान स्टॉक: <b>${s.qty} ${s.unit}</b></p>
-              <p>दैनिक ऑटो खपत: <b>${s.dailyUse} ${s.unit}/दिन</b> (${d} दिन शेष)</p>
-            </div>
-            ${isAdmin ? `
-              <div class="p-2 bg-slate-100 rounded-xl flex items-center justify-between">
-                <span class="font-bold">मैनुअल बदलें (+/-):</span>
-                <div class="flex gap-2">
-                  <button onclick="updateStockQty('${s.id}', -1)" class="w-8 h-8 bg-slate-200 font-bold rounded">-1</button>
-                  <button onclick="updateStockQty('${s.id}', 1)" class="w-8 h-8 bg-slate-900 text-white font-bold rounded">+1</button>
-                </div>
-              </div>
-              <button onclick="deleteStock('${s.id}')" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट स्टॉक</button>
-            ` : ''}
-          </div>
-        `;
-
-        c.innerHTML += `
-          <div onclick="openUniversalModal('${s.name}', 'स्टॉक: ${s.qty} ${s.unit}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-yellow-600 transition">
-            <div><h4 class="font-bold text-slate-900">${s.name}</h4><p class="text-[10px] text-slate-500">${d} दिन शेष</p></div>
-            <span class="font-black text-amber-950">${s.qty} ${s.unit}</span>
-          </div>
-        `;
-      });
-      document.getElementById('stockRecordCount').innerText = stockData.length;
-      const b = document.getElementById('stockNotificationBanner');
-      const now = Date.now();
-      const snz = parseInt(localStorage.getItem('prajapati_stk_snooze') || '0', 10);
-      if (low.length > 0 && isAdmin && now > snz) {
-        document.getElementById('stockNotificationList').innerText = low.join(' | ');
-        b.classList.remove('hidden');
-      } else b.classList.add('hidden');
-    }
-
-    function renderCattleLists() {
-      const bList = document.getElementById('buffaloHeadingList');
-      const cList = document.getElementById('cowHeadingList');
-      bList.innerHTML = ''; cList.innerHTML = '';
-
-      cattleData.forEach(c => {
-        const isBuf = (c.categoryType || '').includes('भैंस');
-        const target = isBuf ? bList : cList;
-
-        const pop = `
-          <div class="space-y-3 text-xs">
-            <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 flex justify-between items-start">
-              <div>
-                <span class="text-[10px] font-bold text-amber-800 uppercase block">${c.categoryType} • ${c.breed}</span>
-                <h4 class="text-xl font-black text-amber-950">टैग: ${c.tag}</h4>
-              </div>
-              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">${c.status}</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>दैनिक दूध:</b> ${c.milk} L</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>खरीद तारीख:</b> ${c.buyDate || '-'}</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>खरीद लागत:</b> ₹${c.buyCost || '0'}</div>
-              <div class="p-2 bg-slate-50 rounded-lg border"><b>AI तारीख:</b> ${c.aiDate || '-'}</div>
-            </div>
-            <div class="pt-2 flex justify-between gap-2">
-              <button onclick="startEditCattle('${c.id}')" class="w-full bg-slate-900 text-amber-300 font-bold py-2.5 rounded-xl text-xs"><i class="fa-solid fa-pen-to-square"></i> विवरण एडिट करें</button>
-              ${isAdmin ? `<button onclick="deleteCattle('${c.id}')" class="bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs border border-rose-300">डिलीट</button>` : ''}
-            </div>
-          </div>
-        `;
-
-        target.innerHTML += `
-          <div onclick="openUniversalModal('${c.categoryType} टैग: ${c.tag}', '${c.breed}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-amber-600 transition">
-            <div><h4 class="font-black text-slate-900">टैग: ${c.tag}</h4><p class="text-[10px] text-slate-500">${c.breed} • ${c.milk}L</p></div>
-            <span class="text-[10px] font-bold bg-amber-100 px-2 py-0.5 rounded">${c.status}</span>
-          </div>
-        `;
-      });
-
-      calfData.forEach(c => {
-        const isBuf = (c.categoryType || '').includes('भैंस');
-        const target = isBuf ? bList : cList;
-
-        const pop = `
-          <div class="space-y-3 text-xs">
-            <div class="p-3 bg-blue-50 rounded-2xl border border-blue-200">
-              <span class="text-[10px] font-bold text-blue-800 uppercase block">${c.categoryType}</span>
-              <h4 class="text-xl font-black text-blue-950">👶 टैग: ${c.tag} (${c.gender})</h4>
-            </div>
-            <div class="p-2.5 bg-slate-50 rounded-xl border space-y-1">
-              <div><b>माता का टैग:</b> ${c.motherTag}</div>
-              <div><b>जन्म तारीख:</b> ${c.birthDate}</div>
-            </div>
-            ${isAdmin ? `<button onclick="deleteCalf('${c.id}')" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
-          </div>
-        `;
-
-        target.innerHTML += `
-          <div onclick="openUniversalModal('बच्चा टैग: ${c.tag}', '${c.categoryType} • माता: ${c.motherTag}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-blue-50/50 p-3 rounded-2xl border-2 border-blue-200 flex justify-between items-center text-xs cursor-pointer hover:border-blue-600 transition">
-            <div><h4 class="font-black text-blue-950">👶 ${c.tag}</h4><p class="text-[10px] text-blue-800">माता: ${c.motherTag}</p></div>
-            <span class="text-[10px] font-bold text-blue-900">${c.gender}</span>
-          </div>
-        `;
-      });
-
-      populateCalfMothers();
-      populateSellDropdown();
-      populateExpenseTagDropdown();
-      renderMilkSummaryStats();
-    }
-
-    function addLabourProfile(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      
-      const name = document.getElementById('labourName').value.trim();
-      const phone = document.getElementById('labourPhone').value.trim() || '-';
-      const salary = parseFloat(document.getElementById('labourSalary').value) || 0;
-      const joinDate = document.getElementById('labourJoinDate').value;
-      const alertDays = parseInt(document.getElementById('labourAlertDays').value, 10) || 3;
-
-      db.ref('labour_profiles').push({
-        name,
-        phone,
-        salary,
-        joinDate,
-        alertDays,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('labourName').value = '';
-        document.getElementById('labourPhone').value = '';
-        document.getElementById('labourSalary').value = '';
-        document.getElementById('labourAlertDays').value = '3';
-        alert("✅ मजदूर प्रोफाइल व अलर्ट सेटिंग सुरक्षित!");
-      });
-    }
-
-    function checkSalaryAlerts() {
-      const notifBanner = document.getElementById('salaryNotificationBanner');
-      const notifList = document.getElementById('salaryNotificationList');
-      notifList.innerHTML = '';
-      let salaryAlerts = [];
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth();
-      const currentDate = now.getDate();
-
-      labourProfiles.forEach(labour => {
-        if (!labour.joinDate) return;
-        const jDate = new Date(labour.joinDate);
-        const cycleDay = jDate.getDate();
-        let targetSalaryDate = new Date(currentYear, currentMonth, cycleDay);
-        
-        const thresholdDays = parseInt(labour.alertDays, 10) || 3;
-
-        if (targetSalaryDate < now && Math.abs(currentDate - cycleDay) > thresholdDays) {
-          targetSalaryDate = new Date(currentYear, currentMonth + 1, cycleDay);
-        }
-        
-        const diffDays = Math.ceil((targetSalaryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        
-        if (diffDays >= 0 && diffDays <= thresholdDays) {
-          salaryAlerts.push(`💰 <b>${labour.name}</b> का वेतन <b>₹${labour.salary.toLocaleString('en-IN')}</b> देय है (${diffDays === 0 ? 'आज देय!' : diffDays + ' दिन शेष'})`);
-        }
-      });
-
-      const snz = parseInt(localStorage.getItem('prajapati_sal_snooze') || '0', 10);
-      if (salaryAlerts.length > 0 && isAdmin && Date.now() > snz) {
-        notifList.innerHTML = salaryAlerts.map(msg => `<div>${msg}</div>`).join('');
-        notifBanner.classList.remove('hidden');
-      } else {
-        notifBanner.classList.add('hidden');
-      }
-    }
-
-    function renderLabour() {
-      const c = document.getElementById('labourHeadingList');
-      c.innerHTML = '';
-      labourProfiles.forEach(l => {
-        const threshold = l.alertDays || 3;
-        const pop = `
-          <div class="space-y-3 text-xs">
-            <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-              <div><h4 class="text-base font-black text-slate-900">${l.name}</h4><p class="text-slate-500 font-bold">${l.phone}</p></div>
-              <span class="text-emerald-900 font-black text-sm">₹${l.salary}/माह</span>
-            </div>
-            <div class="p-2.5 bg-slate-50 rounded-xl border space-y-1">
-              <div><b>जॉइनिंग तारीख:</b> ${l.joinDate}</div>
-              <div><b>वेतन चक्र:</b> हर महीने की ${new Date(l.joinDate).getDate()} तारीख</div>
-              <div><b>अलर्ट सेटिंग:</b> ${threshold} दिन पूर्व</div>
-            </div>
-            <div class="flex gap-2">
-              <a href="tel:${l.phone}" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-solid fa-phone"></i> कॉल करें</a>
-              <a href="https://wa.me/91${l.phone.replace(/\D/g,'')}?text=नमस्ते ${l.name}, प्रजापति डेयरी फॉर्म से संदेश।" target="_blank" class="w-full bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-            </div>
-            ${isAdmin ? `<button onclick="db.ref('labour_profiles/${l.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
-          </div>
-        `;
-
-        c.innerHTML += `
-          <div onclick="openUniversalModal('${l.name}', 'वेतन: ₹${l.salary}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-slate-700 transition">
-            <div><h4 class="font-bold text-slate-900">${l.name}</h4><p class="text-[10px] text-slate-500">${l.phone} • अलर्ट: ${threshold} दिन पूर्व</p></div>
-            <span class="font-bold text-emerald-950">₹${l.salary}/माह</span>
-          </div>
-        `;
-      });
-      document.getElementById('labourRecordCount').innerText = labourProfiles.length;
-      checkSalaryAlerts();
-    }
-
-    function addCustomerPayment(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      db.ref('customer_payments').push({
-        date: document.getElementById('custPayDate').value,
-        name: document.getElementById('custPayName').value.trim(),
-        amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
-        mode: document.getElementById('custPayMode').value,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('custPayName').value = '';
-        document.getElementById('custPayAmount').value = '';
-        alert("✅ ग्राहक जमा दर्ज!");
-      });
-    }
-
-    function addSetupCostItem(e) {
-      e.preventDefault();
-      if (!isAdmin) return;
-      const name = document.getElementById('setupItemName').value.trim();
-      const amount = parseFloat(document.getElementById('setupItemAmount').value) || 0;
-
-      db.ref('farm_setup_costs').push({
-        name,
-        amount,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('setupItemName').value = '';
-        document.getElementById('setupItemAmount').value = '';
-        alert("लागत सुरक्षित!");
-      });
-    }
-
-    function renderSetupCost() {
-      const container = document.getElementById('setupCostListContainer');
-      if (!container) return;
-      container.innerHTML = '';
-      let total = 0;
-      setupCostData.forEach(item => {
-        total += (parseFloat(item.amount) || 0);
-        container.innerHTML += `
-          <div class="flex items-center justify-between p-2.5 bg-slate-50 border rounded-xl text-xs">
-            <span class="font-bold text-slate-800">${item.name}</span>
-            <div class="flex gap-2 items-center">
-              <span class="font-black text-amber-950">₹ ${item.amount.toLocaleString('en-IN')}</span>
-              ${isAdmin ? `<button onclick="db.ref('farm_setup_costs/${item.id}').remove()" class="text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>` : ''}
-            </div>
-          </div>
-        `;
-      });
-
-      let totalMilkRev = 0;
-      let totalExp = 0;
-      let totalAnimalRev = 0;
-
-      milkData.forEach(m => totalMilkRev += (parseFloat(m.total) || 0));
-      expenseData.forEach(e => totalExp += (parseFloat(e.amount) || 0));
-      animalSaleData.forEach(a => totalAnimalRev += (parseFloat(a.amount) || 0));
-
-      const netProfit = Math.max(0, (totalMilkRev + totalAnimalRev) - totalExp);
-      const remaining = Math.max(0, total - netProfit);
-      const percent = total > 0 ? Math.min(100, (netProfit / total) * 100) : 0;
-
-      document.getElementById('dispTotalSetupCost').innerText = '₹ ' + total.toLocaleString('en-IN');
-      document.getElementById('dispNetRecovered').innerText = '₹ ' + netProfit.toLocaleString('en-IN');
-      document.getElementById('dispRemainingCost').innerText = '₹ ' + remaining.toLocaleString('en-IN');
-      document.getElementById('recoveryPercentText').innerText = percent.toFixed(1) + '% कवर';
-      document.getElementById('recoveryProgressBar').style.width = percent + '%';
-    }
-
-    function savePaymentSettings(e) {
-      e.preventDefault();
-      const bName = document.getElementById('settingBankName').value.trim() || 'भारतीय स्टेट बैंक (SBI)';
-      const upi = document.getElementById('settingUpiId').value.trim();
-      const phone = document.getElementById('settingUpiPhone').value.trim();
-      const acc = document.getElementById('settingBankAcc').value.trim();
-      const ifsc = document.getElementById('settingBankIfsc').value.trim();
-
-      db.ref('cloud_payment_settings').set({
-        bankName: bName,
-        upiId: upi,
-        upiPhone: phone,
-        bankAcc: acc,
-        bankIfsc: ifsc
-      }).then(() => {
-        alert("बैंक व UPI सेटिंग्स सुरक्षित!");
-        closePaymentSettingsModal();
-      });
-    }
-
-    function handlePasswordChangeSubmit(e) {
-      e.preventDefault();
-      const oldP = document.getElementById('oldPassInput').value.trim();
-      const newP = document.getElementById('newPassInput').value.trim();
-      if (oldP !== currentAdminPass) { alert("पुराना पिन गलत है!"); return; }
-      db.ref('cloud_admin_pin').set(newP).then(() => {
-        alert("पिन बदल गया!");
-        closeChangePasswordModal();
-      });
-    }
-
-    function exportAllDataToCSV() {
+    function toggleAdminLogin() {
       document.getElementById('sideMenuDropdown').classList.add('hidden');
-      let csv = "प्रजापति डेयरी फॉर्म बैकअप डेटा\n\nदूध बिक्री\nतारीख,ग्राहक,मोबाइल,मात्रा,रेट,कुल\n";
-      milkData.forEach(m => csv += `"${m.date}","${m.customer}","${m.customerPhone || ''}","${m.qty}","${m.rate}","${m.total}"\n`);
-      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `Dairy_Backup_${today}.csv`;
-      link.click();
-    }
-
-    function triggerFactoryReset() {
-      document.getElementById('sideMenuDropdown').classList.add('hidden');
-      const pin = prompt("फैक्ट्री रीसेट करने के लिए एडमिन पिन दर्ज करें:");
-      if (pin !== currentAdminPass) { alert("गलत पिन!"); return; }
-      if (confirm("चेतावनी: क्या आप सच में फार्म का सारा डेटा मिटाना चाहते हैं?")) {
-        const paths = ['milk_records', 'expense_records', 'labour_profiles', 'cattle_records', 'calf_records', 'sold_animals_archive', 'animal_sales', 'customer_payments', 'stock_records', 'farm_setup_costs', 'vet_doctors'];
-        Promise.all(paths.map(p => db.ref(p).remove())).then(() => {
-          alert("समस्त डेटा रीसेट हो गया!");
-          location.reload();
-        });
+      if (!isAdmin) {
+        const pin = prompt("एडमिन पिन दर्ज करें:");
+        if (pin === currentAdminPass) {
+          isAdmin = true;
+          localStorage.setItem('prajapati_is_admin_logged_in', 'true');
+          updateAdminUI();
+          alert("एडमिन मोड चालू!");
+        } else if (pin) alert("गलत पासवर्ड!");
+      } else {
+        isAdmin = false;
+        localStorage.removeItem('prajapati_is_admin_logged_in');
+        updateAdminUI();
+        alert("लॉगआउट सफल!");
       }
     }
 
-    function printOverallMasterReport() {
-      try {
-        const printDiv = document.getElementById('printableArea');
-        if (!printDiv) return;
+    function updateAdminUI() {
+      const badge = document.getElementById('roleBadge');
+      const statusText = document.getElementById('dropdownStatusText');
+      const menuAdminBtnText = document.getElementById('menuAdminBtnText');
+      const menuChangePassBtn = document.getElementById('menuChangePassBtn');
+      const setupAdminArea = document.getElementById('setupCostAdminForm');
+      const logoAdminArea = document.getElementById('adminLogoChangeArea');
 
-        let totM = 0, totR = 0, totE = 0, totAnim = 0;
-        
-        (milkData || []).forEach(d => { totM += (parseFloat(d.qty) || 0); totR += (parseFloat(d.total) || 0); });
-        (expenseData || []).forEach(d => { totE += (parseFloat(d.amount) || 0); });
-        (animalSaleData || []).forEach(d => { totAnim += (parseFloat(d.amount) || 0); });
+      const adminForms = ['milkAdminForm', 'expAdminForm', 'labourAdminForm', 'catAdminForm', 'calfAdminForm', 'sellAnimalAdminForm', 'custAdminForm', 'stockAdminForm'];
 
-        const netProfit = (totR + totAnim) - totE;
-        let logoHtml = currentLogoUrl ? `<img src="${currentLogoUrl}" style="width:65px; height:65px; object-fit:contain; border-radius:8px; margin-right:15px; border:1px solid #ccc;" />` : '';
-
-        const content = `
-          <div style="font-family:sans-serif; color:#111; padding:10px;">
-            <div style="display:flex; align-items:center; justify-content:center; border-bottom:3px solid #064e3b; padding-bottom:10px; margin-bottom:15px;">
-              ${logoHtml}
-              <div style="text-align:center;">
-                <h1 style="font-size:24px; font-weight:bold; margin:0; color:#064e3b;">प्रजापति डेयरी फॉर्म</h1>
-                <p style="font-size:12px; margin:2px 0; color:#333;">संपूर्ण मास्टर रिपोर्ट (लाइव क्लाउड खाता) • दिनांक: ${today}</p>
-              </div>
-            </div>
-
-            <!-- 1. वित्तीय सारांश -->
-            <div style="border:2px solid #0f172a; padding:12px; border-radius:8px; margin-bottom:15px; font-size:12px; background:#f8fafc;">
-              <h3 style="font-size:13px; font-weight:bold; margin-top:0; margin-bottom:8px; text-decoration:underline;">१. वित्तीय सारांश (Financial Overview)</h3>
-              <table style="width:100%; border:none;">
-                <tr>
-                  <td><b>कुल दूध बिक्री मात्रा:</b> ${totM.toFixed(1)} L</td>
-                  <td><b>कुल दूध आमदनी:</b> ₹ ${totR.toFixed(2)}</td>
-                </tr>
-                <tr>
-                  <td><b>पशु बिक्री से आमदनी:</b> ₹ ${totAnim.toFixed(2)}</td>
-                  <td><b>कुल फार्म खर्च:</b> ₹ ${totE.toFixed(2)}</td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="padding-top:6px; font-size:14px;">
-                    <b>शुद्ध बचत (नेट मुनाफा):</b> 
-                    <span style="font-weight:bold; color:${netProfit >= 0 ? '#166534' : '#991b1b'};">
-                      ₹ ${netProfit.toFixed(2)}
-                    </span>
-                  </td>
-                </tr>
-              </table>
-            </div>
-
-            <!-- 2. दूध बिक्री रिकॉर्ड -->
-            <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">२. दूध बिक्री रिकॉर्ड्स (${(milkData || []).length} एंट्री)</h3>
-            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
-              <tr style="background:#f1f5f9;">
-                <th>क्र.</th><th>तारीख</th><th>शिफ्ट</th><th>ग्राहक नाम</th><th>मोबाइल</th><th>मात्रा (L)</th><th>रेट (₹)</th><th>कुल (₹)</th><th>भुगतान</th>
-              </tr>
-              ${(milkData || []).length === 0 ? '<tr><td colspan="9" style="text-align:center;">कोई रिकॉर्ड नहीं</td></tr>' : milkData.map((d, i) => `
-                <tr>
-                  <td style="text-align:center;">${i+1}</td>
-                  <td>${d.date || '-'}</td>
-                  <td>${d.shift || 'सुबह'}</td>
-                  <td>${d.customer || '-'}</td>
-                  <td>${d.customerPhone || '-'}</td>
-                  <td style="text-align:right;">${d.qty || 0}</td>
-                  <td style="text-align:right;">₹${d.rate || 0}</td>
-                  <td style="text-align:right;">₹${d.total || 0}</td>
-                  <td style="text-align:center;">${d.paymentStatus || 'नकद'}</td>
-                </tr>
-              `).join('')}
-              <tr style="background:#e2e8f0; font-weight:bold;">
-                <td colspan="5">कुल योग</td>
-                <td style="text-align:right;">${totM.toFixed(1)} L</td>
-                <td>-</td>
-                <td style="text-align:right;">₹ ${totR.toFixed(2)}</td>
-                <td>-</td>
-              </tr>
-            </table>
-
-            <!-- 3. फार्म खर्च रिकॉर्ड -->
-            <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">३. फार्म खर्च रिकॉर्ड्स (${(expenseData || []).length} एंट्री)</h3>
-            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
-              <tr style="background:#f1f5f9;">
-                <th>क्र.</th><th>तारीख</th><th>मद / कैटेगरी</th><th>दुकानदार</th><th>विवरण</th><th>माध्यम</th><th>रकम (₹)</th>
-              </tr>
-              ${(expenseData || []).length === 0 ? '<tr><td colspan="7" style="text-align:center;">कोई खर्च रिकॉर्ड नहीं</td></tr>' : expenseData.map((e, i) => `
-                <tr>
-                  <td style="text-align:center;">${i+1}</td>
-                  <td>${e.date || '-'}</td>
-                  <td>${e.category || '-'}</td>
-                  <td>${e.vendorName || '-'}</td>
-                  <td>${e.detail || '-'}</td>
-                  <td>${e.paymentMode || 'UPI'}</td>
-                  <td style="text-align:right;">₹ ${e.amount || 0}</td>
-                </tr>
-              `).join('')}
-              <tr style="background:#e2e8f0; font-weight:bold;">
-                <td colspan="6">कुल खर्च</td>
-                <td style="text-align:right;">₹ ${totE.toFixed(2)}</td>
-              </tr>
-            </table>
-
-            <!-- 4. सक्रिय पशु व बछड़ा रिकॉर्ड -->
-            <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">४. सक्रिय पशु व बछड़ा सूची (${(cattleData || []).length} पशु + ${(calfData || []).length} बच्चे)</h3>
-            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
-              <tr style="background:#f1f5f9;">
-                <th>क्र.</th><th>वर्ग</th><th>टैग संख्या</th><th>नस्ल / लिंग</th><th>दैनिक दूध (L)</th><th>स्थिति</th><th>खरीद मूल्य</th>
-              </tr>
-              ${(cattleData || []).map((c, i) => `
-                <tr>
-                  <td style="text-align:center;">${i+1}</td>
-                  <td>${c.categoryType || '-'}</td>
-                  <td><b>${c.tag || '-'}</b></td>
-                  <td>${c.breed || '-'}</td>
-                  <td style="text-align:right;">${c.milk || 0} L</td>
-                  <td>${c.status || '-'}</td>
-                  <td style="text-align:right;">₹ ${c.buyCost || '0'}</td>
-                </tr>
-              `).join('')}
-              ${(calfData || []).map((cal) => `
-                <tr>
-                  <td style="text-align:center;">-</td>
-                  <td>${cal.categoryType || 'बच्चा'}</td>
-                  <td><b>👶 ${cal.tag || '-'}</b></td>
-                  <td>${cal.gender || '-'}</td>
-                  <td style="text-align:center;">-</td>
-                  <td>माता: ${cal.motherTag || '-'}</td>
-                  <td style="text-align:center;">जन्म: ${cal.birthDate || '-'}</td>
-                </tr>
-              `).join('')}
-            </table>
-
-            <!-- 5. मजदूर प्रोफाइल व वेतन -->
-            <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">५. पंजीकृत मजदूर सूची (${(labourProfiles || []).length} मजदूर)</h3>
-            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px;">
-              <tr style="background:#f1f5f9;">
-                <th>क्र.</th><th>नाम</th><th>मोबाइल नंबर</th><th>मासिक वेतन (₹)</th><th>जॉइनिंग तारीख</th><th>अलर्ट दिन पूर्व</th>
-              </tr>
-              ${(labourProfiles || []).length === 0 ? '<tr><td colspan="6" style="text-align:center;">कोई मजदूर पंजीकृत नहीं</td></tr>' : labourProfiles.map((l, i) => `
-                <tr>
-                  <td style="text-align:center;">${i+1}</td>
-                  <td><b>${l.name || '-'}</b></td>
-                  <td>${l.phone || '-'}</td>
-                  <td>₹ ${l.salary || 0} / माह</td>
-                  <td>${l.joinDate || '-'}</td>
-                  <td style="text-align:center;">${l.alertDays || 3} दिन</td>
-                </tr>
-              `).join('')}
-            </table>
-          </div>
-        `;
-
-        printDiv.innerHTML = content;
-        printDiv.classList.remove('hidden');
-
-        window.focus();
-        window.print();
-        printDiv.classList.add('hidden');
-      } catch (err) {
-        alert("PDF तैयार करने में त्रुटि आई: " + err.message);
+      if (isAdmin) {
+        badge.innerText = "Admin Active";
+        badge.className = "text-[9px] sm:text-[10px] bg-emerald-700 text-white px-2.5 py-0.5 rounded-full font-bold border border-emerald-400";
+        statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Admin Mode`;
+        menuAdminBtnText.innerText = "Admin Logout";
+        menuChangePassBtn.classList.remove('hidden');
+        if (setupAdminArea) setupAdminArea.classList.remove('hidden');
+        if (logoAdminArea) logoAdminArea.classList.remove('hidden');
+        adminForms.forEach(id => document.getElementById(id)?.classList.remove('hidden'));
+      } else {
+        badge.innerText = "User Mode";
+        badge.className = "text-[9px] sm:text-[10px] bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded-full font-bold border border-slate-600";
+        statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-500"></span> User Mode (View Only)`;
+        menuAdminBtnText.innerText = "Admin Mode On";
+        menuChangePassBtn.classList.add('hidden');
+        if (setupAdminArea) setupAdminArea.classList.add('hidden');
+        if (logoAdminArea) logoAdminArea.classList.add('hidden');
+        adminForms.forEach(id => document.getElementById(id)?.classList.add('hidden'));
       }
+      renderAll();
     }
 
-    function renderTotals() {
-      let mQty = 0, mRev = 0, exp = 0;
-      milkData.forEach(x => { mQty += (parseFloat(x.qty) || 0); mRev += (parseFloat(x.total) || 0); });
-      expenseData.forEach(x => exp += (parseFloat(x.amount) || 0));
-      document.getElementById('modalMilkQty').innerText = mQty.toFixed(1) + ' L';
-      document.getElementById('modalMilkRev').innerText = '₹' + mRev.toFixed(0);
-      document.getElementById('modalExpenses').innerText = '₹' + exp.toFixed(0);
-      const net = mRev - exp;
-      document.getElementById('modalNetProfit').innerText = '₹' + net.toFixed(0);
-      if (mQty > 0) {
-        document.getElementById('dispCostPerLiter').innerText = '₹ ' + (exp / mQty).toFixed(2);
-        document.getElementById('dispProfitPerLiter').innerText = '₹ ' + ((mRev - exp) / mQty).toFixed(2);
-      }
-    }
-
-    function renderAll() {
-      renderMilk();
-      renderExpense();
-      renderCattleLists();
-      renderKhata();
-      renderStock();
-      renderLabour();
-      renderTotals();
-      renderVetDoctors();
-      renderSetupCost();
-      checkDailyAutoFeedDeduction();
-    }
-
+    // Switch Tabs with Full State Retention
     function switchTab(t) {
       ['milk', 'expense', 'labour', 'cattle', 'khata', 'stock'].forEach(tab => {
         const sec = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
@@ -2038,6 +820,13 @@
       localStorage.setItem('prajapati_active_tab', t);
     }
 
+    // Setup Cost Listener
+    db.ref('farm_setup_costs').on('value', s => {
+      setupCostData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : [];
+      renderSetupCost();
+    });
+
+    // Cloud Listeners with Automatic Rendering
     let renderTimeout = null;
     function scheduleRender() {
       clearTimeout(renderTimeout);
@@ -2067,11 +856,6 @@
     db.ref('vet_doctors').on('value', s => { vetDoctors = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('sold_animals_archive').on('value', s => { soldArchiveData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; });
     db.ref('animal_sales').on('value', s => { animalSaleData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
-    
-    db.ref('farm_setup_costs').on('value', s => {
-      setupCostData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : [];
-      renderSetupCost();
-    });
 
     adjustBreedOptions();
     adjustCalfGenderOptions();
