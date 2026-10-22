@@ -165,9 +165,9 @@
         <i class="fa-solid fa-shield-cat text-amber-600"></i>
         <span>पशु व बछड़ा</span>
       </button>
-      <button onclick="switchTab('customer')" id="tabCustomerBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300">
-        <i class="fa-solid fa-address-book text-indigo-700"></i>
-        <span>ग्राहक खाता</span>
+      <button onclick="switchTab('khata')" id="tabKhataBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300">
+        <i class="fa-solid fa-book-bookmark text-emerald-600"></i>
+        <span>उधारी बहीखाता</span>
       </button>
       <button onclick="switchTab('stock')" id="tabStockBtn" class="shrink-0 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 text-slate-700 bg-white border-2 border-slate-300">
         <i class="fa-solid fa-wheat-awn text-yellow-600"></i>
@@ -231,10 +231,10 @@
       </div>
     </section>
 
-    <!-- TAB 2: EXPENSES -->
+    <!-- TAB 2: EXPENSES (WITH VENDOR DUE/PAYMENT OPTIONS) -->
     <section id="tabExpense" class="mt-4 hidden space-y-4">
       <div id="expAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-purple-600">
-        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wallet text-purple-700"></i> खर्च दर्ज करें</h2>
+        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wallet text-purple-700"></i> खर्च / भुगतान दर्ज करें</h2>
         <form onsubmit="addExpenseEntry(event)" class="space-y-3">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="expDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
@@ -243,6 +243,7 @@
               <select id="expCategory" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
                 <option value="चारा / खली / दाना (Feed)">चारा / खली / दाना</option>
                 <option value="दवाई व डॉक्टर (Medical)">दवाई व डॉक्टर (Medical)</option>
+                <option value="दुकानदार उधारी चुकाई (Vendor Paid)">दुकानदार उधारी चुकाई (Paid)</option>
                 <option value="मजदूर एडवांस (Advance)">मजदूर एडवांस</option>
                 <option value="मासिक वेतन भुगतान">मासिक वेतन</option>
                 <option value="डीजल / बिजली बिल">डीजल / बिजली</option>
@@ -250,18 +251,29 @@
               </select>
             </div>
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु से लिंक करें (इलाज/दवा)</label>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दुकानदार/सप्लायर का नाम</label>
+              <input type="text" id="expVendorName" placeholder="उदा. किसान खाद भंडार" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु से लिंक करें (इलाज)</label>
               <select id="expAnimalTagRef" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
                 <option value="">-- सामान्य फार्म खर्च --</option>
               </select>
             </div>
-            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">विवरण</label><input type="text" id="expDetail" required placeholder="उदा. दवा व सुई" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           </div>
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान विवरण</label><input type="text" id="expDetail" required placeholder="उदा. 2 बोरी चोकर" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रकम (₹)</label><input type="number" id="expAmount" required placeholder="0" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माध्यम</label><select id="expPaymentMode" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white"><option value="PhonePe / UPI">PhonePe / UPI</option><option value="नकद (Cash)">नकद</option></select></div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान माध्यम</label>
+              <select id="expPaymentMode" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
+                <option value="नकद (Cash)">नकद (Cash)</option>
+                <option value="PhonePe / UPI">PhonePe / UPI</option>
+                <option value="दुकानदार उधारी (Vendor Due)">दुकानदार उधारी (Due)</option>
+              </select>
+            </div>
           </div>
-          <div class="flex justify-end"><button type="submit" class="bg-purple-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">खर्च सेव करें</button></div>
+          <div class="flex justify-end"><button type="submit" class="bg-purple-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">खर्च / भुगतान सेव करें</button></div>
         </form>
       </div>
 
@@ -271,7 +283,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: LABOUR (UPDATED WITH JOINING DATE & ALERT DAYS SETTING) -->
+    <!-- TAB 3: LABOUR -->
     <section id="tabLabour" class="mt-4 hidden space-y-4">
       <div id="labourAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-slate-800">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-user-plus text-cyan-700"></i> नया मजदूर प्रोफाइल जोड़ें</h2>
@@ -279,7 +291,7 @@
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मजदूर का नाम</label><input type="text" id="labourName" required placeholder="उदा. कल्लू राम" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर</label><input type="tel" id="labourPhone" required placeholder="9876543210" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
           <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मासिक वेतन (₹)</label><input type="number" id="labourSalary" required placeholder="12000" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-950" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख (Joining Date)</label><input type="date" id="labourJoinDate" required class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख</label><input type="date" id="labourJoinDate" required class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
           <div>
             <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">वेतन अलर्ट (दिन पूर्व)</label>
             <input type="number" id="labourAlertDays" required value="3" placeholder="उदा. 3" min="1" max="15" class="w-full text-sm border-2 border-rose-300 bg-rose-50 rounded-xl p-2.5 font-black text-rose-950" />
@@ -369,21 +381,61 @@
       </div>
     </section>
 
-    <!-- TAB 5: CUSTOMER LEDGER -->
-    <section id="tabCustomer" class="mt-4 hidden space-y-4">
+    <!-- TAB 5: ADVANCED BahiKhata / Ledger (NEW TWO-WAY AUTO KHATA) -->
+    <section id="tabKhata" class="mt-4 hidden space-y-4">
+      <!-- 3 Summary Overview Cards -->
+      <div class="grid grid-cols-3 gap-2 text-center">
+        <div class="bg-emerald-950 text-white p-3 rounded-2xl border-2 border-emerald-500 shadow">
+          <span class="text-[10px] text-emerald-300 font-bold uppercase block">कुल लेना है (मार्केट)</span>
+          <span class="text-base sm:text-xl font-black text-amber-300 mt-1 block" id="khataTotalReceivable">₹0</span>
+        </div>
+        <div class="bg-rose-950 text-white p-3 rounded-2xl border-2 border-rose-500 shadow">
+          <span class="text-[10px] text-rose-300 font-bold uppercase block">कुल देना है (उधारी)</span>
+          <span class="text-base sm:text-xl font-black text-rose-200 mt-1 block" id="khataTotalPayable">₹0</span>
+        </div>
+        <div class="bg-slate-900 text-white p-3 rounded-2xl border-2 border-slate-700 shadow">
+          <span class="text-[10px] text-slate-400 font-bold uppercase block">नेट संतुलन (Net)</span>
+          <span class="text-base sm:text-xl font-black mt-1 block" id="khataNetBalance">₹0</span>
+        </div>
+      </div>
+
+      <!-- Quick Payment Entries Area -->
       <div id="custAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-indigo-600">
-        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-address-book text-indigo-700"></i> ग्राहक जमा दर्ज करें</h2>
-        <form onsubmit="addCustomerPayment(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-indigo-700"></i> ग्राहक से रुपया जमा दर्ज करें</h2>
+        <form onsubmit="addCustomerPayment(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="custPayDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक नाम</label><input type="text" id="custPayName" required placeholder="उदा. राम जी" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label><input type="number" id="custPayAmount" required placeholder="0" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div class="sm:col-span-3 flex justify-end"><button type="submit" class="bg-indigo-900 text-white font-bold py-2.5 px-6 rounded-xl text-sm shadow">जमा सेव करें</button></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक का नाम</label><input type="text" id="custPayName" required placeholder="उदा. राम जी" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label><input type="number" id="custPayAmount" required placeholder="उदा. 700" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माध्यम</label>
+            <select id="custPayMode" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
+              <option value="PhonePe / UPI">PhonePe / UPI</option>
+              <option value="नकद (Cash)">नकद (Cash)</option>
+            </select>
+          </div>
+          <div class="sm:col-span-4 flex justify-end"><button type="submit" class="bg-indigo-900 hover:bg-indigo-950 text-white font-bold py-2.5 px-6 rounded-xl text-sm shadow">जमा सुरक्षित करें</button></div>
         </form>
       </div>
 
-      <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
-        <div class="p-3 bg-slate-50 border-b flex justify-between items-center"><span class="font-bold text-slate-800 text-xs sm:text-sm">ग्राहक बहीखाता</span><span class="text-xs bg-indigo-100 text-indigo-950 font-bold px-2.5 py-0.5 rounded-full">लाइव लेजर</span></div>
-        <div id="customerHeadingList" class="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+      <!-- 2 Side-by-Side Ledgers -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- Section A: Market Receivables (Customer Dues) -->
+        <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
+          <div class="p-3 bg-emerald-50 border-b flex justify-between items-center">
+            <span class="font-extrabold text-emerald-950 text-xs sm:text-sm flex items-center gap-1.5"><i class="fa-solid fa-arrow-down-left text-emerald-700"></i> ग्राहक खाता (मुझसे लेना बाकी है)</span>
+            <span class="text-xs bg-emerald-200 text-emerald-900 font-bold px-2 py-0.5 rounded-full" id="khataCustomerCount">0</span>
+          </div>
+          <div id="khataCustomerList" class="p-3 space-y-2 max-h-[500px] overflow-y-auto"></div>
+        </div>
+
+        <!-- Section B: Farm Payables (Vendor/Shopkeeper Dues) -->
+        <div class="bg-white rounded-2xl shadow border-2 border-slate-300 overflow-hidden">
+          <div class="p-3 bg-rose-50 border-b flex justify-between items-center">
+            <span class="font-extrabold text-rose-950 text-xs sm:text-sm flex items-center gap-1.5"><i class="fa-solid fa-arrow-up-right text-rose-700"></i> दुकानदार खाता (मुझे देना बाकी है)</span>
+            <span class="text-xs bg-rose-200 text-rose-900 font-bold px-2 py-0.5 rounded-full" id="khataVendorCount">0</span>
+          </div>
+          <div id="khataVendorList" class="p-3 space-y-2 max-h-[500px] overflow-y-auto"></div>
+        </div>
       </div>
     </section>
 
@@ -407,9 +459,9 @@
     </section>
   </main>
 
-  <!-- UNIVERSAL DETAIL MODAL -->
+  <!-- UNIVERSAL DETAIL MODAL (WITH FULL PASSBOOK SUPPORT) -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
-    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
+    <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between border-b shrink-0">
         <div><h3 class="font-black text-amber-300" id="universalModalTitle">विवरण</h3><p class="text-[11px] text-slate-400" id="universalModalSub">प्रजापति डेयरी फॉर्म</p></div>
         <button onclick="closeUniversalModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white font-black text-sm">✕</button>
@@ -586,7 +638,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script with Accurate Labour Alert Days Support -->
+  <!-- Core Script with Robust Khata / Passbook Implementation -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -734,7 +786,6 @@
     function openChangePasswordModal() { document.getElementById('changePassModal').classList.remove('hidden'); }
     function closeChangePasswordModal() { document.getElementById('changePassModal').classList.add('hidden'); }
 
-    // Logo Preview & Cloud Upload Fix
     function openLogoPreview() {
       applyLogoToDOM(currentLogoUrl);
       document.getElementById('logoPreviewModal').classList.remove('hidden');
@@ -1101,7 +1152,7 @@
       });
     }
 
-    // Customer WhatsApp Reminder (INCLUDES BANK NAME)
+    // Customer WhatsApp Reminder (CLEAN BANK/UPI MESSAGE)
     function sendWhatsAppReminder(name, bal, phone) {
       const bankNameText = paymentSettings.bankName ? `%0A*बैंक का नाम:* ${paymentSettings.bankName}` : '';
       const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
@@ -1122,46 +1173,323 @@
       sendWhatsAppText(phone, msg);
     }
 
-    function renderCustomers() {
-      const map = {};
+    // ==================== ADVANCED TWO-WAY AUTOMATIC KHATA / LEDGER ====================
+    function renderKhata() {
+      // 1. ग्राहक हिसाब (Receivables)
+      const custMap = {};
       milkData.forEach(m => {
-        if(!map[m.customer]) map[m.customer] = { milk: 0, bill: 0, paid: 0, phone: m.customerPhone || '' };
-        map[m.customer].milk += m.qty; map[m.customer].bill += m.total;
-        if (m.customerPhone) map[m.customer].phone = m.customerPhone;
+        if (!m.customer) return;
+        if (!custMap[m.customer]) custMap[m.customer] = { totalBill: 0, totalPaid: 0, phone: m.customerPhone || '', entries: [] };
+        custMap[m.customer].totalBill += (parseFloat(m.total) || 0);
+        if (m.customerPhone) custMap[m.customer].phone = m.customerPhone;
+        custMap[m.customer].entries.push({
+          date: m.date,
+          type: 'bill',
+          detail: `दूध ${m.qty}L (${m.shift || 'सुबह'}) @ ₹${m.rate}`,
+          mode: m.paymentStatus || 'उधारी',
+          amount: parseFloat(m.total) || 0,
+          timestamp: m.timestamp || 0
+        });
       });
+
       customerPayments.forEach(p => {
-        if(!map[p.name]) map[p.name] = { milk: 0, bill: 0, paid: 0, phone: '' };
-        map[p.name].paid += p.amount;
+        if (!p.name) return;
+        if (!custMap[p.name]) custMap[p.name] = { totalBill: 0, totalPaid: 0, phone: '', entries: [] };
+        custMap[p.name].totalPaid += (parseFloat(p.amount) || 0);
+        custMap[p.name].entries.push({
+          date: p.date,
+          type: 'paid',
+          detail: 'रुपया जमा किया',
+          mode: p.mode || 'PhonePe / UPI',
+          amount: parseFloat(p.amount) || 0,
+          timestamp: p.timestamp || 0
+        });
       });
 
-      const c = document.getElementById('customerHeadingList');
-      c.innerHTML = '';
-      Object.keys(map).forEach(name => {
-        const bal = map[name].bill - map[name].paid;
-        const due = bal > 0;
-        const custPhone = map[name].phone || '';
+      // 2. दुकानदार हिसाब (Payables)
+      const vendorMap = {};
+      expenseData.forEach(e => {
+        const vName = (e.vendorName || '').trim();
+        if (!vName && e.paymentMode !== 'दुकानदार उधारी (Vendor Due)' && e.category !== 'दुकानदार उधारी चुकाई (Vendor Paid)') return;
+        const name = vName || 'अन्य दुकानदार';
 
-        const pop = `
-          <div class="space-y-2 text-xs">
-            <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between"><div><b>${name}</b><br>दूध: ${map[name].milk}L<br><span class="text-[10px] text-slate-500 font-bold">मो: ${custPhone || '-'}</span></div><div class="text-base font-black ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(2)}</div></div>
-            <div class="p-2.5 bg-sky-50 rounded-xl border border-sky-200 text-sky-950 font-medium">
-              <b>उपलब्ध भुगतान माध्यम:</b><br>
-              • बैंक: ${paymentSettings.bankName || 'दर्ज नहीं'}<br>
-              • खाता: ${paymentSettings.bankAcc || 'दर्ज नहीं'} (IFSC: ${paymentSettings.bankIfsc || '-' })<br>
-              • UPI ID: ${paymentSettings.upiId || 'दर्ज नहीं'}<br>
-              • PhonePe/GPay: ${paymentSettings.upiPhone || 'दर्ज नहीं'}
+        if (!vendorMap[name]) vendorMap[name] = { totalDue: 0, totalPaid: 0, entries: [] };
+
+        if (e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)') {
+          vendorMap[name].totalPaid += (parseFloat(e.amount) || 0);
+          vendorMap[name].entries.push({
+            date: e.date,
+            type: 'paid',
+            detail: e.detail || 'उधारी का भुगतान किया',
+            mode: e.paymentMode || 'नकद',
+            amount: parseFloat(e.amount) || 0,
+            timestamp: e.timestamp || 0
+          });
+        } else if (e.paymentMode === 'दुकानदार उधारी (Vendor Due)') {
+          vendorMap[name].totalDue += (parseFloat(e.amount) || 0);
+          vendorMap[name].entries.push({
+            date: e.date,
+            type: 'due',
+            detail: `${e.detail || e.category} (उधारी माल)`,
+            mode: 'उधारी',
+            amount: parseFloat(e.amount) || 0,
+            timestamp: e.timestamp || 0
+          });
+        }
+      });
+
+      // 3. Render Top Cards
+      let totalReceivable = 0;
+      Object.keys(custMap).forEach(k => {
+        const bal = custMap[k].totalBill - custMap[k].totalPaid;
+        if (bal > 0) totalReceivable += bal;
+      });
+
+      let totalPayable = 0;
+      Object.keys(vendorMap).forEach(k => {
+        const bal = vendorMap[k].totalDue - vendorMap[k].totalPaid;
+        if (bal > 0) totalPayable += bal;
+      });
+
+      const netBalance = totalReceivable - totalPayable;
+
+      document.getElementById('khataTotalReceivable').innerText = '₹ ' + totalReceivable.toLocaleString('en-IN');
+      document.getElementById('khataTotalPayable').innerText = '₹ ' + totalPayable.toLocaleString('en-IN');
+      
+      const netElem = document.getElementById('khataNetBalance');
+      netElem.innerText = (netBalance >= 0 ? '+ ₹ ' : '- ₹ ') + Math.abs(netBalance).toLocaleString('en-IN');
+      netElem.className = "text-base sm:text-xl font-black mt-1 block " + (netBalance >= 0 ? "text-emerald-400" : "text-rose-400");
+
+      // 4. Render Customer List
+      const cList = document.getElementById('khataCustomerList');
+      cList.innerHTML = '';
+      const cKeys = Object.keys(custMap);
+      document.getElementById('khataCustomerCount').innerText = cKeys.length;
+
+      if (cKeys.length === 0) {
+        cList.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">कोई ग्राहक खाता मौजूद नहीं है।</div>';
+      } else {
+        cKeys.forEach(name => {
+          const cData = custMap[name];
+          const bal = cData.totalBill - cData.totalPaid;
+          const isDue = bal > 0;
+
+          cList.innerHTML += `
+            <div onclick="openCustomerPassbook('${name}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-emerald-600 transition">
+              <div>
+                <h4 class="font-extrabold text-slate-900 text-sm">${name}</h4>
+                <p class="text-[10px] text-slate-500 font-semibold mt-0.5">कुल बिल: ₹${cData.totalBill.toFixed(0)} | जमा: ₹${cData.totalPaid.toFixed(0)}</p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-black px-2 py-0.5 rounded-full ${isDue ? 'bg-rose-100 text-rose-800 border border-rose-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'}">
+                  ${isDue ? 'लेना: ₹' + bal.toFixed(0) : 'हिसाब चुकता'}
+                </span>
+                <span class="text-[9px] text-slate-400 block mt-1"><i class="fa-solid fa-book-open"></i> पासबुक देखें</span>
+              </div>
             </div>
-            ${due ? `<button onclick="sendWhatsAppReminder('${name}', ${bal}, '${custPhone}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl mt-2 flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp पर तगादा भेजें (बैंक/UPI सहित)</button>` : '<span class="block text-center text-emerald-700 font-bold mt-2">हिसाब चुकता है</span>'}
-          </div>
-        `;
+          `;
+        });
+      }
 
-        c.innerHTML += `
-          <div onclick="openUniversalModal('${name}', 'बकाया: ₹${bal.toFixed(0)}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center cursor-pointer hover:border-indigo-600 transition">
-            <div><h4 class="font-bold text-slate-900 text-sm">${name}</h4><span class="text-[10px] text-slate-500">दूध: ${map[name].milk}L • ${custPhone}</span></div>
-            <span class="font-bold text-xs ${due ? 'text-rose-700' : 'text-emerald-700'}">₹${bal.toFixed(0)}</span>
-          </div>
+      // 5. Render Vendor List
+      const vList = document.getElementById('khataVendorList');
+      vList.innerHTML = '';
+      const vKeys = Object.keys(vendorMap);
+      document.getElementById('khataVendorCount').innerText = vKeys.length;
+
+      if (vKeys.length === 0) {
+        vList.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">कोई दुकानदार उधारी बाकी नहीं है।</div>';
+      } else {
+        vKeys.forEach(name => {
+          const vData = vendorMap[name];
+          const bal = vData.totalDue - vData.totalPaid;
+          const isDue = bal > 0;
+
+          vList.innerHTML += `
+            <div onclick="openVendorPassbook('${name}')" class="p-3 bg-slate-50 border-2 rounded-2xl flex items-center justify-between cursor-pointer hover:border-rose-600 transition">
+              <div>
+                <h4 class="font-extrabold text-slate-900 text-sm">${name}</h4>
+                <p class="text-[10px] text-slate-500 font-semibold mt-0.5">कुल उधारी: ₹${vData.totalDue.toFixed(0)} | चुकाया: ₹${vData.totalPaid.toFixed(0)}</p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-black px-2 py-0.5 rounded-full ${isDue ? 'bg-rose-100 text-rose-800 border border-rose-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'}">
+                  ${isDue ? 'देना: ₹' + bal.toFixed(0) : 'चुकता'}
+                </span>
+                <span class="text-[9px] text-slate-400 block mt-1"><i class="fa-solid fa-book-open"></i> पासबुक देखें</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+    }
+
+    // CUSTOMER PASSBOOK POPUP WITH DATES & RUNNING BALANCE
+    function openCustomerPassbook(customerName) {
+      let entries = [];
+      let totalBill = 0, totalPaid = 0, phone = '';
+
+      milkData.forEach(m => {
+        if (m.customer === customerName) {
+          totalBill += (parseFloat(m.total) || 0);
+          if (m.customerPhone) phone = m.customerPhone;
+          entries.push({
+            date: m.date,
+            title: `दूध बिक्री (${m.qty}L @ ₹${m.rate})`,
+            mode: m.paymentStatus || 'उधारी',
+            amount: parseFloat(m.total) || 0,
+            type: 'debit',
+            timestamp: m.timestamp || new Date(m.date).getTime()
+          });
+        }
+      });
+
+      customerPayments.forEach(p => {
+        if (p.name === customerName) {
+          totalPaid += (parseFloat(p.amount) || 0);
+          entries.push({
+            date: p.date,
+            title: 'जमा / भुगतान प्राप्त',
+            mode: p.mode || 'PhonePe / UPI',
+            amount: parseFloat(p.amount) || 0,
+            type: 'credit',
+            timestamp: p.timestamp || new Date(p.date).getTime()
+          });
+        }
+      });
+
+      entries.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+      let runningBal = 0;
+      let rowsHtml = '';
+      entries.forEach((e, idx) => {
+        if (e.type === 'debit') runningBal += e.amount;
+        else runningBal -= e.amount;
+
+        rowsHtml += `
+          <tr class="border-b text-[11px]">
+            <td class="p-2 font-semibold">${e.date}</td>
+            <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
+            <td class="p-2 text-right font-bold ${e.type === 'credit' ? 'text-emerald-700' : 'text-rose-700'}">
+              ${e.type === 'credit' ? '- ₹' + e.amount : '+ ₹' + e.amount}
+            </td>
+            <td class="p-2 text-right font-black text-slate-900">₹${runningBal.toFixed(0)}</td>
+          </tr>
         `;
       });
+
+      const finalBal = totalBill - totalPaid;
+      const html = `
+        <div class="space-y-3">
+          <div class="p-3 bg-emerald-50 rounded-2xl border-2 border-emerald-300 flex justify-between items-center">
+            <div>
+              <h4 class="font-black text-emerald-950 text-base">${customerName}</h4>
+              <p class="text-[11px] text-emerald-800 font-semibold">मो: ${phone || 'दर्ज नहीं'}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-500 font-bold uppercase block">वर्तमान शुद्ध बकाया</span>
+              <span class="text-xl font-black ${finalBal > 0 ? 'text-rose-700' : 'text-emerald-700'}">₹ ${finalBal.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
+            <table class="w-full text-left">
+              <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b">
+                <tr><th class="p-2">तारीख</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">बकाया शेष</th></tr>
+              </thead>
+              <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
+            </table>
+          </div>
+
+          <div class="flex gap-2">
+            ${finalBal > 0 ? `<button onclick="sendWhatsAppReminder('${customerName}', ${finalBal}, '${phone}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp पर तगादा भेजें</button>` : ''}
+            <button onclick="closeUniversalModal()" class="w-full bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs">बंद करें</button>
+          </div>
+        </div>
+      `;
+
+      openUniversalModal("ग्राहक पासबुक विवरण", customerName, html);
+    }
+
+    // VENDOR PASSBOOK POPUP WITH DATES & RUNNING BALANCE
+    function openVendorPassbook(vendorName) {
+      let entries = [];
+      let totalDue = 0, totalPaid = 0;
+
+      expenseData.forEach(e => {
+        const vName = (e.vendorName || '').trim() || (e.paymentMode === 'दुकानदार उधारी (Vendor Due)' ? 'अन्य दुकानदार' : '');
+        if (vName === vendorName) {
+          if (e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)') {
+            totalPaid += (parseFloat(e.amount) || 0);
+            entries.push({
+              date: e.date,
+              title: e.detail || 'उधारी का भुगतान किया',
+              mode: e.paymentMode || 'नकद',
+              amount: parseFloat(e.amount) || 0,
+              type: 'paid',
+              timestamp: e.timestamp || new Date(e.date).getTime()
+            });
+          } else if (e.paymentMode === 'दुकानदार उधारी (Vendor Due)') {
+            totalDue += (parseFloat(e.amount) || 0);
+            entries.push({
+              date: e.date,
+              title: `${e.detail || e.category} (उधारी माल)`,
+              mode: 'उधारी',
+              amount: parseFloat(e.amount) || 0,
+              type: 'due',
+              timestamp: e.timestamp || new Date(e.date).getTime()
+            });
+          }
+        }
+      });
+
+      entries.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+      let runningBal = 0;
+      let rowsHtml = '';
+      entries.forEach(e => {
+        if (e.type === 'due') runningBal += e.amount;
+        else runningBal -= e.amount;
+
+        rowsHtml += `
+          <tr class="border-b text-[11px]">
+            <td class="p-2 font-semibold">${e.date}</td>
+            <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
+            <td class="p-2 text-right font-bold ${e.type === 'paid' ? 'text-emerald-700' : 'text-rose-700'}">
+              ${e.type === 'paid' ? '- ₹' + e.amount : '+ ₹' + e.amount}
+            </td>
+            <td class="p-2 text-right font-black text-slate-900">₹${runningBal.toFixed(0)}</td>
+          </tr>
+        `;
+      });
+
+      const finalBal = totalDue - totalPaid;
+      const html = `
+        <div class="space-y-3">
+          <div class="p-3 bg-rose-50 rounded-2xl border-2 border-rose-300 flex justify-between items-center">
+            <div>
+              <h4 class="font-black text-rose-950 text-base">${vendorName}</h4>
+              <p class="text-[11px] text-rose-800 font-semibold">दुकानदार / सप्लायर खाता</p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-500 font-bold uppercase block">कुल देना बाकी</span>
+              <span class="text-xl font-black ${finalBal > 0 ? 'text-rose-700' : 'text-emerald-700'}">₹ ${finalBal.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div class="border rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
+            <table class="w-full text-left">
+              <thead class="bg-slate-100 text-[10px] uppercase font-bold text-slate-600 border-b">
+                <tr><th class="p-2">तारीख</th><th class="p-2">विवरण</th><th class="p-2 text-right">रकम</th><th class="p-2 text-right">देना शेष</th></tr>
+              </thead>
+              <tbody>${rowsHtml || '<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">कोई लेनदेन नहीं</td></tr>'}</tbody>
+            </table>
+          </div>
+
+          <button onclick="closeUniversalModal()" class="w-full bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs">बंद करें</button>
+        </div>
+      `;
+
+      openUniversalModal("दुकानदार पासबुक विवरण", vendorName, html);
     }
 
     // Milk Module Calculations
@@ -1244,7 +1572,7 @@
               <div class="p-2 bg-emerald-50 rounded-lg border text-emerald-900 font-bold"><b>कुल:</b> ₹${x.total}</div>
             </div>
             <button onclick="sendCustomerMilkBill('${x.customer}', '${x.date}', ${x.qty}, ${x.rate}, ${x.total}, '${x.paymentStatus}', '${x.customerPhone || ''}')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
-              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद भेजें (बैंक/UPI सहित)
+              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp रसीद भेजें
             </button>
             ${isAdmin ? `<button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
           </div>
@@ -1268,12 +1596,18 @@
       db.ref('expense_records').push({
         date: document.getElementById('expDate').value,
         category: document.getElementById('expCategory').value,
+        vendorName: document.getElementById('expVendorName').value.trim(),
         animalTag: document.getElementById('expAnimalTagRef').value,
         detail: document.getElementById('expDetail').value.trim(),
         amount: parseFloat(document.getElementById('expAmount').value) || 0,
         paymentMode: document.getElementById('expPaymentMode').value,
         timestamp: Date.now()
-      }).then(() => { document.getElementById('expDetail').value = ''; document.getElementById('expAmount').value = ''; alert("खर्च सुरक्षित!"); });
+      }).then(() => {
+        document.getElementById('expDetail').value = '';
+        document.getElementById('expAmount').value = '';
+        document.getElementById('expVendorName').value = '';
+        alert("खर्च / भुगतान सुरक्षित!");
+      });
     }
 
     function renderExpense() {
@@ -1282,7 +1616,7 @@
       expenseData.forEach(x => {
         c.innerHTML += `
           <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
-            <div><h4 class="font-bold text-slate-900">${x.detail}</h4><p class="text-[10px] text-slate-500">${x.date} • ${x.animalTag || x.category}</p></div>
+            <div><h4 class="font-bold text-slate-900">${x.detail}</h4><p class="text-[10px] text-slate-500">${x.date} • ${x.vendorName ? x.vendorName + ' • ' : ''}${x.animalTag || x.category}</p></div>
             <span class="font-bold text-purple-950">₹${x.amount}</span>
           </div>
         `;
@@ -1457,7 +1791,6 @@
       renderMilkSummaryStats();
     }
 
-    // ACCURATE LABOUR PROFILE CREATION (WITH USER-SET ALERT DAYS)
     function addLabourProfile(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1484,7 +1817,6 @@
       });
     }
 
-    // REALTIME LABOUR SALARY ALERTS (CHECKS USER-DEFINED DAYS)
     function checkSalaryAlerts() {
       const notifBanner = document.getElementById('salaryNotificationBanner');
       const notifList = document.getElementById('salaryNotificationList');
@@ -1565,15 +1897,15 @@
         date: document.getElementById('custPayDate').value,
         name: document.getElementById('custPayName').value.trim(),
         amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
+        mode: document.getElementById('custPayMode').value,
         timestamp: Date.now()
       }).then(() => {
         document.getElementById('custPayName').value = '';
         document.getElementById('custPayAmount').value = '';
-        alert("जमा दर्ज!");
+        alert("✅ ग्राहक जमा दर्ज!");
       });
     }
 
-    // FIXED & LOCKED: Setup Cost Add & Calculation
     function addSetupCostItem(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1763,14 +2095,14 @@
             <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">३. फार्म खर्च रिकॉर्ड्स (${(expenseData || []).length} एंट्री)</h3>
             <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;">
               <tr style="background:#f1f5f9;">
-                <th>क्र.</th><th>तारीख</th><th>मद / कैटेगरी</th><th>संबंधित पशु</th><th>विवरण</th><th>माध्यम</th><th>रकम (₹)</th>
+                <th>क्र.</th><th>तारीख</th><th>मद / कैटेगरी</th><th>दुकानदार</th><th>विवरण</th><th>माध्यम</th><th>रकम (₹)</th>
               </tr>
               ${(expenseData || []).length === 0 ? '<tr><td colspan="7" style="text-align:center;">कोई खर्च रिकॉर्ड नहीं</td></tr>' : expenseData.map((e, i) => `
                 <tr>
                   <td style="text-align:center;">${i+1}</td>
                   <td>${e.date || '-'}</td>
                   <td>${e.category || '-'}</td>
-                  <td>${e.animalTag || '-'}</td>
+                  <td>${e.vendorName || '-'}</td>
                   <td>${e.detail || '-'}</td>
                   <td>${e.paymentMode || 'UPI'}</td>
                   <td style="text-align:right;">₹ ${e.amount || 0}</td>
@@ -1862,7 +2194,7 @@
       renderMilk();
       renderExpense();
       renderCattleLists();
-      renderCustomers();
+      renderKhata();
       renderStock();
       renderLabour();
       renderTotals();
@@ -1872,7 +2204,7 @@
     }
 
     function switchTab(t) {
-      ['milk', 'expense', 'labour', 'cattle', 'customer', 'stock'].forEach(tab => {
+      ['milk', 'expense', 'labour', 'cattle', 'khata', 'stock'].forEach(tab => {
         const sec = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
         const btn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
         if (sec) sec.classList.add('hidden');
