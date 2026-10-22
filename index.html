@@ -121,7 +121,7 @@
         <i class="fa-solid fa-bell text-amber-300 text-xl"></i>
         <div>
           <h4 class="font-bold text-xs sm:text-sm text-amber-300">मजदूर वेतन भुगतान चेतावनी</h4>
-          <div id="salaryNotificationList" class="text-xs text-indigo-100 font-semibold"></div>
+          <div id="salaryNotificationList" class="text-xs text-indigo-100 font-semibold space-y-1"></div>
         </div>
       </div>
       <button onclick="dismissSalaryAlert()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs shadow shrink-0">
@@ -271,16 +271,20 @@
       </div>
     </section>
 
-    <!-- TAB 3: LABOUR -->
+    <!-- TAB 3: LABOUR (UPDATED WITH JOINING DATE & ALERT DAYS SETTING) -->
     <section id="tabLabour" class="mt-4 hidden space-y-4">
       <div id="labourAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-slate-800">
-        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-user-plus text-cyan-700"></i> नया मजदूर जोड़ें</h2>
-        <form onsubmit="addLabourProfile(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">नाम</label><input type="text" id="labourName" required placeholder="उदा. कल्लू" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मोबाइल</label><input type="tel" id="labourPhone" required placeholder="9876543210" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">वेतन (₹)</label><input type="number" id="labourSalary" required placeholder="12000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख</label><input type="date" id="labourJoinDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="submit" class="bg-slate-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm">मजदूर सुरक्षित करें</button></div>
+        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-user-plus text-cyan-700"></i> नया मजदूर प्रोफाइल जोड़ें</h2>
+        <form onsubmit="addLabourProfile(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मजदूर का नाम</label><input type="text" id="labourName" required placeholder="उदा. कल्लू राम" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मोबाइल नंबर</label><input type="tel" id="labourPhone" required placeholder="9876543210" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
+          <div><label class="block text-[11px] font-bold text-emerald-800 uppercase mb-1">मासिक वेतन (₹)</label><input type="number" id="labourSalary" required placeholder="12000" class="w-full text-sm border-2 border-emerald-400 bg-emerald-50 rounded-xl p-2.5 font-black text-emerald-950" /></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जॉइनिंग तारीख (Joining Date)</label><input type="date" id="labourJoinDate" required class="w-full text-sm border-2 rounded-xl p-2.5 font-semibold" /></div>
+          <div>
+            <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">वेतन अलर्ट (दिन पूर्व)</label>
+            <input type="number" id="labourAlertDays" required value="3" placeholder="उदा. 3" min="1" max="15" class="w-full text-sm border-2 border-rose-300 bg-rose-50 rounded-xl p-2.5 font-black text-rose-950" />
+          </div>
+          <div class="sm:col-span-2 lg:col-span-5 flex justify-end"><button type="submit" class="bg-slate-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">मजदूर सुरक्षित करें</button></div>
         </form>
       </div>
 
@@ -460,7 +464,7 @@
     </div>
   </div>
 
-  <!-- POPUP: PAYMENT SETTINGS (WITH BANK NAME OPTION) -->
+  <!-- POPUP: PAYMENT SETTINGS -->
   <div id="paymentSettingsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border-4 border-sky-500 space-y-3">
       <div class="flex justify-between items-center border-b pb-2">
@@ -582,7 +586,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script (Auto Daily Feed Deduction + Bank Name Included) -->
+  <!-- Core Script with Accurate Labour Alert Days Support -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -641,7 +645,6 @@
       document.getElementById('stockNotificationBanner').classList.add('hidden');
     }
 
-    // Direct WhatsApp Launcher
     function sendWhatsAppText(phone, textMsg) {
       const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
       if (cleanPhone) {
@@ -1098,7 +1101,7 @@
       });
     }
 
-    // Customer WhatsApp Reminder (INCLUDES BANK NAME SAFELY)
+    // Customer WhatsApp Reminder (INCLUDES BANK NAME)
     function sendWhatsAppReminder(name, bal, phone) {
       const bankNameText = paymentSettings.bankName ? `%0A*बैंक का नाम:* ${paymentSettings.bankName}` : '';
       const upiText = paymentSettings.upiId ? `%0A*UPI ID:* ${paymentSettings.upiId}` : '';
@@ -1317,10 +1320,10 @@
       }
     }
 
-    // AUTOMATIC DAILY DEDUCTION LOGIC (SAFE & CONTROLLED)
+    // AUTOMATIC DAILY DEDUCTION LOGIC
     function checkDailyAutoFeedDeduction() {
       const lastCheck = localStorage.getItem('prajapati_feed_auto_date');
-      if (lastCheck === today) return; // आज पहले ही कट चुका है
+      if (lastCheck === today) return;
 
       if (isAdmin && stockData.length > 0) {
         stockData.forEach(s => {
@@ -1454,32 +1457,87 @@
       renderMilkSummaryStats();
     }
 
+    // ACCURATE LABOUR PROFILE CREATION (WITH USER-SET ALERT DAYS)
     function addLabourProfile(e) {
       e.preventDefault();
       if (!isAdmin) return;
+      
+      const name = document.getElementById('labourName').value.trim();
+      const phone = document.getElementById('labourPhone').value.trim() || '-';
+      const salary = parseFloat(document.getElementById('labourSalary').value) || 0;
+      const joinDate = document.getElementById('labourJoinDate').value;
+      const alertDays = parseInt(document.getElementById('labourAlertDays').value, 10) || 3;
+
       db.ref('labour_profiles').push({
-        name: document.getElementById('labourName').value.trim(),
-        phone: document.getElementById('labourPhone').value.trim() || '-',
-        salary: parseFloat(document.getElementById('labourSalary').value) || 0,
-        joinDate: document.getElementById('labourJoinDate').value,
+        name,
+        phone,
+        salary,
+        joinDate,
+        alertDays,
         timestamp: Date.now()
       }).then(() => {
         document.getElementById('labourName').value = '';
         document.getElementById('labourPhone').value = '';
         document.getElementById('labourSalary').value = '';
-        alert("मजदूर सुरक्षित!");
+        document.getElementById('labourAlertDays').value = '3';
+        alert("✅ मजदूर प्रोफाइल व अलर्ट सेटिंग सुरक्षित!");
       });
+    }
+
+    // REALTIME LABOUR SALARY ALERTS (CHECKS USER-DEFINED DAYS)
+    function checkSalaryAlerts() {
+      const notifBanner = document.getElementById('salaryNotificationBanner');
+      const notifList = document.getElementById('salaryNotificationList');
+      notifList.innerHTML = '';
+      let salaryAlerts = [];
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const currentDate = now.getDate();
+
+      labourProfiles.forEach(labour => {
+        if (!labour.joinDate) return;
+        const jDate = new Date(labour.joinDate);
+        const cycleDay = jDate.getDate();
+        let targetSalaryDate = new Date(currentYear, currentMonth, cycleDay);
+        
+        const thresholdDays = parseInt(labour.alertDays, 10) || 3;
+
+        if (targetSalaryDate < now && Math.abs(currentDate - cycleDay) > thresholdDays) {
+          targetSalaryDate = new Date(currentYear, currentMonth + 1, cycleDay);
+        }
+        
+        const diffDays = Math.ceil((targetSalaryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays >= 0 && diffDays <= thresholdDays) {
+          salaryAlerts.push(`💰 <b>${labour.name}</b> का वेतन <b>₹${labour.salary.toLocaleString('en-IN')}</b> देय है (${diffDays === 0 ? 'आज देय!' : diffDays + ' दिन शेष'})`);
+        }
+      });
+
+      const snz = parseInt(localStorage.getItem('prajapati_sal_snooze') || '0', 10);
+      if (salaryAlerts.length > 0 && isAdmin && Date.now() > snz) {
+        notifList.innerHTML = salaryAlerts.map(msg => `<div>${msg}</div>`).join('');
+        notifBanner.classList.remove('hidden');
+      } else {
+        notifBanner.classList.add('hidden');
+      }
     }
 
     function renderLabour() {
       const c = document.getElementById('labourHeadingList');
       c.innerHTML = '';
       labourProfiles.forEach(l => {
+        const threshold = l.alertDays || 3;
         const pop = `
           <div class="space-y-3 text-xs">
             <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
               <div><h4 class="text-base font-black text-slate-900">${l.name}</h4><p class="text-slate-500 font-bold">${l.phone}</p></div>
               <span class="text-emerald-900 font-black text-sm">₹${l.salary}/माह</span>
+            </div>
+            <div class="p-2.5 bg-slate-50 rounded-xl border space-y-1">
+              <div><b>जॉइनिंग तारीख:</b> ${l.joinDate}</div>
+              <div><b>वेतन चक्र:</b> हर महीने की ${new Date(l.joinDate).getDate()} तारीख</div>
+              <div><b>अलर्ट सेटिंग:</b> ${threshold} दिन पूर्व</div>
             </div>
             <div class="flex gap-2">
               <a href="tel:${l.phone}" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-solid fa-phone"></i> कॉल करें</a>
@@ -1491,12 +1549,13 @@
 
         c.innerHTML += `
           <div onclick="openUniversalModal('${l.name}', 'वेतन: ₹${l.salary}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-slate-700 transition">
-            <div><h4 class="font-bold text-slate-900">${l.name}</h4><p class="text-[10px] text-slate-500">${l.phone}</p></div>
+            <div><h4 class="font-bold text-slate-900">${l.name}</h4><p class="text-[10px] text-slate-500">${l.phone} • अलर्ट: ${threshold} दिन पूर्व</p></div>
             <span class="font-bold text-emerald-950">₹${l.salary}/माह</span>
           </div>
         `;
       });
       document.getElementById('labourRecordCount').innerText = labourProfiles.length;
+      checkSalaryAlerts();
     }
 
     function addCustomerPayment(e) {
@@ -1514,6 +1573,7 @@
       });
     }
 
+    // FIXED & LOCKED: Setup Cost Add & Calculation
     function addSetupCostItem(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1623,6 +1683,7 @@
       }
     }
 
+    // COMPLETE 5-SECTION MASTER PDF PRINT (SAFE & RELIABLE)
     function printOverallMasterReport() {
       try {
         const printDiv = document.getElementById('printableArea');
@@ -1755,15 +1816,16 @@
             <h3 style="font-size:13px; font-weight:bold; margin-bottom:6px;">५. पंजीकृत मजदूर सूची (${(labourProfiles || []).length} मजदूर)</h3>
             <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px;">
               <tr style="background:#f1f5f9;">
-                <th>क्र.</th><th>नाम</th><th>मोबाइल नंबर</th><th>मासिक वेतन (₹)</th><th>जॉइनिंग तारीख</th>
+                <th>क्र.</th><th>नाम</th><th>मोबाइल नंबर</th><th>मासिक वेतन (₹)</th><th>जॉइनिंग तारीख</th><th>अलर्ट दिन पूर्व</th>
               </tr>
-              ${(labourProfiles || []).length === 0 ? '<tr><td colspan="5" style="text-align:center;">कोई मजदूर पंजीकृत नहीं</td></tr>' : labourProfiles.map((l, i) => `
+              ${(labourProfiles || []).length === 0 ? '<tr><td colspan="6" style="text-align:center;">कोई मजदूर पंजीकृत नहीं</td></tr>' : labourProfiles.map((l, i) => `
                 <tr>
                   <td style="text-align:center;">${i+1}</td>
                   <td><b>${l.name || '-'}</b></td>
                   <td>${l.phone || '-'}</td>
                   <td>₹ ${l.salary || 0} / माह</td>
                   <td>${l.joinDate || '-'}</td>
+                  <td style="text-align:center;">${l.alertDays || 3} दिन</td>
                 </tr>
               `).join('')}
             </table>
