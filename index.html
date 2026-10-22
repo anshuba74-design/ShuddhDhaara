@@ -150,38 +150,32 @@
   <main class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 no-print">
     <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none justify-between sm:justify-start">
       <div class="flex items-center gap-2">
-        <!-- Tab 1: Milk -->
         <button onclick="switchTab('milk')" id="tabMilkBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
           <i class="fa-solid fa-bottle-droplet text-base"></i>
           <span>दूध बिक्री</span>
         </button>
 
-        <!-- Tab 2: Expense -->
         <button onclick="switchTab('expense')" id="tabExpenseBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
           <i class="fa-solid fa-wallet text-base"></i>
           <span>खर्च / हिसाब</span>
         </button>
 
-        <!-- Tab 3: Labour -->
         <button onclick="switchTab('labour')" id="tabLabourBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
           <i class="fa-solid fa-user-group text-base"></i>
           <span>मजदूर</span>
         </button>
 
-        <!-- Tab 4: Cattle -->
         <button onclick="switchTab('cattle')" id="tabCattleBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
           <i class="fa-solid fa-cow text-base"></i>
           <span>पशु व बछड़ा</span>
         </button>
 
-        <!-- Tab 5: Stock -->
         <button onclick="switchTab('stock')" id="tabStockBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
           <i class="fa-solid fa-wheat-awn text-base"></i>
           <span>चारा स्टॉक</span>
         </button>
       </div>
 
-      <!-- Tab 6: Khata (Right-aligned) -->
       <button onclick="switchTab('khata')" id="tabKhataBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 ml-auto sm:ml-4 shadow-sm border-2">
         <i class="fa-solid fa-book-bookmark text-base"></i>
         <span>उधारी बहीखाता</span>
@@ -218,7 +212,7 @@
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक नाम (सर्च / चुनें)</label>
               <div class="relative">
                 <input type="text" id="milkCustomer" autocomplete="off" onfocus="showCustomerDropdown()" oninput="filterCustomerDropdown(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 pr-9 font-bold" />
-                <button type="button" onmousedown="event.preventDefault(); toggleCustomerDropdownOnly('milkCustomerSuggestions', 'milkCustomer');" class="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-emerald-700 flex items-center justify-center cursor-pointer">
+                <button type="button" onmousedown="event.preventDefault(); toggleGenericDropdown('milkCustomerSuggestions', 'milkCustomer', filterCustomerDropdown);" class="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-emerald-700 flex items-center justify-center cursor-pointer">
                   <i class="fa-solid fa-chevron-down text-xs"></i>
                 </button>
               </div>
@@ -253,10 +247,10 @@
       </div>
     </section>
 
-    <!-- TAB 2: EXPENSES (WITH PROPER VENDOR AUTOCOMPLETE DROPDOWN) -->
+    <!-- TAB 2: EXPENSES (WITHOUT VENDOR PAID OPTION) -->
     <section id="tabExpense" class="mt-4 hidden space-y-4">
       <div id="expAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-purple-600">
-        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wallet text-purple-700"></i> खर्च / उधारी भुगतान दर्ज करें</h2>
+        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wallet text-purple-700"></i> फार्म नियमित खर्च दर्ज करें</h2>
         <form onsubmit="addExpenseEntry(event)" class="space-y-3">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="expDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
@@ -265,7 +259,6 @@
               <select id="expCategory" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
                 <option value="चारा / खली / दाना (Feed)">चारा / खली / दाना</option>
                 <option value="दवाई व डॉक्टर (Medical)">दवाई व डॉक्टर (Medical)</option>
-                <option value="दुकानदार उधारी चुकाई (Vendor Paid)">दुकानदार उधारी चुकाई (Paid)</option>
                 <option value="मजदूर एडवांस (Advance)">मजदूर एडवांस</option>
                 <option value="मासिक वेतन भुगतान">मासिक वेतन</option>
                 <option value="डीजल / बिजली बिल">डीजल / बिजली</option>
@@ -274,7 +267,12 @@
             </div>
             <div class="relative">
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दुकानदार / सप्लायर (सर्च / चुनें)</label>
-              <input type="text" id="expVendorName" autocomplete="off" onfocus="showVendorDropdown()" oninput="filterVendorDropdown(this.value)" placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" />
+              <div class="relative">
+                <input type="text" id="expVendorName" autocomplete="off" onfocus="showVendorDropdown()" oninput="filterVendorDropdown(this.value)" placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 pr-9 font-bold" />
+                <button type="button" onmousedown="event.preventDefault(); toggleGenericDropdown('vendorSuggestions', 'expVendorName', filterVendorDropdown);" class="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-purple-700 flex items-center justify-center cursor-pointer">
+                  <i class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+              </div>
               <div id="vendorSuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-purple-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
             </div>
             <div>
@@ -285,7 +283,7 @@
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान विवरण</label><input type="text" id="expDetail" required placeholder="उदा. 2 बोरी चोकर या उधारी का भुगतान" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+            <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">सामान विवरण</label><input type="text" id="expDetail" required placeholder="उदा. 2 बोरी चोकर या दवाई" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
             <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">रकम (₹)</label><input type="number" id="expAmount" required placeholder="0" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
             <div>
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान माध्यम</label>
@@ -296,7 +294,7 @@
               </select>
             </div>
           </div>
-          <div class="flex justify-end"><button type="submit" class="bg-purple-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">खर्च / भुगतान सेव करें</button></div>
+          <div class="flex justify-end"><button type="submit" class="bg-purple-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">खर्च सेव करें</button></div>
         </form>
       </div>
 
@@ -385,7 +383,16 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री तारीख</label><input type="date" id="saleAnimalDate" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु / बच्चा चुनें</label><select id="saleSelectableAnimal" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold bg-white text-rose-800"></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खरीदार</label><input type="text" id="saleBuyerName" placeholder="उदा. रमेश व्यापारी" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+          <div class="relative">
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">खरीदार नाम (सर्च / चुनें)</label>
+            <div class="relative">
+              <input type="text" id="saleBuyerName" autocomplete="off" onfocus="showBuyerDropdown()" oninput="filterBuyerDropdown(this.value)" placeholder="उदा. रमेश व्यापारी" class="w-full text-sm border-2 rounded-xl p-2.5 pr-9 font-bold" />
+              <button type="button" onmousedown="event.preventDefault(); toggleGenericDropdown('saleBuyerSuggestions', 'saleBuyerName', filterBuyerDropdown);" class="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-emerald-700 flex items-center justify-center cursor-pointer">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </button>
+            </div>
+            <div id="saleBuyerSuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-emerald-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
+          </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री रकम (₹)</label><input type="number" id="saleAnimalAmount" placeholder="75000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
           <div class="sm:col-span-2 lg:col-span-4 flex justify-end"><button type="button" onclick="saveDirectSellAnimal()" class="bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">पशु बेचें व आर्काइव करें</button></div>
         </div>
@@ -423,7 +430,7 @@
       </div>
     </section>
 
-    <!-- TAB 6: ADVANCED BahiKhata / Ledger (RIGHT-MOST POSITION) -->
+    <!-- TAB 6: ADVANCED BahiKhata / Ledger (WITH BOTH CUSTOMER & VENDOR SETTLEMENTS + PROOF PIC) -->
     <section id="tabKhata" class="mt-4 hidden space-y-4">
       <!-- 3 Summary Overview Cards -->
       <div class="grid grid-cols-3 gap-2 text-center">
@@ -441,31 +448,86 @@
         </div>
       </div>
 
-      <!-- Quick Payment Entries Area (Customer Payment) -->
-      <div id="custAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-indigo-600">
-        <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-indigo-700"></i> ग्राहक से रुपया जमा दर्ज करें</h2>
-        <form onsubmit="addCustomerPayment(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="custPayDate" required class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
-          <div class="relative">
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक का नाम (सर्च / चुनें)</label>
-            <div class="relative">
-              <input type="text" id="custPayName" autocomplete="off" onfocus="showCustomerDropdown2()" oninput="filterCustomerDropdown2(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-sm border-2 rounded-xl p-2.5 pr-9 font-bold" />
-              <button type="button" onmousedown="event.preventDefault(); toggleCustomerDropdownOnly('custPaySuggestions', 'custPayName');" class="absolute right-0 top-0 bottom-0 px-3 text-slate-500 hover:text-indigo-700 flex items-center justify-center cursor-pointer">
-                <i class="fa-solid fa-chevron-down text-xs"></i>
-              </button>
+      <!-- Action Forms Wrapper (Customer Received & Vendor Paid) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- Card 1: Customer Payment Received -->
+        <div id="custAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-indigo-600 space-y-3">
+          <h2 class="font-extrabold text-slate-900 text-sm mb-1 flex items-center gap-2"><i class="fa-solid fa-hand-holding-dollar text-indigo-700"></i> ग्राहक से रुपया जमा दर्ज करें</h2>
+          <form onsubmit="addCustomerPayment(event)" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="custPayDate" required class="w-full text-xs border-2 rounded-xl p-2.5" /></div>
+              <div class="relative">
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ग्राहक नाम (सर्च / चुनें)</label>
+                <div class="relative">
+                  <input type="text" id="custPayName" autocomplete="off" onfocus="showCustomerDropdown2()" oninput="filterCustomerDropdown2(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-xs border-2 rounded-xl p-2.5 pr-8 font-bold" />
+                  <button type="button" onmousedown="event.preventDefault(); toggleGenericDropdown('custPaySuggestions', 'custPayName', filterCustomerDropdown2);" class="absolute right-0 top-0 bottom-0 px-2.5 text-slate-500 hover:text-indigo-700 flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                  </button>
+                </div>
+                <div id="custPaySuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-indigo-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
+              </div>
             </div>
-            <div id="custPaySuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-indigo-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
-          </div>
-          <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label><input type="number" id="custPayAmount" required placeholder="उदा. 700" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माध्यम</label>
-            <select id="custPayMode" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold">
-              <option value="PhonePe / UPI">PhonePe / UPI</option>
-              <option value="नकद (Cash)">नकद (Cash)</option>
-            </select>
-          </div>
-          <div class="sm:col-span-4 flex justify-end"><button type="submit" class="bg-indigo-900 hover:bg-indigo-950 text-white font-bold py-2.5 px-6 rounded-xl text-sm shadow">जमा सुरक्षित करें</button></div>
-        </form>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जमा रकम (₹)</label><input type="number" id="custPayAmount" required placeholder="उदा. 700" class="w-full text-xs border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान माध्यम</label>
+                <select id="custPayMode" class="w-full text-xs border-2 rounded-xl p-2.5 bg-white font-bold">
+                  <option value="PhonePe / UPI">PhonePe / UPI</option>
+                  <option value="नकद (Cash)">नकद (Cash)</option>
+                  <option value="बैंक ट्रांसफर (NEFT/IMPS)">बैंक ट्रांसफर</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1"><i class="fa-solid fa-camera mr-1"></i> रसीद / स्क्रीनशॉट प्रूफ फोटो (वैकल्पिक)</label>
+              <input type="file" id="custPayProofFile" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-100 file:text-indigo-900 border rounded-xl p-1 bg-slate-50" />
+            </div>
+
+            <div class="flex justify-end pt-1"><button type="submit" id="custPaySubmitBtn" class="bg-indigo-900 hover:bg-indigo-950 text-white font-bold py-2 px-5 rounded-xl text-xs shadow">ग्राहक जमा सुरक्षित करें</button></div>
+          </form>
+        </div>
+
+        <!-- Card 2: Vendor Due Paid (Shifted from Expense) -->
+        <div id="vendorAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-rose-600 space-y-3">
+          <h2 class="font-extrabold text-slate-900 text-sm mb-1 flex items-center gap-2"><i class="fa-solid fa-money-bill-transfer text-rose-600"></i> दुकानदार को उधारी चुकाई दर्ज करें</h2>
+          <form onsubmit="addVendorPaymentSettlement(event)" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">तारीख</label><input type="date" id="vendorPayDate" required class="w-full text-xs border-2 rounded-xl p-2.5" /></div>
+              <div class="relative">
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दुकानदार नाम (सर्च / चुनें)</label>
+                <div class="relative">
+                  <input type="text" id="vendorPayName" autocomplete="off" onfocus="showVendorDropdown2()" oninput="filterVendorDropdown2(this.value)" required placeholder="टाइप करें या चुनें..." class="w-full text-xs border-2 rounded-xl p-2.5 pr-8 font-bold" />
+                  <button type="button" onmousedown="event.preventDefault(); toggleGenericDropdown('vendorPaySuggestions', 'vendorPayName', filterVendorDropdown2);" class="absolute right-0 top-0 bottom-0 px-2.5 text-slate-500 hover:text-rose-700 flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                  </button>
+                </div>
+                <div id="vendorPaySuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-rose-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">चुकाई गई रकम (₹)</label><input type="number" id="vendorPayAmount" required placeholder="उदा. 1500" class="w-full text-xs border-2 rounded-xl p-2.5 font-bold text-rose-950" /></div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">भुगतान माध्यम</label>
+                <select id="vendorPayMode" class="w-full text-xs border-2 rounded-xl p-2.5 bg-white font-bold">
+                  <option value="PhonePe / UPI">PhonePe / UPI</option>
+                  <option value="नकद (Cash)">नकद (Cash)</option>
+                  <option value="बैंक ट्रांसफर">बैंक ट्रांसफर</option>
+                </select>
+              </div>
+              <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">टिप्पणी / विवरण</label><input type="text" id="vendorPayDetail" placeholder="उदा. पुरानी उधारी चुकता की" class="w-full text-xs border-2 rounded-xl p-2.5" /></div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-rose-900 uppercase mb-1"><i class="fa-solid fa-camera mr-1"></i> रसीद / पर्ची प्रूफ फोटो (वैकल्पिक)</label>
+              <input type="file" id="vendorPayProofFile" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-rose-100 file:text-rose-900 border rounded-xl p-1 bg-slate-50" />
+            </div>
+
+            <div class="flex justify-end pt-1"><button type="submit" id="vendorPaySubmitBtn" class="bg-rose-800 hover:bg-rose-900 text-white font-bold py-2 px-5 rounded-xl text-xs shadow">दुकानदार भुगतान सुरक्षित करें</button></div>
+          </form>
+        </div>
       </div>
 
       <!-- 2 Side-by-Side Ledgers -->
@@ -491,7 +553,7 @@
     </section>
   </main>
 
-  <!-- UNIVERSAL DETAIL MODAL (WITH LIVE TIME PASSBOOK & EDIT/DELETE ICONS) -->
+  <!-- UNIVERSAL DETAIL MODAL (WITH LIVE TIME PASSBOOK, PROOF PREVIEW & EDIT/DELETE ICONS) -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-slate-800 flex flex-col max-h-[90vh]">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between border-b shrink-0">
@@ -499,6 +561,17 @@
         <button onclick="closeUniversalModal()" class="w-8 h-8 rounded-full bg-rose-600 text-white font-black text-sm">✕</button>
       </div>
       <div id="universalModalContent" class="p-4 overflow-y-auto space-y-3"></div>
+    </div>
+  </div>
+
+  <!-- PROOF IMAGE PREVIEW MODAL -->
+  <div id="proofImageModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4 no-print">
+    <div class="relative bg-white rounded-3xl p-4 max-w-md w-full shadow-2xl border-4 border-amber-400 text-center">
+      <button onclick="closeProofImageModal()" class="absolute -top-3 -right-3 w-8 h-8 bg-rose-600 text-white rounded-full flex items-center justify-center font-black">✕</button>
+      <h3 class="font-extrabold text-slate-900 text-sm mb-2" id="proofModalTitle">रसीद / भुगतान प्रमाण</h3>
+      <div class="w-full max-h-[70vh] rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center border">
+        <img id="proofModalImg" src="" alt="Payment Proof" class="w-full h-auto object-contain max-h-[65vh]" />
+      </div>
     </div>
   </div>
 
@@ -670,7 +743,7 @@
 
   <div id="printableArea" class="hidden"></div>
 
-  <!-- Core Script with Interactive Dropdowns, Inline Edit/Delete & Live Passbook -->
+  <!-- Core Script with Interactive Dropdowns, Proof Pic Upload & 2-Way Ledger -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDUzWlps8peG5X9_-uOT_3HLB_dsVDh97I",
@@ -715,6 +788,7 @@
     document.getElementById('expDate').value = today;
     document.getElementById('labourJoinDate').value = today;
     document.getElementById('custPayDate').value = today;
+    document.getElementById('vendorPayDate').value = today;
     document.getElementById('calfBirthDate').value = today;
     document.getElementById('saleAnimalDate').value = today;
     document.getElementById('catBuyDate').value = today;
@@ -745,12 +819,54 @@
       return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
     }
 
-    // ==================== INTERACTIVE AUTOCOMPLETE DROPDOWNS ====================
+    // Convert file to base64 with safe image compression
+    function readFileAsCompressedBase64(file, callback) {
+      if (!file) { callback(null); return; }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.65);
+          callback(dataUrl);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function openProofImageModal(imgSrc, title) {
+      if (!imgSrc) return;
+      document.getElementById('proofModalImg').src = imgSrc;
+      document.getElementById('proofModalTitle').innerText = title || "रसीद / भुगतान प्रमाण";
+      document.getElementById('proofImageModal').classList.remove('hidden');
+    }
+    function closeProofImageModal() {
+      document.getElementById('proofImageModal').classList.add('hidden');
+    }
+
+    // ==================== DROPDOWN LIST HELPERS ====================
     function getUniqueVendors() {
       const set = new Set();
       expenseData.forEach(e => {
         const v = (e.vendorName || '').trim();
-        if (v) set.add(v);
+        if (v && v !== 'अन्य दुकानदार') set.add(v);
       });
       return Array.from(set);
     }
@@ -768,20 +884,38 @@
       return Array.from(set);
     }
 
-    function showVendorDropdown() {
-      filterVendorDropdown(document.getElementById('expVendorName').value);
+    function getUniqueBuyers() {
+      const set = new Set();
+      animalSaleData.forEach(a => {
+        const b = (a.buyer || '').trim();
+        if (b) set.add(b);
+      });
+      soldArchiveData.forEach(a => {
+        const b = (a.buyer || '').trim();
+        if (b) set.add(b);
+      });
+      return Array.from(set);
     }
 
+    function toggleGenericDropdown(boxId, inputId, filterFn) {
+      const box = document.getElementById(boxId);
+      if (!box) return;
+      if (box.classList.contains('hidden')) {
+        const inp = document.getElementById(inputId);
+        const val = inp ? inp.value : '';
+        filterFn(val);
+      } else {
+        box.classList.add('hidden');
+      }
+    }
+
+    // Vendor Dropdowns
+    function showVendorDropdown() { filterVendorDropdown(document.getElementById('expVendorName').value); }
     function filterVendorDropdown(val) {
       const box = document.getElementById('vendorSuggestions');
       const list = getUniqueVendors();
       const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
-
-      if (filtered.length === 0) {
-        box.classList.add('hidden');
-        return;
-      }
-
+      if (filtered.length === 0) { box.classList.add('hidden'); return; }
       box.innerHTML = filtered.map(name => `
         <div onclick="selectVendorName('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-purple-100 cursor-pointer transition">
           <i class="fa-solid fa-shop text-purple-600 mr-2"></i> ${name}
@@ -789,26 +923,36 @@
       `).join('');
       box.classList.remove('hidden');
     }
-
     function selectVendorName(name) {
       document.getElementById('expVendorName').value = name;
       document.getElementById('vendorSuggestions').classList.add('hidden');
     }
 
-    function showCustomerDropdown() {
-      filterCustomerDropdown(document.getElementById('milkCustomer').value);
+    function showVendorDropdown2() { filterVendorDropdown2(document.getElementById('vendorPayName').value); }
+    function filterVendorDropdown2(val) {
+      const box = document.getElementById('vendorPaySuggestions');
+      const list = getUniqueVendors();
+      const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
+      if (filtered.length === 0) { box.classList.add('hidden'); return; }
+      box.innerHTML = filtered.map(name => `
+        <div onclick="selectVendorName2('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-rose-100 cursor-pointer transition">
+          <i class="fa-solid fa-shop text-rose-600 mr-2"></i> ${name}
+        </div>
+      `).join('');
+      box.classList.remove('hidden');
+    }
+    function selectVendorName2(name) {
+      document.getElementById('vendorPayName').value = name;
+      document.getElementById('vendorPaySuggestions').classList.add('hidden');
     }
 
+    // Customer Dropdowns
+    function showCustomerDropdown() { filterCustomerDropdown(document.getElementById('milkCustomer').value); }
     function filterCustomerDropdown(val) {
       const box = document.getElementById('milkCustomerSuggestions');
       const list = getUniqueCustomers();
       const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
-
-      if (filtered.length === 0) {
-        box.classList.add('hidden');
-        return;
-      }
-
+      if (filtered.length === 0) { box.classList.add('hidden'); return; }
       box.innerHTML = filtered.map(name => `
         <div onclick="selectCustomerName('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-emerald-100 cursor-pointer transition">
           <i class="fa-solid fa-user text-emerald-600 mr-2"></i> ${name}
@@ -816,26 +960,17 @@
       `).join('');
       box.classList.remove('hidden');
     }
-
     function selectCustomerName(name) {
       document.getElementById('milkCustomer').value = name;
       document.getElementById('milkCustomerSuggestions').classList.add('hidden');
     }
 
-    function showCustomerDropdown2() {
-      filterCustomerDropdown2(document.getElementById('custPayName').value);
-    }
-
+    function showCustomerDropdown2() { filterCustomerDropdown2(document.getElementById('custPayName').value); }
     function filterCustomerDropdown2(val) {
       const box = document.getElementById('custPaySuggestions');
       const list = getUniqueCustomers();
       const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
-
-      if (filtered.length === 0) {
-        box.classList.add('hidden');
-        return;
-      }
-
+      if (filtered.length === 0) { box.classList.add('hidden'); return; }
       box.innerHTML = filtered.map(name => `
         <div onclick="selectCustomerName2('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-indigo-100 cursor-pointer transition">
           <i class="fa-solid fa-user text-indigo-600 mr-2"></i> ${name}
@@ -843,34 +978,46 @@
       `).join('');
       box.classList.remove('hidden');
     }
-
     function selectCustomerName2(name) {
       document.getElementById('custPayName').value = name;
       document.getElementById('custPaySuggestions').classList.add('hidden');
     }
 
-    function toggleCustomerDropdownOnly(dropdownId, inputId) {
-      const box = document.getElementById(dropdownId);
-      if (!box) return;
-      if (box.classList.contains('hidden')) {
-        const inp = document.getElementById(inputId);
-        const val = inp ? inp.value : '';
-        if (inputId === 'milkCustomer') filterCustomerDropdown(val);
-        else filterCustomerDropdown2(val);
-      } else {
-        box.classList.add('hidden');
-      }
+    // Buyer Dropdown
+    function showBuyerDropdown() { filterBuyerDropdown(document.getElementById('saleBuyerName').value); }
+    function filterBuyerDropdown(val) {
+      const box = document.getElementById('saleBuyerSuggestions');
+      const list = getUniqueBuyers();
+      const filtered = list.filter(n => n.toLowerCase().includes((val || '').trim().toLowerCase()));
+      if (filtered.length === 0) { box.classList.add('hidden'); return; }
+      box.innerHTML = filtered.map(name => `
+        <div onclick="selectBuyerName('${name.replace(/'/g, "\\'")}')" class="p-2.5 text-xs font-bold text-slate-800 hover:bg-emerald-100 cursor-pointer transition">
+          <i class="fa-solid fa-user-tag text-emerald-600 mr-2"></i> ${name}
+        </div>
+      `).join('');
+      box.classList.remove('hidden');
+    }
+    function selectBuyerName(name) {
+      document.getElementById('saleBuyerName').value = name;
+      document.getElementById('saleBuyerSuggestions').classList.add('hidden');
     }
 
+    // Close dropdowns on outside click
     document.addEventListener('click', e => {
-      if (!e.target.closest('#expVendorName') && !e.target.closest('#vendorSuggestions')) {
+      if (!e.target.closest('#expVendorName') && !e.target.closest('#vendorSuggestions') && !e.target.closest('button[onmousedown*="vendorSuggestions"]')) {
         document.getElementById('vendorSuggestions')?.classList.add('hidden');
+      }
+      if (!e.target.closest('#vendorPayName') && !e.target.closest('#vendorPaySuggestions') && !e.target.closest('button[onmousedown*="vendorPaySuggestions"]')) {
+        document.getElementById('vendorPaySuggestions')?.classList.add('hidden');
       }
       if (!e.target.closest('#milkCustomer') && !e.target.closest('#milkCustomerSuggestions') && !e.target.closest('button[onmousedown*="milkCustomerSuggestions"]')) {
         document.getElementById('milkCustomerSuggestions')?.classList.add('hidden');
       }
       if (!e.target.closest('#custPayName') && !e.target.closest('#custPaySuggestions') && !e.target.closest('button[onmousedown*="custPaySuggestions"]')) {
         document.getElementById('custPaySuggestions')?.classList.add('hidden');
+      }
+      if (!e.target.closest('#saleBuyerName') && !e.target.closest('#saleBuyerSuggestions') && !e.target.closest('button[onmousedown*="saleBuyerSuggestions"]')) {
+        document.getElementById('saleBuyerSuggestions')?.classList.add('hidden');
       }
     });
 
@@ -899,7 +1046,7 @@
       db.ref(nodePath + '/' + recordId).update({
         amount: newAmount,
         detail: newDetail || oldDetail,
-        total: newAmount, // For milk
+        total: newAmount,
         editedAt: Date.now()
       }).then(() => {
         alert("✅ एंट्री सफलतापूर्वक सुधारी गई!");
@@ -943,7 +1090,7 @@
       const setupAdminArea = document.getElementById('setupCostAdminForm');
       const logoAdminArea = document.getElementById('adminLogoChangeArea');
 
-      const adminForms = ['milkAdminForm', 'expAdminForm', 'labourAdminForm', 'catAdminForm', 'calfAdminForm', 'sellAnimalAdminForm', 'custAdminForm', 'stockAdminForm'];
+      const adminForms = ['milkAdminForm', 'expAdminForm', 'labourAdminForm', 'catAdminForm', 'calfAdminForm', 'sellAnimalAdminForm', 'custAdminForm', 'vendorAdminForm', 'stockAdminForm'];
 
       if (isAdmin) {
         badge.innerText = "Admin Active";
@@ -1018,13 +1165,12 @@
       if (!isAdmin) return;
       const file = event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        db.ref('cloud_dairy_logo').set(e.target.result).then(() => {
+      readFileAsCompressedBase64(file, dataUrl => {
+        if (!dataUrl) return;
+        db.ref('cloud_dairy_logo').set(dataUrl).then(() => {
           alert("लोगो सुरक्षित हो गया!");
         });
-      };
-      reader.readAsDataURL(file);
+      });
     }
 
     function removeCloudLogo() {
@@ -1160,10 +1306,7 @@
       const buyCostVal = parseFloat(document.getElementById('catBuyCost').value) || 0;
       const aiDateVal = document.getElementById('catAiDate').value || '';
 
-      if (!tagVal) {
-        alert("कृपया टैग संख्या दर्ज करें!");
-        return;
-      }
+      if (!tagVal) { alert("कृपया टैग संख्या दर्ज करें!"); return; }
 
       if (Array.isArray(cattleData) && cattleData.length > 0) {
         const duplicate = cattleData.find(c => c && c.tag === tagVal && c.categoryType === catType && c.id !== editId);
@@ -1190,16 +1333,9 @@
 
       if (editId) {
         db.ref('cattle_records/' + editId).update(pashuPayload)
-          .then(() => {
-            alert("✅ पशु विवरण सफलतापूर्वक अपडेट हो गया!");
-            cancelCattleEdit();
-          })
-          .catch(err => {
-            alert("Firebase त्रुटि: " + err.message);
-          })
-          .finally(() => {
-            if (btn) { btn.disabled = false; btn.innerText = "सुरक्षित करें"; }
-          });
+          .then(() => { alert("✅ पशु विवरण सफलतापूर्वक अपडेट हो गया!"); cancelCattleEdit(); })
+          .catch(err => alert("Firebase त्रुटि: " + err.message))
+          .finally(() => { if (btn) { btn.disabled = false; btn.innerText = "सुरक्षित करें"; } });
       } else {
         db.ref('cattle_records').push(pashuPayload)
           .then(() => {
@@ -1208,12 +1344,8 @@
             document.getElementById('catDailyMilk').value = '';
             document.getElementById('catBuyCost').value = '';
           })
-          .catch(err => {
-            alert("Firebase त्रुटि: " + err.message);
-          })
-          .finally(() => {
-            if (btn) { btn.disabled = false; btn.innerText = "सुरक्षित करें"; }
-          });
+          .catch(err => alert("Firebase त्रुटि: " + err.message))
+          .finally(() => { if (btn) { btn.disabled = false; btn.innerText = "सुरक्षित करें"; } });
       }
     }
 
@@ -1301,7 +1433,6 @@
       });
     }
 
-    // Vet Doctor Contact Logic
     function toggleVetAddForm() {
       const form = document.getElementById('vetAdminAddForm');
       const isHidden = form.classList.contains('hidden');
@@ -1390,6 +1521,7 @@
           mode: m.paymentStatus || 'उधारी',
           amount: parseFloat(m.total) || 0,
           type: 'debit',
+          proofPic: m.proofPic || null,
           timestamp: m.timestamp || new Date(m.date).getTime()
         });
       });
@@ -1407,6 +1539,7 @@
           mode: p.mode || 'PhonePe / UPI',
           amount: parseFloat(p.amount) || 0,
           type: 'credit',
+          proofPic: p.proofPic || null,
           timestamp: p.timestamp || new Date(p.date).getTime()
         });
       });
@@ -1416,7 +1549,7 @@
       expenseData.forEach(e => {
         let vName = (e.vendorName || '').trim();
         const isVendorDue = e.paymentMode === 'दुकानदार उधारी (Vendor Due)';
-        const isVendorPaid = e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)';
+        const isVendorPaid = e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)' || e.isVendorSettlement === true;
 
         if (!vName && (isVendorDue || isVendorPaid)) {
           vName = 'अन्य दुकानदार';
@@ -1435,6 +1568,7 @@
             mode: e.paymentMode || 'नकद',
             amount: parseFloat(e.amount) || 0,
             type: 'paid',
+            proofPic: e.proofPic || null,
             timestamp: e.timestamp || new Date(e.date).getTime()
           });
         } else if (isVendorDue) {
@@ -1447,6 +1581,7 @@
             mode: 'उधारी',
             amount: parseFloat(e.amount) || 0,
             type: 'due',
+            proofPic: e.proofPic || null,
             timestamp: e.timestamp || new Date(e.date).getTime()
           });
         }
@@ -1537,7 +1672,7 @@
       }
     }
 
-    // CUSTOMER PASSBOOK POPUP WITH INLINE EDIT & DELETE BUTTONS
+    // CUSTOMER PASSBOOK POPUP WITH INLINE PROOF PIC PREVIEW
     function openCustomerPassbook(customerName) {
       let entries = [];
       let totalBill = 0, totalPaid = 0, phone = '';
@@ -1554,6 +1689,7 @@
             mode: m.paymentStatus || 'उधारी',
             amount: parseFloat(m.total) || 0,
             type: 'debit',
+            proofPic: m.proofPic || null,
             timestamp: m.timestamp || new Date(m.date).getTime()
           });
         }
@@ -1570,6 +1706,7 @@
             mode: p.mode || 'PhonePe / UPI',
             amount: parseFloat(p.amount) || 0,
             type: 'credit',
+            proofPic: p.proofPic || null,
             timestamp: p.timestamp || new Date(p.date).getTime()
           });
         }
@@ -1583,8 +1720,14 @@
         if (e.type === 'debit') runningBal += e.amount;
         else runningBal -= e.amount;
 
+        const proofBtn = e.proofPic ? `
+          <button onclick="openProofImageModal('${e.proofPic}', '${customerName} - रसीद प्रमाण')" class="text-indigo-600 hover:text-indigo-800 ml-1.5 inline-flex items-center gap-0.5 text-[10px] font-bold bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">
+            <i class="fa-solid fa-image"></i> फोटो
+          </button>
+        ` : '';
+
         const actionBtns = isAdmin ? `
-          <div class="inline-flex items-center gap-1.5 ml-2">
+          <div class="inline-flex items-center gap-1.5 ml-1.5">
             <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${customerName.replace(/'/g, "\\'")}', false)" title="एडिट करें" class="text-amber-600 hover:text-amber-800 p-1">
               <i class="fa-solid fa-pen text-[10px]"></i>
             </button>
@@ -1597,7 +1740,10 @@
         rowsHtml += `
           <tr class="border-b text-[11px]">
             <td class="p-2 font-semibold">${formatDateTime(e.timestamp)}</td>
-            <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
+            <td class="p-2">
+              <b>${e.title}</b> ${proofBtn}<br>
+              <span class="text-[9px] text-slate-400">${e.mode}</span>
+            </td>
             <td class="p-2 text-right font-bold ${e.type === 'credit' ? 'text-emerald-700' : 'text-rose-700'}">
               ${e.type === 'credit' ? '- ₹' + e.amount : '+ ₹' + e.amount}
             </td>
@@ -1642,7 +1788,7 @@
       openUniversalModal("ग्राहक पासबुक विवरण", customerName, html);
     }
 
-    // VENDOR PASSBOOK POPUP WITH INLINE EDIT & DELETE BUTTONS
+    // VENDOR PASSBOOK POPUP WITH INLINE PROOF PIC PREVIEW
     function openVendorPassbook(vendorName) {
       let entries = [];
       let totalDue = 0, totalPaid = 0;
@@ -1650,7 +1796,7 @@
       expenseData.forEach(e => {
         let vName = (e.vendorName || '').trim();
         const isVendorDue = e.paymentMode === 'दुकानदार उधारी (Vendor Due)';
-        const isVendorPaid = e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)';
+        const isVendorPaid = e.category === 'दुकानदार उधारी चुकाई (Vendor Paid)' || e.isVendorSettlement === true;
 
         if (!vName && (isVendorDue || isVendorPaid)) {
           vName = 'अन्य दुकानदार';
@@ -1667,6 +1813,7 @@
               mode: e.paymentMode || 'नकद',
               amount: parseFloat(e.amount) || 0,
               type: 'paid',
+              proofPic: e.proofPic || null,
               timestamp: e.timestamp || new Date(e.date).getTime()
             });
           } else if (isVendorDue) {
@@ -1679,6 +1826,7 @@
               mode: 'उधारी',
               amount: parseFloat(e.amount) || 0,
               type: 'due',
+              proofPic: e.proofPic || null,
               timestamp: e.timestamp || new Date(e.date).getTime()
             });
           }
@@ -1693,8 +1841,14 @@
         if (e.type === 'due') runningBal += e.amount;
         else runningBal -= e.amount;
 
+        const proofBtn = e.proofPic ? `
+          <button onclick="openProofImageModal('${e.proofPic}', '${vendorName} - भुगतान रसीद प्रमाण')" class="text-rose-600 hover:text-rose-800 ml-1.5 inline-flex items-center gap-0.5 text-[10px] font-bold bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded">
+            <i class="fa-solid fa-image"></i> फोटो
+          </button>
+        ` : '';
+
         const actionBtns = isAdmin ? `
-          <div class="inline-flex items-center gap-1.5 ml-2">
+          <div class="inline-flex items-center gap-1.5 ml-1.5">
             <button onclick="editRecordPrompt('${e.nodePath}', '${e.id}', ${e.amount}, '${e.title.replace(/'/g, "\\'")}', '${vendorName.replace(/'/g, "\\'")}', true)" title="एडिट करें" class="text-amber-600 hover:text-amber-800 p-1">
               <i class="fa-solid fa-pen text-[10px]"></i>
             </button>
@@ -1707,7 +1861,10 @@
         rowsHtml += `
           <tr class="border-b text-[11px]">
             <td class="p-2 font-semibold">${formatDateTime(e.timestamp)}</td>
-            <td class="p-2"><b>${e.title}</b><br><span class="text-[9px] text-slate-400">${e.mode}</span></td>
+            <td class="p-2">
+              <b>${e.title}</b> ${proofBtn}<br>
+              <span class="text-[9px] text-slate-400">${e.mode}</span>
+            </td>
             <td class="p-2 text-right font-bold ${e.type === 'paid' ? 'text-emerald-700' : 'text-rose-700'}">
               ${e.type === 'paid' ? '- ₹' + e.amount : '+ ₹' + e.amount}
             </td>
@@ -1846,7 +2003,7 @@
       renderMilkSummaryStats();
     }
 
-    // Expense & Stock
+    // Regular Farm Expense
     function addExpenseEntry(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -1863,7 +2020,7 @@
         document.getElementById('expDetail').value = '';
         document.getElementById('expAmount').value = '';
         document.getElementById('expVendorName').value = '';
-        alert("खर्च / भुगतान सुरक्षित!");
+        alert("खर्च सुरक्षित!");
       });
     }
 
@@ -2129,7 +2286,7 @@
             </div>
             <div class="flex gap-2">
               <a href="tel:${l.phone}" class="w-full bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-solid fa-phone"></i> कॉल करें</a>
-              <a href="https://wa.me/91${l.phone.replace(/\D/g,'')}?text=नमस्ते ${l.name}, प्रजापति डेयरी फॉर्म से संदेश।" target="_blank" class="w-full bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+              <a href="https://wa.me/91${l.phone.replace(/\D/g,'')}?text=नमस्ते ${l.name}, प्रजापति डेयरी फॉर्म से संदेश।" target="_blank" class="w-full bg-emerald-50 text-white font-bold py-2.5 rounded-xl text-center"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
             </div>
             ${isAdmin ? `<button onclick="db.ref('labour_profiles/${l.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl border border-rose-300">डिलीट</button>` : ''}
           </div>
@@ -2146,19 +2303,77 @@
       checkSalaryAlerts();
     }
 
+    // Customer Payment Received Form Submit (With Proof Pic)
     function addCustomerPayment(e) {
       e.preventDefault();
       if (!isAdmin) return;
-      db.ref('customer_payments').push({
-        date: document.getElementById('custPayDate').value,
-        name: document.getElementById('custPayName').value.trim(),
-        amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
-        mode: document.getElementById('custPayMode').value,
-        timestamp: Date.now()
-      }).then(() => {
-        document.getElementById('custPayName').value = '';
-        document.getElementById('custPayAmount').value = '';
-        alert("✅ ग्राहक जमा दर्ज!");
+
+      const date = document.getElementById('custPayDate').value;
+      const name = document.getElementById('custPayName').value.trim();
+      const amount = parseFloat(document.getElementById('custPayAmount').value) || 0;
+      const mode = document.getElementById('custPayMode').value;
+      const file = document.getElementById('custPayProofFile').files[0];
+
+      const btn = document.getElementById('custPaySubmitBtn');
+      if (btn) { btn.disabled = true; btn.innerText = "सुरक्षित हो रहा है..."; }
+
+      readFileAsCompressedBase64(file, proofPic => {
+        db.ref('customer_payments').push({
+          date,
+          name,
+          amount,
+          mode,
+          proofPic: proofPic || null,
+          timestamp: Date.now()
+        }).then(() => {
+          document.getElementById('custPayName').value = '';
+          document.getElementById('custPayAmount').value = '';
+          document.getElementById('custPayProofFile').value = '';
+          alert("✅ ग्राहक जमा व प्रूफ सुरक्षित!");
+        }).catch(err => alert("त्रुटि: " + err.message))
+        .finally(() => {
+          if (btn) { btn.disabled = false; btn.innerText = "ग्राहक जमा सुरक्षित करें"; }
+        });
+      });
+    }
+
+    // Vendor Due Payment Settlement Form Submit (With Proof Pic)
+    function addVendorPaymentSettlement(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+
+      const date = document.getElementById('vendorPayDate').value;
+      const vendorName = document.getElementById('vendorPayName').value.trim();
+      const amount = parseFloat(document.getElementById('vendorPayAmount').value) || 0;
+      const mode = document.getElementById('vendorPayMode').value;
+      const detail = document.getElementById('vendorPayDetail').value.trim() || 'दुकानदार उधारी चुकाई (Vendor Paid)';
+      const file = document.getElementById('vendorPayProofFile').files[0];
+
+      const btn = document.getElementById('vendorPaySubmitBtn');
+      if (btn) { btn.disabled = true; btn.innerText = "सुरक्षित हो रहा है..."; }
+
+      readFileAsCompressedBase64(file, proofPic => {
+        db.ref('expense_records').push({
+          date,
+          category: 'दुकानदार उधारी चुकाई (Vendor Paid)',
+          vendorName,
+          animalTag: '',
+          detail,
+          amount,
+          paymentMode: mode,
+          isVendorSettlement: true,
+          proofPic: proofPic || null,
+          timestamp: Date.now()
+        }).then(() => {
+          document.getElementById('vendorPayName').value = '';
+          document.getElementById('vendorPayAmount').value = '';
+          document.getElementById('vendorPayDetail').value = '';
+          document.getElementById('vendorPayProofFile').value = '';
+          alert("✅ दुकानदार भुगतान व प्रूफ सुरक्षित!");
+        }).catch(err => alert("त्रुटि: " + err.message))
+        .finally(() => {
+          if (btn) { btn.disabled = false; btn.innerText = "दुकानदार भुगतान सुरक्षित करें"; }
+        });
       });
     }
 
