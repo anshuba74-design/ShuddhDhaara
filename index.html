@@ -43,21 +43,27 @@
       </div>
 
       <!-- Right Header Actions -->
-      <div class="flex items-center gap-2 relative">
-        <button onclick="openSetupCostModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow border-2 border-amber-300 flex items-center gap-1.5 transition active:scale-95">
+      <div class="flex items-center gap-1.5 sm:gap-2 relative">
+        <!-- New Smart Ration Calculator Button -->
+        <button onclick="openRationModal()" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-2 rounded-xl shadow border-2 border-yellow-300 flex items-center gap-1.5 transition active:scale-95">
+          <i class="fa-solid fa-wheat-awn text-slate-950"></i>
+          <span class="hidden md:inline">राशन हिसाब</span>
+        </button>
+
+        <button onclick="openSetupCostModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-2 rounded-xl shadow border-2 border-amber-300 flex items-center gap-1.5 transition active:scale-95">
           <i class="fa-solid fa-calculator"></i>
           <span class="hidden sm:inline">लागत हिसाब</span>
         </button>
 
         <!-- Admin Only PDF Button -->
-        <button onclick="printOverallMasterReport()" id="pdfReportBtn" title="केवल एडमिन के लिए" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow border-2 border-sky-400 flex items-center gap-1.5 transition active:scale-95">
+        <button onclick="printOverallMasterReport()" id="pdfReportBtn" title="केवल एडमिन के लिए" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-2 rounded-xl shadow border-2 border-sky-400 flex items-center gap-1.5 transition active:scale-95">
           <i class="fa-solid fa-file-pdf text-amber-300"></i>
           <span class="hidden sm:inline">संपूर्ण PDF रिपोर्ट</span>
           <span class="sm:hidden">PDF</span>
           <i class="fa-solid fa-lock text-[10px] text-amber-300 ml-0.5" id="pdfLockIcon"></i>
         </button>
 
-        <button onclick="openSummaryModal()" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs sm:text-sm font-bold px-2.5 py-2 rounded-xl shadow border border-emerald-600 flex items-center gap-1 transition">
+        <button onclick="openSummaryModal()" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs sm:text-sm font-bold px-2 sm:px-2.5 py-2 rounded-xl shadow border border-emerald-600 flex items-center gap-1 transition">
           <i class="fa-solid fa-chart-pie text-amber-300"></i>
           <span class="hidden md:inline">कुल हिसाब</span>
         </button>
@@ -550,6 +556,16 @@
 
     <!-- TAB 5: FEED STOCK -->
     <section id="tabStock" class="mt-4 hidden space-y-4">
+      <div class="flex justify-between items-center bg-yellow-50 p-3 rounded-2xl border-2 border-yellow-300 shadow-sm">
+        <div>
+          <h3 class="text-xs font-black text-yellow-950 uppercase">वैज्ञानिक दैनिक आहार प्रबंधन</h3>
+          <p class="text-[11px] text-yellow-800">पशु वजन व दूध उत्पादन के आधार पर संतुलित दाना व चारा गणना</p>
+        </div>
+        <button onclick="openRationModal()" class="bg-yellow-600 hover:bg-yellow-700 text-white text-xs font-black px-4 py-2 rounded-xl shadow flex items-center gap-1.5 transition active:scale-95">
+          <i class="fa-solid fa-calculator"></i> राशन कैलकुलेटर खोलें
+        </button>
+      </div>
+
       <div id="stockAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-yellow-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2"><i class="fa-solid fa-wheat-awn text-yellow-700"></i> चारा स्टॉक जोड़ें</h2>
         <form onsubmit="addStockItem(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
@@ -717,6 +733,112 @@
       </div>
     </section>
   </main>
+
+  <!-- POPUP: SMART CATTLE FEED & RATION CALCULATOR (NEW) -->
+  <div id="rationCalculatorModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 no-print">
+    <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-yellow-500 flex flex-col max-h-[92vh]">
+      <div class="bg-gradient-to-r from-yellow-950 via-slate-950 to-amber-950 text-white p-4 flex items-center justify-between border-b border-yellow-600 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center text-lg font-black shadow">
+            <i class="fa-solid fa-wheat-awn"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-yellow-300 text-sm sm:text-base">स्मार्ट राशन व चारा कैलकुलेटर</h3>
+            <p class="text-[10px] text-yellow-200">वैज्ञानिक दैनिक संतुलित आहार व लागत विश्लेषण</p>
+          </div>
+        </div>
+        <button onclick="closeRationModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-black text-sm transition">✕</button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-3.5">
+        <!-- Input Selector Box -->
+        <div class="p-3.5 bg-yellow-50/70 border-2 border-yellow-300 rounded-2xl space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] font-bold text-yellow-950 uppercase mb-1">फार्म का पशु चुनें (ऑटो-डिटेल)</label>
+              <select id="rationAnimalSelect" onchange="onRationAnimalSelected()" class="w-full text-xs font-bold border-2 border-yellow-400 bg-white rounded-xl p-2.5 text-slate-800">
+                <option value="">-- मैनुअल गणना करें या पशु चुनें --</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">पशु वर्ग</label>
+              <select id="rationAnimalType" onchange="calcRationDiet()" class="w-full text-xs font-bold border rounded-xl p-2 bg-white">
+                <option value="buffalo">भैंस (Buffalo)</option>
+                <option value="cow">गाय (Cow)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">अनुमानित वजन (kg)</label>
+              <input type="number" id="rationAnimalWeight" value="500" oninput="calcRationDiet()" class="w-full text-xs font-black border rounded-xl p-2" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">दैनिक दूध (L)</label>
+              <input type="number" step="0.5" id="rationAnimalMilk" value="14" oninput="calcRationDiet()" class="w-full text-xs font-black border rounded-xl p-2 text-emerald-950" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Diet Card -->
+        <div class="p-4 bg-slate-900 text-white rounded-2xl border-2 border-yellow-400 space-y-3 shadow-md">
+          <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+            <span class="text-xs font-bold text-yellow-300 uppercase"><i class="fa-solid fa-clipboard-list mr-1"></i> दैनिक संतुलित आहार चार्ट (Daily Ration)</span>
+            <span class="text-[10px] bg-yellow-400/20 text-yellow-300 font-extrabold px-2 py-0.5 rounded-full border border-yellow-400/40" id="rationDmIntake">DM: ~15 kg/दिन</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700">
+              <span class="text-[10px] text-slate-400 font-bold block">1. सूखा भूसा / कड़बी</span>
+              <div class="text-base font-black text-amber-300 mt-0.5" id="rationDryFodder">5.0 kg</div>
+              <span class="text-[9px] text-slate-400">रूमेन व पाचन हेतु</span>
+            </div>
+
+            <div class="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700">
+              <span class="text-[10px] text-slate-400 font-bold block">2. हरा चारा (बरसीम/ज्वार/मक्का)</span>
+              <div class="text-base font-black text-emerald-400 mt-0.5" id="rationGreenFodder">22.0 kg</div>
+              <span class="text-[9px] text-slate-400">विटामिन व हाइड्रेशन</span>
+            </div>
+
+            <div class="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700 col-span-2">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="text-[10px] text-slate-400 font-bold block">3. संतुलित दाना / खली (Concentrate)</span>
+                  <div class="text-lg font-black text-yellow-300 mt-0.5" id="rationConcentrate">8.5 kg / दिन</div>
+                </div>
+                <div class="text-right text-[10px] text-slate-300 font-bold">
+                  <span class="block bg-slate-700 px-2 py-0.5 rounded" id="rationShiftSplit">सुबह: 4.25 kg • शाम: 4.25 kg</span>
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1">शारीरिक रखरखाव (1.5 kg) + दूध उत्पादन अनुपात के अनुसार</p>
+            </div>
+
+            <div class="p-2 bg-slate-800/80 rounded-xl border border-slate-700">
+              <span class="text-[10px] text-slate-400 font-bold block">4. मिनरल मिक्सचर</span>
+              <div class="text-sm font-black text-sky-300 mt-0.5" id="rationMineral">60 ग्राम / दिन</div>
+            </div>
+
+            <div class="p-2 bg-slate-800/80 rounded-xl border border-slate-700">
+              <span class="text-[10px] text-slate-400 font-bold block">5. सादा नमक</span>
+              <div class="text-sm font-black text-slate-200 mt-0.5" id="rationSalt">40 ग्राम / दिन</div>
+            </div>
+          </div>
+
+          <!-- Feed Cost & Profit Impact -->
+          <div class="pt-2 border-t border-slate-700 flex justify-between items-center text-xs">
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase block font-bold">दैनिक फीड लागत (अनुमानित)</span>
+              <span class="text-base font-black text-rose-400" id="rationDailyFeedCost">₹ 280 / दिन</span>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400 uppercase block font-bold">दूध से शुद्ध बचत (Net Margin)</span>
+              <span class="text-base font-black text-emerald-400" id="rationDailyNetMargin">₹ 630 / दिन</span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="closeRationModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs shadow">बंद करें</button>
+      </div>
+    </div>
+  </div>
 
   <!-- UNIVERSAL DETAIL MODAL -->
   <div id="universalDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 no-print">
@@ -1055,14 +1177,10 @@
 
     // High-precision Date and Time Formatter
     function formatDateTime(ts, fallbackDate) {
-      if (!ts && fallbackDate) {
-        return fallbackDate;
-      }
+      if (!ts && fallbackDate) return fallbackDate;
       if (!ts) return '-';
       const d = new Date(ts);
-      if (isNaN(d.getTime())) {
-        return fallbackDate || ts;
-      }
+      if (isNaN(d.getTime())) return fallbackDate || ts;
       const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
       const dateStr = d.toLocaleDateString('en-GB');
       return `${dateStr}, ${timeStr}`;
@@ -1543,6 +1661,80 @@
     function openChangePasswordModal() { document.getElementById('changePassModal').classList.remove('hidden'); }
     function closeChangePasswordModal() { document.getElementById('changePassModal').classList.add('hidden'); }
 
+    // RATION CALCULATOR MODAL OPEN/CLOSE
+    function openRationModal() {
+      populateRationAnimals();
+      calcRationDiet();
+      document.getElementById('rationCalculatorModal').classList.remove('hidden');
+    }
+    function closeRationModal() {
+      document.getElementById('rationCalculatorModal').classList.add('hidden');
+    }
+
+    function populateRationAnimals() {
+      const sel = document.getElementById('rationAnimalSelect');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">-- मैनुअल गणना करें या पशु चुनें --</option>';
+      cattleData.forEach(c => {
+        sel.innerHTML += `<option value="${c.id}">${c.categoryType} #${c.tag} (${c.breed}) • ${c.milk}L दूध</option>`;
+      });
+    }
+
+    function onRationAnimalSelected() {
+      const id = document.getElementById('rationAnimalSelect').value;
+      if (!id) return;
+      const c = cattleData.find(x => x.id === id);
+      if (!c) return;
+
+      const isBuf = (c.categoryType || '').includes('भैंस');
+      document.getElementById('rationAnimalType').value = isBuf ? 'buffalo' : 'cow';
+      document.getElementById('rationAnimalWeight').value = isBuf ? '550' : '450';
+      document.getElementById('rationAnimalMilk').value = c.milk || 0;
+      calcRationDiet();
+    }
+
+    function calcRationDiet() {
+      const type = document.getElementById('rationAnimalType').value;
+      const weight = parseFloat(document.getElementById('rationAnimalWeight').value) || 500;
+      const milk = parseFloat(document.getElementById('rationAnimalMilk').value) || 0;
+
+      // Scientific Dry Matter (DM) Intake: ~2.5% to 3.0% of body weight + milk production requirement
+      const dmRate = type === 'buffalo' ? 0.028 : 0.025;
+      const totalDm = (weight * dmRate) + (milk * 0.1);
+
+      // Maintenance concentrate (1.5 kg) + Milk yield ratio:
+      // Buffalo: 1 kg feed per 2.0 L milk | Cow: 1 kg feed per 2.5 L milk
+      const milkFactor = type === 'buffalo' ? 2.0 : 2.5;
+      const concentrate = (1.5 + (milk / milkFactor));
+
+      // Dry Fodder: ~1.0% of body weight
+      const dryFodder = (weight * 0.01);
+
+      // Green Fodder: To fulfill remaining bulk & moisture (~4% - 5% of body weight)
+      const greenFodder = Math.max(15, (weight * 0.045));
+
+      const mineral = (weight > 500 ? 60 : 50);
+      const salt = (weight > 500 ? 40 : 30);
+
+      // Estimated feeding cost per day (Rates: Feed ~₹25/kg, Dry Fodder ~₹8/kg, Green Fodder ~₹2/kg)
+      const feedCost = (concentrate * 25) + (dryFodder * 8) + (greenFodder * 2) + 10;
+      const milkRevenue = milk * 65; // Avg retail rate
+      const netMargin = milkRevenue - feedCost;
+
+      document.getElementById('rationDmIntake').innerText = `DM आवश्यकता: ~${totalDm.toFixed(1)} kg/दिन`;
+      document.getElementById('rationDryFodder').innerText = `${dryFodder.toFixed(1)} kg`;
+      document.getElementById('rationGreenFodder').innerText = `${greenFodder.toFixed(1)} kg`;
+      document.getElementById('rationConcentrate').innerText = `${concentrate.toFixed(1)} kg / दिन`;
+      document.getElementById('rationShiftSplit').innerText = `सुबह: ${(concentrate / 2).toFixed(2)} kg • शाम: ${(concentrate / 2).toFixed(2)} kg`;
+      document.getElementById('rationMineral').innerText = `${mineral} ग्राम / दिन`;
+      document.getElementById('rationSalt').innerText = `${salt} ग्राम / दिन`;
+
+      document.getElementById('rationDailyFeedCost').innerText = `₹ ${feedCost.toFixed(0)} / दिन`;
+      const marginElem = document.getElementById('rationDailyNetMargin');
+      marginElem.innerText = (netMargin >= 0 ? '+ ₹ ' : '- ₹ ') + Math.abs(netMargin).toFixed(0) + ' / दिन';
+      marginElem.className = `text-base font-black ${netMargin >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+    }
+
     function openLogoPreview() {
       applyLogoToDOM(currentLogoUrl);
       document.getElementById('logoPreviewModal').classList.remove('hidden');
@@ -1561,7 +1753,7 @@
         if(headerImg) { headerImg.src = url; headerImg.classList.remove('hidden'); }
         if(headerDef) { headerDef.classList.add('hidden'); }
         if(prevImg) { prevImg.src = url; prevImg.classList.remove('hidden'); }
-        if(prevDef) { prevDef.classList.remove('hidden'); }
+        if(prevDef) { prevDef.classList.add('hidden'); }
       } else {
         if(headerImg) { headerImg.classList.add('hidden'); }
         if(headerDef) { headerDef.classList.remove('hidden'); }
@@ -2802,6 +2994,7 @@
       populateCalfMothers();
       populateSellDropdown();
       populateExpenseTagDropdown();
+      populateRationAnimals();
       renderMilkSummaryStats();
     }
 
