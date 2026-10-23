@@ -43,27 +43,21 @@
       </div>
 
       <!-- Right Header Actions -->
-      <div class="flex items-center gap-1.5 sm:gap-2 relative">
-        <!-- New Smart Ration Calculator Button -->
-        <button onclick="openRationModal()" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-2 rounded-xl shadow border-2 border-yellow-300 flex items-center gap-1.5 transition active:scale-95">
-          <i class="fa-solid fa-wheat-awn text-slate-950"></i>
-          <span class="hidden md:inline">राशन हिसाब</span>
-        </button>
-
-        <button onclick="openSetupCostModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-2 rounded-xl shadow border-2 border-amber-300 flex items-center gap-1.5 transition active:scale-95">
+      <div class="flex items-center gap-2 relative">
+        <button onclick="openSetupCostModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow border-2 border-amber-300 flex items-center gap-1.5 transition active:scale-95">
           <i class="fa-solid fa-calculator"></i>
           <span class="hidden sm:inline">लागत हिसाब</span>
         </button>
 
         <!-- Admin Only PDF Button -->
-        <button onclick="printOverallMasterReport()" id="pdfReportBtn" title="केवल एडमिन के लिए" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-2.5 sm:px-3 py-2 rounded-xl shadow border-2 border-sky-400 flex items-center gap-1.5 transition active:scale-95">
+        <button onclick="printOverallMasterReport()" id="pdfReportBtn" title="केवल एडमिन के लिए" class="bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-extrabold px-3 py-2 rounded-xl shadow border-2 border-sky-400 flex items-center gap-1.5 transition active:scale-95">
           <i class="fa-solid fa-file-pdf text-amber-300"></i>
           <span class="hidden sm:inline">संपूर्ण PDF रिपोर्ट</span>
           <span class="sm:hidden">PDF</span>
           <i class="fa-solid fa-lock text-[10px] text-amber-300 ml-0.5" id="pdfLockIcon"></i>
         </button>
 
-        <button onclick="openSummaryModal()" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs sm:text-sm font-bold px-2 sm:px-2.5 py-2 rounded-xl shadow border border-emerald-600 flex items-center gap-1 transition">
+        <button onclick="openSummaryModal()" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs sm:text-sm font-bold px-2.5 py-2 rounded-xl shadow border border-emerald-600 flex items-center gap-1 transition">
           <i class="fa-solid fa-chart-pie text-amber-300"></i>
           <span class="hidden md:inline">कुल हिसाब</span>
         </button>
@@ -734,7 +728,7 @@
     </section>
   </main>
 
-  <!-- POPUP: SMART CATTLE FEED & RATION CALCULATOR (NEW) -->
+  <!-- POPUP: SMART CATTLE FEED & RATION CALCULATOR -->
   <div id="rationCalculatorModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-yellow-500 flex flex-col max-h-[92vh]">
       <div class="bg-gradient-to-r from-yellow-950 via-slate-950 to-amber-950 text-white p-4 flex items-center justify-between border-b border-yellow-600 shrink-0">
@@ -1698,27 +1692,20 @@
       const weight = parseFloat(document.getElementById('rationAnimalWeight').value) || 500;
       const milk = parseFloat(document.getElementById('rationAnimalMilk').value) || 0;
 
-      // Scientific Dry Matter (DM) Intake: ~2.5% to 3.0% of body weight + milk production requirement
       const dmRate = type === 'buffalo' ? 0.028 : 0.025;
       const totalDm = (weight * dmRate) + (milk * 0.1);
 
-      // Maintenance concentrate (1.5 kg) + Milk yield ratio:
-      // Buffalo: 1 kg feed per 2.0 L milk | Cow: 1 kg feed per 2.5 L milk
       const milkFactor = type === 'buffalo' ? 2.0 : 2.5;
       const concentrate = (1.5 + (milk / milkFactor));
 
-      // Dry Fodder: ~1.0% of body weight
       const dryFodder = (weight * 0.01);
-
-      // Green Fodder: To fulfill remaining bulk & moisture (~4% - 5% of body weight)
       const greenFodder = Math.max(15, (weight * 0.045));
 
       const mineral = (weight > 500 ? 60 : 50);
       const salt = (weight > 500 ? 40 : 30);
 
-      // Estimated feeding cost per day (Rates: Feed ~₹25/kg, Dry Fodder ~₹8/kg, Green Fodder ~₹2/kg)
       const feedCost = (concentrate * 25) + (dryFodder * 8) + (greenFodder * 2) + 10;
-      const milkRevenue = milk * 65; // Avg retail rate
+      const milkRevenue = milk * 65;
       const netMargin = milkRevenue - feedCost;
 
       document.getElementById('rationDmIntake').innerText = `DM आवश्यकता: ~${totalDm.toFixed(1)} kg/दिन`;
