@@ -3150,6 +3150,66 @@
 
     const savedTab = localStorage.getItem('prajapati_active_tab') || 'milk';
     switchTab(savedTab);
+        // चालू महीने में वेतन मिल जाने पर अलर्ट हटाने वाला अपडेट
+    window.checkSalaryAlerts = function() {
+      const notifBanner = document.getElementById('salaryNotificationBanner');
+      const notifList = document.getElementById('salaryNotificationList');
+      if (!notifBanner || !notifList) return;
+      notifList.innerHTML = '';
+      let salaryAlerts = [];
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const currentDate = now.getDate();
+
+      const currentMonthStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+
+      (labourProfiles || []).forEach(labour => {
+        if (!labour.joinDate) return;
+
+        // अगर चालू महीने में वेतन दिया जा चुका है तो अलर्ट न दिखाएँ
+        const isPaidThisMonth = (expenseData || []).some(exp => {
+          const isSalaryExp = exp.category === 'मासिक वेतन भुगतान' || (exp.detail && exp.detail.includes('वेतन'));
+          const matchesName = (exp.vendorName && exp.vendorName.trim() === labour.name.trim()) || 
+                              (exp.detail && exp.detail.includes(labour.name));
+          const matchesMonth = exp.date && exp.date.startsWith(currentMonthStr);
+          return isSalaryExp && matchesName && matchesMonth;
+        });
+
+        if (isPaidThisMonth) return;
+
+        const jDate = new Date(labour.joinDate);
+        const cycleDay = jDate.getDate();
+        let targetSalaryDate = new Date(currentYear, currentMonth, cycleDay);
+        const thresholdDays = parseInt(labour.alertDays, 10) || 3;
+
+        if (targetSalaryDate < now && Math.abs(currentDate - cycleDay) > thresholdDays) {
+          targetSalaryDate = new Date(currentYear, currentMonth + 1, cycleDay);
+        }
+        
+        const diffDays = Math.ceil((targetSalaryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays >= 0 && diffDays <= thresholdDays) {
+          salaryAlerts.push(`
+            <div class="flex items-center justify-between gap-3 py-1 border-b border-indigo-700/50 last:border-none">
+              <span>💰 <b>${labour.name}</b> का वेतन <b>₹${labour.salary.toLocaleString('en-IN')}</b> (${diffDays === 0 ? 'आज देय!' : diffDays + ' दिन शेष'})</span>
+              <button type="button" onclick="quickPaySalary('${labour.name.replace(/'/g, "\\'")}', ${labour.salary})" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-2.5 py-1 rounded-lg text-[10px] shadow shrink-0">
+                वेतन दें
+              </button>
+            </div>
+          `);
+        }
+      });
+
+      const snz = parseInt(localStorage.getItem('prajapati_sal_snooze') || '0', 10);
+      if (salaryAlerts.length > 0 && isAdmin && Date.now() > snz) {
+        notifList.innerHTML = salaryAlerts.join('');
+        notifBanner.classList.remove('hidden');
+      } else {
+        notifBanner.classList.add('hidden');
+      }
+    };
+
   </script>
 </body>
 </html>
