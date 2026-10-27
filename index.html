@@ -259,7 +259,6 @@
             <div><label class="text-[10px] font-bold block uppercase">बेस रेट (₹)</label><input type="number" step="0.1" id="plantBaseRate" value="7.5" oninput="calcPlantMilkRate()" class="w-full text-sm border rounded-lg p-2 font-bold" /></div>
           </div>
 
-          <!-- Partial Payment Supported Fields -->
           <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
             <div>
               <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मात्रा (<span id="saleUnitLabel">L</span>)</label>
@@ -280,6 +279,26 @@
             <div>
               <label class="block text-[11px] font-bold text-rose-800 uppercase mb-1">शेष उधारी ₹ (Due)</label>
               <input type="number" step="1" id="milkDueAmount" readonly placeholder="0" class="w-full text-sm border-2 border-rose-300 bg-rose-50 rounded-xl p-2.5 font-bold text-rose-900" />
+            </div>
+          </div>
+
+          <!-- Dual Camera / Gallery Proof Input for Sale -->
+          <div class="p-3 bg-slate-50 border rounded-xl">
+            <span class="block text-[11px] font-bold text-slate-700 uppercase mb-1.5"><i class="fa-solid fa-camera text-emerald-700 mr-1"></i> रसीद / तौल पर्ची फोटो (वैकल्पिक)</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-camera"></i> <span>कैमरा खोलें</span>
+                <input type="file" accept="image/*" capture="environment" id="saleProofCam" onchange="handleDualProofFile(event, 'saleProofData', 'saleProofPreview')" class="hidden" />
+              </label>
+              <label class="bg-slate-800 hover:bg-slate-900 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-images"></i> <span>गैलरी से चुनें</span>
+                <input type="file" accept="image/*" id="saleProofGal" onchange="handleDualProofFile(event, 'saleProofData', 'saleProofPreview')" class="hidden" />
+              </label>
+              <input type="hidden" id="saleProofData" value="" />
+              <div id="saleProofPreview" class="hidden flex items-center gap-2 ml-auto">
+                <img src="" id="saleProofPreviewImg" class="w-9 h-9 object-cover rounded-lg border border-slate-300" />
+                <button type="button" onclick="clearDualProof('saleProofData', 'saleProofPreview', 'saleProofCam', 'saleProofGal')" class="text-rose-600 text-xs font-bold">हटाएं</button>
+              </div>
             </div>
           </div>
 
@@ -361,6 +380,27 @@
               </select>
             </div>
           </div>
+
+          <!-- Dual Camera / Gallery Proof Input for Expense -->
+          <div class="p-3 bg-slate-50 border rounded-xl">
+            <span class="block text-[11px] font-bold text-slate-700 uppercase mb-1.5"><i class="fa-solid fa-camera text-purple-700 mr-1"></i> बिल / खरीदारी पर्ची फोटो (वैकल्पिक)</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="bg-purple-800 hover:bg-purple-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-camera"></i> <span>कैमरा खोलें</span>
+                <input type="file" accept="image/*" capture="environment" id="expProofCam" onchange="handleDualProofFile(event, 'expProofData', 'expProofPreview')" class="hidden" />
+              </label>
+              <label class="bg-slate-800 hover:bg-slate-900 text-purple-300 text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-images"></i> <span>गैलरी से चुनें</span>
+                <input type="file" accept="image/*" id="expProofGal" onchange="handleDualProofFile(event, 'expProofData', 'expProofPreview')" class="hidden" />
+              </label>
+              <input type="hidden" id="expProofData" value="" />
+              <div id="expProofPreview" class="hidden flex items-center gap-2 ml-auto">
+                <img src="" id="expProofPreviewImg" class="w-9 h-9 object-cover rounded-lg border border-slate-300" />
+                <button type="button" onclick="clearDualProof('expProofData', 'expProofPreview', 'expProofCam', 'expProofGal')" class="text-rose-600 text-xs font-bold">हटाएं</button>
+              </div>
+            </div>
+          </div>
+
           <div class="flex justify-end">
             <button type="submit" id="expSubmitBtn" class="bg-purple-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">खर्च सेव करें</button>
           </div>
@@ -417,7 +457,7 @@
         </button>
       </div>
 
-      <!-- Add Cattle Form -->
+      <!-- Add Cattle Form with Photo Upload -->
       <div id="catAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-amber-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2">
           <i class="fa-solid fa-cow text-amber-600"></i> <span id="catFormTitle">नया पशु प्रोफाइल</span>
@@ -452,6 +492,26 @@
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">AI / सीमन तारीख</label><input type="date" id="catAiDate" class="w-full text-sm border-2 border-amber-300 bg-amber-50 rounded-xl p-2.5 font-semibold" /></div>
           <div><label class="block text-[11px] font-bold text-amber-900 uppercase mb-1">खरीद मूल्य (₹)</label><input type="number" id="catBuyCost" placeholder="70000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold" /></div>
 
+          <!-- Dual Camera / Gallery Proof Input for Cattle -->
+          <div class="sm:col-span-2 lg:col-span-4 p-3 bg-amber-50/60 border rounded-xl">
+            <span class="block text-[11px] font-bold text-amber-950 uppercase mb-1.5"><i class="fa-solid fa-camera text-amber-700 mr-1"></i> पशु की फोटो / खरीद रसीद (वैकल्पिक)</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-camera"></i> <span>कैमरा खोलें</span>
+                <input type="file" accept="image/*" capture="environment" id="catPhotoCam" onchange="handleDualProofFile(event, 'catPhotoData', 'catPhotoPreview')" class="hidden" />
+              </label>
+              <label class="bg-slate-800 hover:bg-slate-900 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-images"></i> <span>गैलरी से चुनें</span>
+                <input type="file" accept="image/*" id="catPhotoGal" onchange="handleDualProofFile(event, 'catPhotoData', 'catPhotoPreview')" class="hidden" />
+              </label>
+              <input type="hidden" id="catPhotoData" value="" />
+              <div id="catPhotoPreview" class="hidden flex items-center gap-2 ml-auto">
+                <img src="" id="catPhotoPreviewImg" class="w-9 h-9 object-cover rounded-lg border border-slate-300" />
+                <button type="button" onclick="clearDualProof('catPhotoData', 'catPhotoPreview', 'catPhotoCam', 'catPhotoGal')" class="text-rose-600 text-xs font-bold">हटाएं</button>
+              </div>
+            </div>
+          </div>
+
           <div class="sm:col-span-2 lg:col-span-4 flex justify-end gap-2">
             <button type="button" onclick="cancelCattleEdit()" id="cancelCatEditBtn" class="hidden px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">रद्द करें</button>
             <button type="button" id="cattleSaveBtn" onclick="saveDirectCattle()" class="bg-amber-900 text-white font-bold py-2.5 px-6 rounded-xl text-sm shadow">सुरक्षित करें</button>
@@ -459,7 +519,7 @@
         </div>
       </div>
 
-      <!-- Add Calf Form -->
+      <!-- Add Calf Form with Photo Upload -->
       <div id="calfAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-blue-500">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2">
           <i class="fa-solid fa-baby text-blue-600"></i> बच्चा जन्म रिकॉर्ड
@@ -476,13 +536,34 @@
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">माता का चयन</label><select id="calfMotherTagSelect" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"></select></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">लिंग</label><select id="calfGender" class="w-full text-sm border-2 rounded-xl p-2.5 bg-white font-bold"></select></div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">जन्म तारीख</label><input type="date" id="calfBirthDate" class="w-full text-sm border-2 rounded-xl p-2.5" /></div>
+
+          <!-- Dual Camera / Gallery Proof Input for Calf -->
+          <div class="sm:col-span-2 lg:col-span-3 p-3 bg-blue-50/60 border rounded-xl">
+            <span class="block text-[11px] font-bold text-blue-950 uppercase mb-1.5"><i class="fa-solid fa-camera text-blue-700 mr-1"></i> नवजात बच्चे की फोटो (वैकल्पिक)</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-camera"></i> <span>कैमरा खोलें</span>
+                <input type="file" accept="image/*" capture="environment" id="calfPhotoCam" onchange="handleDualProofFile(event, 'calfPhotoData', 'calfPhotoPreview')" class="hidden" />
+              </label>
+              <label class="bg-slate-800 hover:bg-slate-900 text-blue-300 text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-images"></i> <span>गैलरी से चुनें</span>
+                <input type="file" accept="image/*" id="calfPhotoGal" onchange="handleDualProofFile(event, 'calfPhotoData', 'calfPhotoPreview')" class="hidden" />
+              </label>
+              <input type="hidden" id="calfPhotoData" value="" />
+              <div id="calfPhotoPreview" class="hidden flex items-center gap-2 ml-auto">
+                <img src="" id="calfPhotoPreviewImg" class="w-9 h-9 object-cover rounded-lg border border-slate-300" />
+                <button type="button" onclick="clearDualProof('calfPhotoData', 'calfPhotoPreview', 'calfPhotoCam', 'calfPhotoGal')" class="text-rose-600 text-xs font-bold">हटाएं</button>
+              </div>
+            </div>
+          </div>
+
           <div class="sm:col-span-2 lg:col-span-4 flex items-end justify-end">
             <button type="button" onclick="saveDirectCalf()" class="bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">जन्म दर्ज करें</button>
           </div>
         </div>
       </div>
 
-      <!-- Sell Animal Form -->
+      <!-- Sell Animal Form with Photo Upload -->
       <div id="sellAnimalAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-emerald-600">
         <h2 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2">
           <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> पशु बेचें (आर्काइव में जाएगा)
@@ -501,6 +582,27 @@
             <div id="saleBuyerSuggestions" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border-2 border-emerald-500 rounded-xl shadow-2xl max-h-48 overflow-y-auto z-50 divide-y"></div>
           </div>
           <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">बिक्री रकम (₹)</label><input type="number" id="saleAnimalAmount" placeholder="75000" class="w-full text-sm border-2 rounded-xl p-2.5 font-bold text-emerald-950" /></div>
+
+          <!-- Dual Camera / Gallery Proof Input for Selling Animal -->
+          <div class="sm:col-span-2 lg:col-span-4 p-3 bg-emerald-50/60 border rounded-xl">
+            <span class="block text-[11px] font-bold text-emerald-950 uppercase mb-1.5"><i class="fa-solid fa-camera text-emerald-700 mr-1"></i> बिक्री रसीद / खरीदार के साथ फोटो (वैकल्पिक)</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-camera"></i> <span>कैमरा खोलें</span>
+                <input type="file" accept="image/*" capture="environment" id="sellAnimalPhotoCam" onchange="handleDualProofFile(event, 'sellAnimalPhotoData', 'sellAnimalPhotoPreview')" class="hidden" />
+              </label>
+              <label class="bg-slate-800 hover:bg-slate-900 text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-images"></i> <span>गैलरी से चुनें</span>
+                <input type="file" accept="image/*" id="sellAnimalPhotoGal" onchange="handleDualProofFile(event, 'sellAnimalPhotoData', 'sellAnimalPhotoPreview')" class="hidden" />
+              </label>
+              <input type="hidden" id="sellAnimalPhotoData" value="" />
+              <div id="sellAnimalPhotoPreview" class="hidden flex items-center gap-2 ml-auto">
+                <img src="" id="sellAnimalPhotoPreviewImg" class="w-9 h-9 object-cover rounded-lg border border-slate-300" />
+                <button type="button" onclick="clearDualProof('sellAnimalPhotoData', 'sellAnimalPhotoPreview', 'sellAnimalPhotoCam', 'sellAnimalPhotoGal')" class="text-rose-600 text-xs font-bold">हटाएं</button>
+              </div>
+            </div>
+          </div>
+
           <div class="sm:col-span-2 lg:col-span-4 flex justify-end">
             <button type="button" onclick="saveDirectSellAnimal()" class="bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow">पशु बेचें व आर्काइव करें</button>
           </div>
@@ -574,7 +676,7 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Customer Payment -->
+        <!-- Customer Payment with Photo Proof -->
         <div id="custAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-indigo-600 space-y-3">
           <h2 class="font-extrabold text-slate-900 text-sm mb-1 flex items-center gap-2">
             <i class="fa-solid fa-hand-holding-dollar text-indigo-700"></i> ग्राहक से रुपया जमा दर्ज करें
@@ -605,13 +707,34 @@
                 </select>
               </div>
             </div>
+
+            <!-- Dual Proof Input for Customer Payment -->
+            <div class="p-2.5 bg-slate-50 border rounded-xl">
+              <span class="block text-[11px] font-bold text-indigo-900 uppercase mb-1.5"><i class="fa-solid fa-camera mr-1"></i> रसीद / स्क्रीनशॉट प्रूफ फोटो (वैकल्पिक)</span>
+              <div class="flex flex-wrap items-center gap-2">
+                <label class="bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                  <i class="fa-solid fa-camera"></i> <span>कैमरा खोलें</span>
+                  <input type="file" accept="image/*" capture="environment" id="custPayProofCam" onchange="handleDualProofFile(event, 'custPayProofData', 'custPayProofPreview')" class="hidden" />
+                </label>
+                <label class="bg-slate-800 hover:bg-slate-900 text-indigo-300 text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                  <i class="fa-solid fa-images"></i> <span>गैलरी से चुनें</span>
+                  <input type="file" accept="image/*" id="custPayProofGal" onchange="handleDualProofFile(event, 'custPayProofData', 'custPayProofPreview')" class="hidden" />
+                </label>
+                <input type="hidden" id="custPayProofData" value="" />
+                <div id="custPayProofPreview" class="hidden flex items-center gap-2 ml-auto">
+                  <img src="" id="custPayProofPreviewImg" class="w-9 h-9 object-cover rounded-lg border border-slate-300" />
+                  <button type="button" onclick="clearDualProof('custPayProofData', 'custPayProofPreview', 'custPayProofCam', 'custPayProofGal')" class="text-rose-600 text-xs font-bold">हटाएं</button>
+                </div>
+              </div>
+            </div>
+
             <div class="flex justify-end pt-1">
               <button type="submit" id="custPaySubmitBtn" class="bg-indigo-900 hover:bg-indigo-950 text-white font-bold py-2 px-5 rounded-xl text-xs shadow">ग्राहक जमा सुरक्षित करें</button>
             </div>
           </form>
         </div>
 
-        <!-- Vendor Due Settlement -->
+        <!-- Vendor Due Settlement with Photo Proof -->
         <div id="vendorAdminForm" class="hidden bg-white p-4 rounded-2xl shadow border-2 border-rose-600 space-y-3">
           <h2 class="font-extrabold text-slate-900 text-sm mb-1 flex items-center gap-2">
             <i class="fa-solid fa-money-bill-transfer text-rose-600"></i> दुकानदार को उधारी चुकाई दर्ज करें
@@ -643,6 +766,27 @@
               </div>
               <div><label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">विवरण</label><input type="text" id="vendorPayDetail" placeholder="उदा. पुरानी उधारी चुकता की" class="w-full text-xs border-2 rounded-xl p-2.5" /></div>
             </div>
+
+            <!-- Dual Proof Input for Vendor Payment -->
+            <div class="p-2.5 bg-slate-50 border rounded-xl">
+              <span class="block text-[11px] font-bold text-rose-900 uppercase mb-1.5"><i class="fa-solid fa-camera mr-1"></i> रसीद / पर्ची प्रूफ फोटो (वैकल्पिक)</span>
+              <div class="flex flex-wrap items-center gap-2">
+                <label class="bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                  <i class="fa-solid fa-camera"></i> <span>कैमरा खोलें</span>
+                  <input type="file" accept="image/*" capture="environment" id="vendorPayProofCam" onchange="handleDualProofFile(event, 'vendorPayProofData', 'vendorPayProofPreview')" class="hidden" />
+                </label>
+                <label class="bg-slate-800 hover:bg-slate-900 text-rose-300 text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow">
+                  <i class="fa-solid fa-images"></i> <span>गैलरी से चुनें</span>
+                  <input type="file" accept="image/*" id="vendorPayProofGal" onchange="handleDualProofFile(event, 'vendorPayProofData', 'vendorPayProofPreview')" class="hidden" />
+                </label>
+                <input type="hidden" id="vendorPayProofData" value="" />
+                <div id="vendorPayProofPreview" class="hidden flex items-center gap-2 ml-auto">
+                  <img src="" id="vendorPayProofPreviewImg" class="w-9 h-9 object-cover rounded-lg border border-slate-300" />
+                  <button type="button" onclick="clearDualProof('vendorPayProofData', 'vendorPayProofPreview', 'vendorPayProofCam', 'vendorPayProofGal')" class="text-rose-600 text-xs font-bold">हटाएं</button>
+                </div>
+              </div>
+            </div>
+
             <div class="flex justify-end pt-1">
               <button type="submit" id="vendorPaySubmitBtn" class="bg-rose-800 hover:bg-rose-900 text-white font-bold py-2 px-5 rounded-xl text-xs shadow">दुकानदार भुगतान सुरक्षित करें</button>
             </div>
@@ -670,7 +814,18 @@
     </section>
   </main>
 
-  <!-- Modals -->
+  <!-- PROOF IMAGE PREVIEW MODAL -->
+  <div id="proofImageModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4 no-print">
+    <div class="relative bg-white rounded-3xl p-4 max-w-md w-full shadow-2xl border-4 border-amber-400 text-center">
+      <button onclick="closeProofImageModal()" class="absolute -top-3 -right-3 w-8 h-8 bg-rose-600 text-white rounded-full flex items-center justify-center font-black">✕</button>
+      <h3 class="font-extrabold text-slate-900 text-sm mb-2" id="proofModalTitle">रसीद / भुगतान प्रमाण</h3>
+      <div class="w-full max-h-[70vh] rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center border">
+        <img id="proofModalImg" src="" alt="Payment Proof" class="w-full h-auto object-contain max-h-[65vh]" />
+      </div>
+    </div>
+  </div>
+
+  <!-- OTHER MODALS -->
   <div id="rationCalculatorModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden border-4 border-yellow-500 flex flex-col max-h-[92vh]">
       <div class="bg-gradient-to-r from-yellow-950 via-slate-950 to-amber-950 text-white p-4 flex items-center justify-between border-b border-yellow-600 shrink-0">
@@ -897,6 +1052,66 @@
       if (isNaN(d.getTime())) return fallbackDate || ts;
       return `${d.toLocaleDateString('en-GB')}, ${d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
     }
+
+    // Photo Compression and Dual Proof Upload Helper
+    function readFileAsCompressedBase64(file, callback) {
+      if (!file) { callback(null); return; }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.65);
+          callback(dataUrl);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleDualProofFile(event, hiddenInputId, previewContainerId) {
+      const file = event.target.files[0];
+      if (!file) return;
+      readFileAsCompressedBase64(file, dataUrl => {
+        if (!dataUrl) return;
+        document.getElementById(hiddenInputId).value = dataUrl;
+        const cont = document.getElementById(previewContainerId);
+        const img = cont.querySelector('img');
+        if (img) img.src = dataUrl;
+        cont.classList.remove('hidden');
+      });
+    }
+
+    function clearDualProof(hiddenInputId, previewContainerId, camInputId, galInputId) {
+      document.getElementById(hiddenInputId).value = '';
+      document.getElementById(previewContainerId).classList.add('hidden');
+      if (camInputId && document.getElementById(camInputId)) document.getElementById(camInputId).value = '';
+      if (galInputId && document.getElementById(galInputId)) document.getElementById(galInputId).value = '';
+    }
+
+    function openProofImageModal(imgSrc, title) {
+      if (!imgSrc) return;
+      document.getElementById('proofModalImg').src = imgSrc;
+      document.getElementById('proofModalTitle').innerText = title || "रसीद / भुगतान प्रमाण";
+      document.getElementById('proofImageModal').classList.remove('hidden');
+    }
+    function closeProofImageModal() { document.getElementById('proofImageModal').classList.add('hidden'); }
 
     function cleanKey(str) { return (str || '').trim().toLowerCase(); }
 
@@ -1229,8 +1444,8 @@
       const weight = parseFloat(document.getElementById('rationAnimalWeight').value) || 500;
       const milk = parseFloat(document.getElementById('rationAnimalMilk').value) || 0;
 
-      const milkFactor = type === 'buffalo' ? 2.0 : 2.5;
-      const concentrate = (1.5 + (milk / milkFactor));
+      const factor = type === 'buffalo' ? 2.0 : 2.5;
+      const concentrate = (1.5 + (milk / factor));
       const dryFodder = (weight * 0.01);
       const greenFodder = Math.max(15, (weight * 0.045));
 
@@ -1312,6 +1527,7 @@
       const milkVal = parseFloat(document.getElementById('catDailyMilk').value) || 0;
       const buyCostVal = parseFloat(document.getElementById('catBuyCost').value) || 0;
       const aiDateVal = document.getElementById('catAiDate').value || '';
+      const photoVal = document.getElementById('catPhotoData').value || null;
 
       if (!tagVal) { alert("कृपया टैग संख्या दर्ज करें!"); return; }
 
@@ -1320,10 +1536,9 @@
 
       const payload = {
         categoryType: catType, tag: tagVal, breed: breedVal,
-        status: lactStatus,
-        pregStatus: pregStatus,
+        status: lactStatus, pregStatus: pregStatus,
         milk: lactStatus.includes('दूध दे रही') ? milkVal : 0,
-        buyCost: buyCostVal, aiDate: aiDateVal, timestamp: Date.now()
+        buyCost: buyCostVal, aiDate: aiDateVal, photo: photoVal, timestamp: Date.now()
       };
 
       const btn = document.getElementById('cattleSaveBtn');
@@ -1342,6 +1557,7 @@
       document.getElementById('catDailyMilk').value = '';
       document.getElementById('catBuyCost').value = '';
       document.getElementById('catAiDate').value = '';
+      clearDualProof('catPhotoData', 'catPhotoPreview', 'catPhotoCam', 'catPhotoGal');
       document.getElementById('catFormTitle').innerText = "नया पशु प्रोफाइल";
       document.getElementById('cancelCatEditBtn').classList.add('hidden');
     }
@@ -1350,6 +1566,7 @@
       if (!isAdmin) { alert("केवल एडमिन!"); return; }
       const tagVal = document.getElementById('calfTag').value.trim();
       if (!tagVal) { alert("टैग लिखें!"); return; }
+      const photoVal = document.getElementById('calfPhotoData').value || null;
 
       db.ref('calf_records').push({
         categoryType: document.getElementById('calfCategoryType').value,
@@ -1357,9 +1574,11 @@
         motherTag: document.getElementById('calfMotherTagSelect').value,
         gender: document.getElementById('calfGender').value,
         birthDate: document.getElementById('calfBirthDate').value,
+        photo: photoVal,
         timestamp: Date.now()
       }).then(() => {
         document.getElementById('calfTag').value = '';
+        clearDualProof('calfPhotoData', 'calfPhotoPreview', 'calfPhotoCam', 'calfPhotoGal');
         alert("✅ बच्चा जन्म दर्ज!");
       });
     }
@@ -1376,16 +1595,18 @@
       const date = document.getElementById('saleAnimalDate').value;
       const buyer = document.getElementById('saleBuyerName').value.trim();
       const amount = parseFloat(document.getElementById('saleAnimalAmount').value) || 0;
+      const salePhoto = document.getElementById('sellAnimalPhotoData').value || target.photo || null;
 
       const archiveObj = {
         date, tag: target.tag, categoryType: target.categoryType, breed: target.breed || target.gender || '-',
-        buyer, amount, buyCost: target.buyCost || 0, timestamp: Date.now()
+        buyer, amount, buyCost: target.buyCost || 0, photo: salePhoto, timestamp: Date.now()
       };
 
       db.ref('sold_animals_archive').push(archiveObj).then(() => {
         if (type === 'cat') db.ref('cattle_records/' + id).remove();
         else db.ref('calf_records/' + id).remove();
-        db.ref('animal_sales').push({ date, tag: target.tag, buyer, amount, timestamp: Date.now() });
+        db.ref('animal_sales').push({ date, tag: target.tag, buyer, amount, photo: salePhoto, timestamp: Date.now() });
+        clearDualProof('sellAnimalPhotoData', 'sellAnimalPhotoPreview', 'sellAnimalPhotoCam', 'sellAnimalPhotoGal');
         alert("✅ पशु बेच दिया गया!");
       });
     }
@@ -1395,9 +1616,10 @@
       c.innerHTML = '';
       if (soldArchiveData.length === 0) { c.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">कोई बेचा गया पशु रिकॉर्ड नहीं है।</div>'; return; }
       soldArchiveData.forEach(item => {
+        const photoBtn = item.photo ? `<button onclick="openProofImageModal('${item.photo}', 'टैग #${item.tag}')" class="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold mt-1 inline-flex items-center gap-1"><i class="fa-solid fa-image"></i> फोटो</button>` : '';
         c.innerHTML += `
           <div class="p-3 bg-slate-50 rounded-2xl border text-xs flex justify-between items-center">
-            <div><b>${item.categoryType} #${item.tag}</b><p class="text-[10px] text-slate-500">${item.date} • खरीदार: ${item.buyer}</p></div>
+            <div><b>${item.categoryType} #${item.tag}</b><p class="text-[10px] text-slate-500">${item.date} • खरीदार: ${item.buyer}</p>${photoBtn}</div>
             <span class="font-black text-emerald-800">₹ ${item.amount}</span>
           </div>
         `;
@@ -1442,7 +1664,6 @@
       });
     }
 
-    // Pregnancy & Breeding Alert Automation
     function checkBreedingAlerts() {
       const bBanner = document.getElementById('breedingNotificationBanner');
       const bList = document.getElementById('breedingNotificationList');
@@ -1459,9 +1680,8 @@
         const gestationDays = isBuf ? 310 : 280;
 
         if (daysPassed >= 60 && daysPassed <= 90 && c.pregStatus !== 'गाभिन') {
-          alerts.push(`🔍 <b>${c.categoryType} #${c.tag}</b>: AI हुए ${daysPassed} दिन हो चुके हैं। डॉक्टर से <b>गर्भ जांच (PD Check)</b> कराएं।`);
+          alerts.push(`🔍 <b>${c.categoryType} #${c.tag}</b>: AI हुए ${daysPassed} दिन हो चुके हैं। <b>गर्भ जांच (PD Check)</b> कराएं।`);
         }
-
         if (c.pregStatus === 'गाभिन') {
           const daysLeft = gestationDays - daysPassed;
           if (daysLeft <= 60 && daysLeft > 0) {
@@ -1478,7 +1698,6 @@
       }
     }
 
-    // Partial Payment Calculation
     function calcMilkTotal() {
       const q = parseFloat(document.getElementById('milkQty').value) || 0;
       const r = parseFloat(document.getElementById('milkRate').value) || 0;
@@ -1516,6 +1735,7 @@
       const paid = parseFloat(document.getElementById('milkPaidAmount').value) || 0;
       const due = parseFloat(document.getElementById('milkDueAmount').value) || 0;
       const phone = document.getElementById('milkCustomerPhone').value.trim();
+      const proofPic = document.getElementById('saleProofData').value || null;
 
       let itemName = document.getElementById('milkItemSelect').value;
       if (itemName === '__custom__') itemName = document.getElementById('milkCustomItemName').value.trim() || 'अन्य उत्पाद';
@@ -1530,7 +1750,7 @@
         saleType: document.getElementById('milkSaleType').value,
         customer: document.getElementById('milkCustomer').value.trim(),
         customerPhone: phone,
-        qty, rate, total, paidAmount: paid, dueAmount: due,
+        qty, rate, total, paidAmount: paid, dueAmount: due, proofPic: proofPic,
         timestamp: Date.now()
       }).then(() => {
         document.getElementById('milkCustomer').value = '';
@@ -1538,6 +1758,7 @@
         document.getElementById('milkQty').value = '';
         document.getElementById('milkPaidAmount').value = '';
         document.getElementById('milkDueAmount').value = '';
+        clearDualProof('saleProofData', 'saleProofPreview', 'saleProofCam', 'saleProofGal');
         alert("बिक्री सुरक्षित!");
         renderMilkSummaryStats();
       }).finally(() => { if (btn) btn.disabled = false; });
@@ -1563,6 +1784,7 @@
       c.innerHTML = '';
       milkData.forEach(x => {
         const itm = x.itemName || 'दूध';
+        const proofHtml = x.proofPic ? `<button onclick="openProofImageModal('${x.proofPic}', '${x.customer} - रसीद')" class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[10px] font-bold"><i class="fa-solid fa-image"></i> रसीद फोटो</button>` : '';
         const pop = `
           <div class="space-y-2.5 text-xs">
             <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between items-start">
@@ -1575,6 +1797,7 @@
               <div class="p-2 bg-slate-50 rounded-lg border"><b>मात्रा:</b> ${x.qty}</div>
               <div class="p-2 bg-emerald-50 rounded-lg border text-emerald-900 font-bold"><b>कुल:</b> ₹${x.total}</div>
             </div>
+            ${proofHtml ? `<div class="text-center pt-1">${proofHtml}</div>` : ''}
             ${isAdmin ? `<button onclick="db.ref('milk_records/${x.id}').remove(); closeUniversalModal();" class="w-full bg-rose-100 text-rose-700 font-bold py-2 rounded-xl text-xs">हटाएं</button>` : ''}
           </div>
         `;
@@ -1582,7 +1805,7 @@
         c.innerHTML += `
           <div onclick="openUniversalModal('${x.customer}', '${itm} • ${x.date}', \`${pop.replace(/"/g, '&quot;')}\`)" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-emerald-600 transition">
             <div class="truncate">
-              <div class="flex items-center gap-1.5"><span class="text-[9px] font-black bg-emerald-100 text-emerald-900 px-1.5 py-0.5 rounded">${itm}</span><h4 class="font-bold text-slate-900 truncate">${x.customer}</h4></div>
+              <div class="flex items-center gap-1.5"><span class="text-[9px] font-black bg-emerald-100 text-emerald-900 px-1.5 py-0.5 rounded">${itm}</span><h4 class="font-bold text-slate-900 truncate">${x.customer} ${x.proofPic ? '📸' : ''}</h4></div>
               <p class="text-[10px] text-slate-500 mt-0.5">${x.date} • ${x.shift}</p>
             </div>
             <div class="text-right shrink-0"><span class="font-bold text-emerald-950">${x.qty}</span><br><span class="font-bold text-slate-700">₹${x.total}</span></div>
@@ -1598,6 +1821,7 @@
       if (!isAdmin) return;
       let category = document.getElementById('expCategory').value;
       if (category === '__custom_exp__') category = document.getElementById('customExpName').value.trim() || 'अन्य खर्च';
+      const proofPic = document.getElementById('expProofData').value || null;
 
       const btn = document.getElementById('expSubmitBtn');
       if (btn) btn.disabled = true;
@@ -1610,11 +1834,13 @@
         detail: document.getElementById('expDetail').value.trim(),
         amount: parseFloat(document.getElementById('expAmount').value) || 0,
         paymentMode: document.getElementById('expPaymentMode').value,
+        proofPic: proofPic,
         timestamp: Date.now()
       }).then(() => {
         document.getElementById('expDetail').value = '';
         document.getElementById('expAmount').value = '';
         document.getElementById('expVendorName').value = '';
+        clearDualProof('expProofData', 'expProofPreview', 'expProofCam', 'expProofGal');
         alert("खर्च सुरक्षित!");
       }).finally(() => { if (btn) btn.disabled = false; });
     }
@@ -1623,10 +1849,11 @@
       const c = document.getElementById('expenseHeadingList');
       c.innerHTML = '';
       expenseData.forEach(x => {
+        const proofBadge = x.proofPic ? `<button onclick="openProofImageModal('${x.proofPic}', '${x.detail}')" class="text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded text-[10px] font-bold ml-1">📸 पर्ची</button>` : '';
         c.innerHTML += `
           <div class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs">
             <div class="truncate">
-              <h4 class="font-bold text-slate-900 truncate">${x.detail}</h4>
+              <h4 class="font-bold text-slate-900 truncate">${x.detail} ${proofBadge}</h4>
               <p class="text-[10px] text-slate-500">${x.date} • ${x.vendorName ? x.vendorName + ' • ' : ''}${x.category}</p>
             </div>
             <span class="font-bold text-purple-950 shrink-0">₹${x.amount}</span>
@@ -1686,9 +1913,10 @@
       cattleData.forEach(c => {
         const isBuf = (c.categoryType || '').includes('भैंस');
         const target = isBuf ? bList : cList;
+        const photoBtn = c.photo ? `<div class="mt-2 text-center"><button onclick="openProofImageModal('${c.photo}', 'टैग #${c.tag} फोटो')" class="bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold px-3 py-1 rounded-xl text-xs inline-flex items-center gap-1"><i class="fa-solid fa-image"></i> पशु की फोटो देखें</button></div>` : '';
         target.innerHTML += `
-          <div onclick="openUniversalModal('${c.categoryType} टैग: ${c.tag}', '${c.breed}', 'दैनिक दूध: ${c.milk}L<br>गर्भ स्थिति: ${c.pregStatus || 'खाली'}<br>AI तारीख: ${c.aiDate || '-'}')" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-amber-600 transition">
-            <div><h4 class="font-black text-slate-900">टैग: ${c.tag}</h4><p class="text-[10px] text-slate-500">${c.breed} • ${c.milk}L</p></div>
+          <div onclick="openUniversalModal('${c.categoryType} टैग: ${c.tag}', '${c.breed}', 'दैनिक दूध: ${c.milk}L<br>गर्भ स्थिति: ${c.pregStatus || 'खाली'}<br>AI तारीख: ${c.aiDate || '-'}${photoBtn}')" class="bg-white p-3 rounded-2xl border-2 border-slate-300 flex justify-between items-center text-xs cursor-pointer hover:border-amber-600 transition">
+            <div><h4 class="font-black text-slate-900">टैग: ${c.tag} ${c.photo ? '📸' : ''}</h4><p class="text-[10px] text-slate-500">${c.breed} • ${c.milk}L</p></div>
             <span class="text-[10px] font-bold bg-amber-100 px-2 py-0.5 rounded">${c.status} (${c.pregStatus || 'खाली'})</span>
           </div>
         `;
@@ -1697,9 +1925,10 @@
       calfData.forEach(c => {
         const isBuf = (c.categoryType || '').includes('भैंस');
         const target = isBuf ? bList : cList;
+        const photoBtn = c.photo ? `<div class="mt-2 text-center"><button onclick="openProofImageModal('${c.photo}', 'बच्चा #${c.tag}')" class="bg-blue-100 text-blue-950 font-bold px-3 py-1 rounded-xl text-xs"><i class="fa-solid fa-image"></i> बच्चे की फोटो देखें</button></div>` : '';
         target.innerHTML += `
-          <div class="bg-blue-50/50 p-3 rounded-2xl border-2 border-blue-200 flex justify-between items-center text-xs">
-            <div><h4 class="font-black text-blue-950">👶 ${c.tag}</h4><p class="text-[10px] text-blue-800">माता: ${c.motherTag}</p></div>
+          <div onclick="openUniversalModal('बच्चा टैग: ${c.tag}', '${c.categoryType}', 'माता: #${c.motherTag}<br>जन्म: ${c.birthDate}${photoBtn}')" class="bg-blue-50/50 p-3 rounded-2xl border-2 border-blue-200 flex justify-between items-center text-xs cursor-pointer hover:border-blue-600 transition">
+            <div><h4 class="font-black text-blue-950">👶 ${c.tag} ${c.photo ? '📸' : ''}</h4><p class="text-[10px] text-blue-800">माता: ${c.motherTag}</p></div>
             <span class="text-[10px] font-bold text-blue-900">${c.gender}</span>
           </div>
         `;
@@ -1805,15 +2034,18 @@
     function addCustomerPayment(e) {
       e.preventDefault();
       if (!isAdmin) return;
+      const proofPic = document.getElementById('custPayProofData').value || null;
       db.ref('customer_payments').push({
         date: document.getElementById('custPayDate').value,
         name: document.getElementById('custPayName').value.trim(),
         amount: parseFloat(document.getElementById('custPayAmount').value) || 0,
         mode: document.getElementById('custPayMode').value,
+        proofPic: proofPic,
         timestamp: Date.now()
       }).then(() => {
         document.getElementById('custPayName').value = '';
         document.getElementById('custPayAmount').value = '';
+        clearDualProof('custPayProofData', 'custPayProofPreview', 'custPayProofCam', 'custPayProofGal');
         alert("ग्राहक जमा सुरक्षित!");
       });
     }
@@ -1821,6 +2053,7 @@
     function addVendorPaymentSettlement(e) {
       e.preventDefault();
       if (!isAdmin) return;
+      const proofPic = document.getElementById('vendorPayProofData').value || null;
       db.ref('expense_records').push({
         date: document.getElementById('vendorPayDate').value,
         category: 'दुकानदार उधारी चुकाई (Vendor Paid)',
@@ -1830,10 +2063,12 @@
         amount: parseFloat(document.getElementById('vendorPayAmount').value) || 0,
         paymentMode: document.getElementById('vendorPayMode').value,
         isVendorSettlement: true,
+        proofPic: proofPic,
         timestamp: Date.now()
       }).then(() => {
         document.getElementById('vendorPayName').value = '';
         document.getElementById('vendorPayAmount').value = '';
+        clearDualProof('vendorPayProofData', 'vendorPayProofPreview', 'vendorPayProofCam', 'vendorPayProofGal');
         alert("दुकानदार भुगतान सुरक्षित!");
       });
     }
@@ -2034,7 +2269,6 @@
       }
     }
 
-    // Complete 5-Section Master PDF Report
     function printOverallMasterReport() {
       if (!isAdmin) { 
         alert("🔒 केवल एडमिन ही PDF डाउनलोड कर सकते हैं!"); 
