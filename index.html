@@ -155,6 +155,11 @@
   <main class="max-w-6xl mx-auto px-3 sm:px-4 mt-3 no-print">
     <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none justify-between sm:justify-start">
       <div class="flex items-center gap-2">
+        <!-- New Dedicated User / Customer Tab -->
+        <button onclick="switchTab('userPortal')" id="tabUserPortalBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
+          <i class="fa-solid fa-user-check text-base"></i><span>ग्राहक पासबुक व आर्डर</span>
+        </button>
+
         <button onclick="switchTab('milk')" id="tabMilkBtn" class="px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2">
           <i class="fa-solid fa-bottle-droplet text-base"></i><span>उत्पाद व दूध बिक्री</span>
         </button>
@@ -176,8 +181,146 @@
       </button>
     </div>
 
+    <!-- TAB USER PORTAL: CUSTOMER PASSBOOK & SAFE ORDERING -->
+    <section id="tabUserPortal" class="mt-4 space-y-4">
+      <!-- Search / Identification Block -->
+      <div class="bg-gradient-to-r from-teal-950 via-slate-900 to-emerald-950 text-white p-4 sm:p-5 rounded-3xl shadow-xl border-2 border-teal-500">
+        <div class="max-w-xl mx-auto text-center space-y-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-teal-900/60 rounded-full border border-teal-400 text-teal-300 text-xs font-bold">
+            <i class="fa-solid fa-shield-halved"></i> निजी ग्राहक खाता
+          </div>
+          <h2 class="text-lg sm:text-2xl font-black text-amber-300">अपना डेयरी खाता व आर्डर देखें</h2>
+          <p class="text-xs text-slate-300">कृपया अपना पंजीकृत 10 अंकों का मोबाइल नंबर दर्ज करें</p>
+          <div class="flex gap-2 pt-2">
+            <input type="tel" id="userLoginPhone" maxlength="10" placeholder="उदा. 9876543210" class="w-full text-slate-900 text-sm font-black p-3 rounded-2xl outline-none border-2 border-teal-400 shadow-inner" />
+            <button onclick="loadCustomerPortal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-5 py-3 rounded-2xl text-xs sm:text-sm shrink-0 shadow transition active:scale-95">
+              खाता खोलें
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Passbook and Orders Section (Shown after mobile search) -->
+      <div id="customerPortalContent" class="hidden space-y-4">
+        <!-- Balance Card -->
+        <div class="bg-white p-4 rounded-3xl shadow border-2 border-slate-300 grid grid-cols-1 sm:grid-cols-3 gap-3 items-center">
+          <div>
+            <span class="text-xs text-slate-500 font-bold block uppercase">ग्राहक का नाम / फोन</span>
+            <h3 class="text-lg sm:text-xl font-black text-slate-900" id="portalCustName">-</h3>
+            <p class="text-xs text-slate-600 font-bold" id="portalCustPhone">-</p>
+          </div>
+          <div class="p-3 bg-rose-50 border-2 border-rose-300 rounded-2xl text-center">
+            <span class="text-[10px] text-rose-800 font-extrabold uppercase block">कुल देय बकाया (Your Due)</span>
+            <span class="text-xl sm:text-2xl font-black text-rose-700" id="portalCustDue">₹0</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button onclick="openCustomerPayUPI()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-black py-2.5 px-4 rounded-xl text-xs shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-qrcode text-amber-300"></i> सीधे UPI से भुगतान करें
+            </button>
+            <a id="portalWhatsAppSupport" href="#" target="_blank" class="w-full bg-slate-900 hover:bg-slate-800 text-emerald-300 font-bold py-2 px-4 rounded-xl text-xs text-center flex items-center justify-center gap-2 border border-slate-700">
+              <i class="fa-brands fa-whatsapp text-emerald-400"></i> डेयरी से व्हाट्सएप संपर्क
+            </a>
+          </div>
+        </div>
+
+        <!-- Safe Order Form with Cut-off Protection -->
+        <div class="bg-white p-4 rounded-3xl shadow border-2 border-teal-600">
+          <div class="flex items-center justify-between border-b pb-2 mb-3">
+            <div>
+              <h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-2">
+                <i class="fa-solid fa-cart-plus text-teal-700"></i> नया दूध / उत्पाद ऑर्डर बुक करें
+              </h3>
+              <p class="text-[11px] text-slate-500">कट-ऑफ समय के बाद ऑर्डर कैंसल नहीं होगा ताकि दूध की बर्बादी न हो।</p>
+            </div>
+            <span class="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 font-black px-2 py-1 rounded-lg">
+              🛡️ नो-कैंसलेशन पॉलिसी
+            </span>
+          </div>
+
+          <form onsubmit="placeCustomerOrder(event)" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">डिलीवरी तारीख</label>
+                <input type="date" id="orderTargetDate" onchange="checkOrderCutoffLock()" required class="w-full text-xs font-bold border-2 rounded-xl p-2.5 outline-none" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">शिफ्ट</label>
+                <select id="orderShift" onchange="checkOrderCutoffLock()" class="w-full text-xs font-bold border-2 rounded-xl p-2.5 bg-white">
+                  <option value="सुबह (Morning)">सुबह (Morning - कट-ऑफ: रात 9 PM)</option>
+                  <option value="शाम (Evening)">शाम (Evening - कट-ऑफ: दोपहर 1 PM)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">उत्पाद</label>
+                <select id="orderProduct" onchange="updateOrderUnitLabel()" class="w-full text-xs font-bold border-2 border-teal-400 rounded-xl p-2.5 bg-teal-50 text-teal-950">
+                  <option value="दूध (Milk)">दूध (Milk)</option>
+                  <option value="देशी घी (Ghee)">देशी घी (Ghee)</option>
+                  <option value="पनीर (Paneer)">पनीर (Paneer)</option>
+                  <option value="खोया / मावा (Khoya)">खोया / मावा</option>
+                  <option value="दूध अवकाश (No Milk Required)">❌ कल दूध नहीं चाहिए (छुट्टी)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">मात्रा (<span id="orderUnitLabel">L</span>)</label>
+                <input type="number" step="0.5" id="orderQty" required placeholder="उदा. 2" class="w-full text-xs font-black border-2 rounded-xl p-2.5" />
+              </div>
+            </div>
+
+            <div class="p-3 bg-amber-50 rounded-2xl border border-amber-300 flex items-start gap-2.5 text-xs text-amber-950">
+              <i class="fa-solid fa-clock-rotate-left text-base text-amber-700 mt-0.5"></i>
+              <div>
+                <b>ऑर्डर नियम व समय सीमा (Cut-Off Rules):</b>
+                <p class="text-[11px] text-amber-900 mt-0.5">
+                  1. सुबह की डिलीवरी के लिए <b>रात 9:00 बजे</b> के बाद ऑर्डर रद्द नहीं किया जा सकता।<br>
+                  2. शाम की डिलीवरी के लिए <b>दोपहर 1:00 बजे</b> के बाद ऑर्डर रद्द नहीं किया जा सकता।
+                </p>
+              </div>
+            </div>
+
+            <div id="cutoffWarningMsg" class="hidden text-xs font-black text-rose-700 bg-rose-50 p-2.5 rounded-xl border border-rose-300 text-center">
+              ⚠️ चुनी गई शिफ्ट के लिए कट-ऑफ समय निकल चुका है। अब यह ऑर्डर दर्ज या रद्द नहीं हो सकता।
+            </div>
+
+            <div class="flex justify-end pt-1">
+              <button type="submit" id="orderSubmitBtn" class="bg-teal-800 hover:bg-teal-900 text-white font-black px-6 py-2.5 rounded-xl text-xs shadow flex items-center gap-2">
+                <i class="fa-solid fa-paper-plane text-amber-300"></i> आर्डर सुरक्षित करें व WhatsApp पर भेजें
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Customer Active & Past Orders -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="bg-white rounded-3xl p-4 shadow border-2 border-slate-300 space-y-2">
+            <h4 class="font-black text-slate-900 text-xs sm:text-sm flex items-center gap-1.5 border-b pb-2">
+              <i class="fa-solid fa-truck text-emerald-700"></i> आपके हालिया आर्डर्स
+            </h4>
+            <div id="customerPortalOrdersList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-4 shadow border-2 border-slate-300 space-y-2">
+            <h4 class="font-black text-slate-900 text-xs sm:text-sm flex items-center gap-1.5 border-b pb-2">
+              <i class="fa-solid fa-receipt text-indigo-700"></i> आपकी पिछली खरीदारी व भुगतान
+            </h4>
+            <div id="customerPortalLedgerList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin view of Incoming Customer Orders -->
+      <div id="adminCustomerOrdersBox" class="hidden bg-white p-4 rounded-3xl shadow border-2 border-amber-500 space-y-3">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="font-extrabold text-slate-900 text-sm sm:text-base flex items-center gap-2">
+            <i class="fa-solid fa-inbox text-amber-600"></i> ग्राहकों से प्राप्त नए आर्डर (Admin View)
+          </h3>
+          <span class="text-xs bg-amber-100 text-amber-950 font-bold px-2.5 py-0.5 rounded-full" id="adminOrderPendingCount">0</span>
+        </div>
+        <div id="adminOrdersFeed" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+      </div>
+    </section>
+
     <!-- TAB 1: MILK & PRODUCT SALE -->
-    <section id="tabMilk" class="mt-4 space-y-4">
+    <section id="tabMilk" class="mt-4 hidden space-y-4">
       <div class="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-900 text-white p-3.5 rounded-2xl shadow border-2 border-emerald-600 grid grid-cols-3 gap-2 text-center">
         <div>
           <span class="text-[10px] text-emerald-300 font-bold block uppercase">आज दूध निकला</span>
@@ -1016,6 +1159,9 @@
     let stockData = [];
     let setupCostData = [];
     let vetDoctors = [];
+    let customerOrders = [];
+
+    let currentLoggedInCustomer = null;
 
     let currentLogoUrl = "";
     let paymentSettings = {
@@ -1035,14 +1181,24 @@
     document.getElementById('calfBirthDate').value = today;
     document.getElementById('saleAnimalDate').value = today;
 
+    // Default order target date: tomorrow
+    const tomorrowObj = new Date();
+    tomorrowObj.setDate(tomorrowObj.getDate() + 1);
+    const tomorrowStr = tomorrowObj.toISOString().split('T')[0];
+    const orderDateEl = document.getElementById('orderTargetDate');
+    if (orderDateEl) {
+      orderDateEl.value = tomorrowStr;
+      orderDateEl.min = today;
+    }
+
     function dismissSalaryAlert() { document.getElementById('salaryNotificationBanner').classList.add('hidden'); }
     function dismissStockAlert() { document.getElementById('stockNotificationBanner').classList.add('hidden'); }
     function dismissBreedingAlert() { document.getElementById('breedingNotificationBanner').classList.add('hidden'); }
 
     function sendWhatsAppText(phone, textMsg) {
       const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
-      if (cleanPhone) window.open(`https://wa.me/91${cleanPhone}?text=${textMsg}`, '_blank');
-      else window.open(`https://wa.me/?text=${textMsg}`, '_blank');
+      if (cleanPhone) window.open(`https://wa.me/91${cleanPhone}?text=${encodeURIComponent(textMsg)}`, '_blank');
+      else window.open(`https://wa.me/?text=${encodeURIComponent(textMsg)}`, '_blank');
     }
 
     function formatDateTime(ts, fallbackDate) {
@@ -1367,6 +1523,7 @@
       const menuChangePassBtn = document.getElementById('menuChangePassBtn');
       const setupAdminArea = document.getElementById('setupCostAdminForm');
       const pdfLock = document.getElementById('pdfLockIcon');
+      const adminOrdersBox = document.getElementById('adminCustomerOrdersBox');
       const adminForms = ['milkAdminForm', 'expAdminForm', 'labourAdminForm', 'catAdminForm', 'calfAdminForm', 'sellAnimalAdminForm', 'custAdminForm', 'vendorAdminForm', 'stockAdminForm'];
 
       if (isAdmin) {
@@ -1377,6 +1534,7 @@
         menuChangePassBtn.classList.remove('hidden');
         if (setupAdminArea) setupAdminArea.classList.remove('hidden');
         if (pdfLock) pdfLock.className = "fa-solid fa-unlock text-[10px] text-emerald-200 ml-0.5";
+        if (adminOrdersBox) adminOrdersBox.classList.remove('hidden');
         adminForms.forEach(id => document.getElementById(id)?.classList.remove('hidden'));
       } else {
         badge.innerText = "User Mode";
@@ -1386,6 +1544,7 @@
         menuChangePassBtn.classList.add('hidden');
         if (setupAdminArea) setupAdminArea.classList.add('hidden');
         if (pdfLock) pdfLock.className = "fa-solid fa-lock text-[10px] text-amber-300 ml-0.5";
+        if (adminOrdersBox) adminOrdersBox.classList.add('hidden');
         adminForms.forEach(id => document.getElementById(id)?.classList.add('hidden'));
       }
       renderAll();
@@ -2155,6 +2314,288 @@
       });
     }
 
+    /* -------------------------------------------------------------
+       CUSTOMER PORTAL & CUT-OFF TIME SAFE ORDERING SYSTEM
+    ------------------------------------------------------------- */
+    function updateOrderUnitLabel() {
+      const prod = document.getElementById('orderProduct').value;
+      const lbl = document.getElementById('orderUnitLabel');
+      const qty = document.getElementById('orderQty');
+      if (prod.includes('दूध अवकाश')) {
+        lbl.innerText = 'दिन';
+        qty.value = '1';
+      } else if (prod.includes('दूध')) {
+        lbl.innerText = 'L';
+      } else {
+        lbl.innerText = 'Kg/इकाई';
+      }
+    }
+
+    // Check Cut-off Lock Rules:
+    // Morning Delivery: Cutoff is previous day at 9:00 PM (21:00)
+    // Evening Delivery: Cutoff is same day at 1:00 PM (13:00)
+    function isOrderCutoffPassed(targetDateStr, shiftStr) {
+      if (!targetDateStr) return false;
+      const now = new Date();
+      const isMorning = (shiftStr || '').includes('सुबह');
+
+      // Target delivery date at midnight
+      const targetDateParts = targetDateStr.split('-');
+      const targetYear = parseInt(targetDateParts[0], 10);
+      const targetMonth = parseInt(targetDateParts[1], 10) - 1;
+      const targetDay = parseInt(targetDateParts[2], 10);
+
+      let cutoffDateTime;
+      if (isMorning) {
+        // Evening before target date at 21:00
+        cutoffDateTime = new Date(targetYear, targetMonth, targetDay - 1, 21, 0, 0);
+      } else {
+        // Same day of delivery at 13:00
+        cutoffDateTime = new Date(targetYear, targetMonth, targetDay, 13, 0, 0);
+      }
+
+      return now > cutoffDateTime;
+    }
+
+    function checkOrderCutoffLock() {
+      const targetDate = document.getElementById('orderTargetDate').value;
+      const shift = document.getElementById('orderShift').value;
+      const submitBtn = document.getElementById('orderSubmitBtn');
+      const warnBox = document.getElementById('cutoffWarningMsg');
+
+      const isLocked = isOrderCutoffPassed(targetDate, shift);
+      if (isLocked) {
+        warnBox.classList.remove('hidden');
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      } else {
+        warnBox.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+    }
+
+    function loadCustomerPortal() {
+      const inputPhone = (document.getElementById('userLoginPhone').value || '').trim().replace(/\D/g, '');
+      if (inputPhone.length < 10) {
+        alert("कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें!");
+        return;
+      }
+
+      let matchedName = null;
+      // Search in milkData or payments
+      for (let m of milkData) {
+        const ph = (m.customerPhone || '').replace(/\D/g, '');
+        if (ph === inputPhone) { matchedName = m.customer; break; }
+      }
+      if (!matchedName) {
+        // Fallback matching if user entered name in input
+        matchedName = inputPhone;
+      }
+
+      currentLoggedInCustomer = { phone: inputPhone, name: matchedName };
+      renderCustomerPortal();
+      document.getElementById('customerPortalContent').classList.remove('hidden');
+    }
+
+    function renderCustomerPortal() {
+      if (!currentLoggedInCustomer) return;
+      const phone = currentLoggedInCustomer.phone;
+      const cName = currentLoggedInCustomer.name;
+
+      document.getElementById('portalCustName').innerText = cName || 'ग्राहक';
+      document.getElementById('portalCustPhone').innerText = '+91 ' + phone;
+
+      // WhatsApp direct contact
+      const waBtn = document.getElementById('portalWhatsAppSupport');
+      if (waBtn) {
+        const dairyPhone = (paymentSettings.upiPhone || '9876543210').replace(/\D/g, '');
+        waBtn.href = `https://wa.me/91${dairyPhone}?text=${encodeURIComponent('नमस्ते प्रजापति डेयरी, मैं ' + cName + ' (' + phone + ') बात कर रहा हूँ।')}`;
+      }
+
+      // Calculate dues & records
+      let totalBill = 0, totalPaid = 0;
+      const customerSales = [];
+      milkData.forEach(m => {
+        const mPhone = (m.customerPhone || '').replace(/\D/g, '');
+        const match = (mPhone && mPhone === phone) || (cleanKey(m.customer) === cleanKey(cName));
+        if (match) {
+          totalBill += (parseFloat(m.dueAmount != null ? m.dueAmount : m.total) || 0);
+          customerSales.push(m);
+        }
+      });
+
+      const custPays = [];
+      customerPayments.forEach(p => {
+        if (cleanKey(p.name) === cleanKey(cName)) {
+          totalPaid += (parseFloat(p.amount) || 0);
+          custPays.push(p);
+        }
+      });
+
+      const due = Math.max(0, totalBill - totalPaid);
+      document.getElementById('portalCustDue').innerText = '₹ ' + due.toLocaleString('en-IN');
+
+      // Render Ledger
+      const ledgerBox = document.getElementById('customerPortalLedgerList');
+      ledgerBox.innerHTML = '';
+      if (customerSales.length === 0 && custPays.length === 0) {
+        ledgerBox.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">आपका कोई पुराना रिकॉर्ड नहीं मिला।</div>';
+      } else {
+        customerSales.slice().reverse().slice(0, 15).forEach(s => {
+          ledgerBox.innerHTML += `
+            <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between items-center text-xs">
+              <div>
+                <b>${s.itemName || 'दूध'} (${s.qty}${s.itemName && !s.itemName.includes('दूध') ? 'Kg' : 'L'})</b>
+                <p class="text-[10px] text-slate-500">${s.date} • ${s.shift}</p>
+              </div>
+              <div class="text-right">
+                <span class="font-black text-slate-900">₹${s.total}</span>
+                <span class="block text-[9px] font-bold ${s.dueAmount > 0 ? 'text-rose-700' : 'text-emerald-700'}">${s.dueAmount > 0 ? 'उधारी' : 'नकद'}</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // Render Orders
+      const orderBox = document.getElementById('customerPortalOrdersList');
+      orderBox.innerHTML = '';
+      const myOrders = customerOrders.filter(o => o.phone === phone);
+      if (myOrders.length === 0) {
+        orderBox.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">कोई सक्रिय आर्डर नहीं है। ऊपर से नया आर्डर बुक करें।</div>';
+      } else {
+        myOrders.slice().reverse().forEach(o => {
+          const isLocked = isOrderCutoffPassed(o.targetDate, o.shift);
+          const canCancel = !isLocked && o.status === 'Pending';
+          orderBox.innerHTML += `
+            <div class="p-3 bg-teal-50/50 border-2 border-teal-200 rounded-2xl flex justify-between items-center text-xs">
+              <div>
+                <span class="text-[9px] font-black px-2 py-0.5 rounded ${o.status === 'Approved' ? 'bg-emerald-100 text-emerald-900' : 'bg-amber-100 text-amber-900'}">${o.status}</span>
+                <h4 class="font-extrabold text-teal-950 mt-1">${o.product} • ${o.qty}</h4>
+                <p class="text-[10px] text-slate-500 font-semibold">डिलीवरी: ${o.targetDate} (${o.shift})</p>
+              </div>
+              <div class="text-right">
+                ${canCancel ? `<button onclick="cancelCustomerOrder('${o.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 text-[10px] font-black px-2.5 py-1 rounded-lg">रद्द करें</button>` : `<span class="text-[10px] text-slate-400 font-black"><i class="fa-solid fa-lock"></i> लॉक</span>`}
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      checkOrderCutoffLock();
+    }
+
+    function placeCustomerOrder(e) {
+      e.preventDefault();
+      if (!currentLoggedInCustomer) {
+        alert("कृपया पहले मोबाइल नंबर डालकर खाता खोलें!");
+        return;
+      }
+
+      const targetDate = document.getElementById('orderTargetDate').value;
+      const shift = document.getElementById('orderShift').value;
+      const product = document.getElementById('orderProduct').value;
+      const qty = parseFloat(document.getElementById('orderQty').value) || 0;
+
+      if (isOrderCutoffPassed(targetDate, shift)) {
+        alert("⚠️ इस शिफ्ट के लिए कट-ऑफ समय निकल चुका है। ऑर्डर स्वीकार नहीं किया जा सकता।");
+        return;
+      }
+
+      const phone = currentLoggedInCustomer.phone;
+      const name = currentLoggedInCustomer.name || 'ग्राहक';
+
+      const orderPayload = {
+        name,
+        phone,
+        targetDate,
+        shift,
+        product,
+        qty,
+        status: 'Pending',
+        timestamp: Date.now()
+      };
+
+      const btn = document.getElementById('orderSubmitBtn');
+      if (btn) btn.disabled = true;
+
+      db.ref('customer_orders').push(orderPayload).then(() => {
+        alert("✅ आपका ऑर्डर सफलतापूर्वक सुरक्षित हो गया है!");
+        // Open WhatsApp for double opt-in confirmation
+        const dairyPhone = (paymentSettings.upiPhone || '9876543210').replace(/\D/g, '');
+        const msg = `*प्रजापति डेयरी - नया ऑर्डर पुष्टिकरण*\nग्राहक: ${name}\nमोबाइल: ${phone}\nउत्पाद: ${product}\nमात्रा: ${qty}\nडिलीवरी तारीख: ${targetDate} (${shift})\n(नो-कैंसलेशन पॉलिसी स्वीकृत)`;
+        sendWhatsAppText(dairyPhone, msg);
+        renderCustomerPortal();
+      }).finally(() => {
+        if (btn) btn.disabled = false;
+      });
+    }
+
+    function cancelCustomerOrder(orderId) {
+      const order = customerOrders.find(o => o.id === orderId);
+      if (!order) return;
+
+      if (isOrderCutoffPassed(order.targetDate, order.shift)) {
+        alert("🔒 कट-ऑफ समय बीत चुका है। नियमानुसार यह ऑर्डर रद्द नहीं किया जा सकता!");
+        return;
+      }
+
+      if (confirm("क्या आप वाकई इस ऑर्डर को रद्द करना चाहते हैं?")) {
+        db.ref('customer_orders/' + orderId).remove().then(() => {
+          alert("ऑर्डर रद्द कर दिया गया है।");
+          renderCustomerPortal();
+        });
+      }
+    }
+
+    function openCustomerPayUPI() {
+      if (!paymentSettings.upiId) {
+        alert("डेयरी UPI ID अभी सेट नहीं है। कृपया डेयरी मालिक से संपर्क करें।");
+        return;
+      }
+      const dueText = document.getElementById('portalCustDue').innerText.replace(/[^\d.]/g, '');
+      const amt = parseFloat(dueText) || 0;
+      const upiUrl = `upi://pay?pa=${paymentSettings.upiId}&pn=Prajapati%20Dairy&am=${amt > 0 ? amt : ''}&cu=INR`;
+      window.location.href = upiUrl;
+    }
+
+    function renderAdminOrdersFeed() {
+      const feed = document.getElementById('adminOrdersFeed');
+      if (!feed) return;
+      feed.innerHTML = '';
+      const pendingOrders = customerOrders.filter(o => o.status === 'Pending');
+      const badge = document.getElementById('adminOrderPendingCount');
+      if (badge) badge.innerText = pendingOrders.length;
+
+      if (customerOrders.length === 0) {
+        feed.innerHTML = '<div class="text-xs text-slate-400 text-center col-span-3 py-3">कोई ग्राहक आर्डर नहीं है।</div>';
+        return;
+      }
+
+      customerOrders.slice().reverse().forEach(o => {
+        const isPending = o.status === 'Pending';
+        feed.innerHTML += `
+          <div class="bg-slate-50 p-3 rounded-2xl border-2 ${isPending ? 'border-amber-400' : 'border-emerald-300'} text-xs space-y-1">
+            <div class="flex justify-between items-start">
+              <div>
+                <b>${o.name}</b> (${o.phone})
+                <p class="text-[10px] text-slate-600 font-bold">${o.product} • ${o.qty}</p>
+              </div>
+              <span class="text-[9px] font-black px-2 py-0.5 rounded ${isPending ? 'bg-amber-200 text-amber-950' : 'bg-emerald-200 text-emerald-950'}">${o.status}</span>
+            </div>
+            <p class="text-[10px] text-slate-500">डिलीवरी: ${o.targetDate} (${o.shift})</p>
+            ${isPending && isAdmin ? `
+              <div class="pt-1.5 flex gap-1.5">
+                <button onclick="db.ref('customer_orders/${o.id}').update({status:'Approved'})" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-1 rounded-lg text-[10px]">स्वीकार (Approve)</button>
+                <button onclick="db.ref('customer_orders/${o.id}').remove()" class="w-1/3 bg-rose-200 text-rose-800 font-bold py-1 rounded-lg text-[10px]">खारिज</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+    }
+
     function addSetupCostItem(e) {
       e.preventDefault();
       if (!isAdmin) return;
@@ -2264,7 +2705,7 @@
       const pin = prompt("फैक्ट्री रीसेट के लिए एडमिन पिन दर्ज करें:");
       if (pin !== currentAdminPass) { alert("गलत पिन!"); return; }
       if (confirm("चेतावनी: क्या आप सच में फार्म का सारा डेटा मिटाना चाहते हैं?")) {
-        const paths = ['milk_records', 'expense_records', 'labour_profiles', 'cattle_records', 'calf_records', 'sold_animals_archive', 'animal_sales', 'customer_payments', 'stock_records', 'farm_setup_costs', 'vet_doctors'];
+        const paths = ['milk_records', 'expense_records', 'labour_profiles', 'cattle_records', 'calf_records', 'sold_animals_archive', 'animal_sales', 'customer_payments', 'stock_records', 'farm_setup_costs', 'vet_doctors', 'customer_orders'];
         Promise.all(paths.map(p => db.ref(p).remove())).then(() => location.reload());
       }
     }
@@ -2469,9 +2910,12 @@
       renderTotals();
       renderVetDoctors();
       renderSetupCost();
+      renderAdminOrdersFeed();
+      if (currentLoggedInCustomer) renderCustomerPortal();
     }
 
     const tabThemeStyles = {
+      userPortal: { active: "bg-teal-900 text-teal-200 border-teal-500 shadow-md", inactive: "bg-teal-50 text-teal-950 border-teal-300 hover:bg-teal-100" },
       milk: { active: "bg-emerald-900 text-amber-300 border-emerald-500 shadow-md", inactive: "bg-emerald-50 text-emerald-900 border-emerald-300 hover:bg-emerald-100" },
       expense: { active: "bg-purple-900 text-amber-300 border-purple-500 shadow-md", inactive: "bg-purple-50 text-purple-900 border-purple-300 hover:bg-purple-100" },
       labour: { active: "bg-cyan-900 text-cyan-200 border-cyan-500 shadow-md", inactive: "bg-cyan-50 text-cyan-950 border-cyan-300 hover:bg-cyan-100" },
@@ -2481,7 +2925,7 @@
     };
 
     function switchTab(t) {
-      ['milk', 'expense', 'labour', 'cattle', 'khata', 'stock'].forEach(tab => {
+      ['userPortal', 'milk', 'expense', 'labour', 'cattle', 'khata', 'stock'].forEach(tab => {
         document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1))?.classList.add('hidden');
         const btn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
         if (btn) btn.className = `px-3.5 h-11 rounded-2xl font-black transition flex items-center gap-2 text-xs sm:text-sm shrink-0 shadow-sm border-2 ${tabThemeStyles[tab].inactive} ${tab === 'khata' ? 'ml-auto sm:ml-4' : ''}`;
@@ -2513,6 +2957,10 @@
     db.ref('vet_doctors').on('value', s => { vetDoctors = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
     db.ref('sold_animals_archive').on('value', s => { soldArchiveData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; });
     db.ref('animal_sales').on('value', s => { animalSaleData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; scheduleRender(); });
+    db.ref('customer_orders').on('value', s => { 
+      customerOrders = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : []; 
+      scheduleRender(); 
+    });
     db.ref('farm_setup_costs').on('value', s => {
       setupCostData = s.val() ? Object.keys(s.val()).map(k => ({id:k, ...s.val()[k]})) : [];
       renderSetupCost();
@@ -2521,7 +2969,7 @@
     adjustBreedOptions();
     adjustCalfGenderOptions();
     updateAdminUI();
-    const savedTab = localStorage.getItem('prajapati_active_tab') || 'milk';
+    const savedTab = localStorage.getItem('prajapati_active_tab') || 'userPortal';
     switchTab(savedTab);
   </script>
 </body>
